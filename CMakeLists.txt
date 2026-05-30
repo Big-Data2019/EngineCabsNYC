@@ -16,9 +16,9 @@ add_executable(EngineCabsNYC src/main.cpp)
 
 target_link_libraries(EngineCabsNYC PRIVATE 
     yaml-cpp 
-    spdlog 
-    fmt 
-    CLI11
+    spdlog::spdlog
+    fmt::fmt
+    CLI11::CLI11
 )
 
 # Add test executable
@@ -34,4 +34,11 @@ add_executable(EngineCabsNYC_bench benchmarks/bench_main.cpp)
 
 target_link_libraries(EngineCabsNYC_bench PRIVATE 
     benchmark::benchmark 
+)
+
+# Copy the dataset configuration file to the build directory
+configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/dataset_config.yaml 
+    ${CMAKE_CURRENT_BINARY_DIR}/dataset_config.yaml 
+    COPYONLY
 )
