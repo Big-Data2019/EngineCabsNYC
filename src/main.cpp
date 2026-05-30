@@ -17,8 +17,7 @@ int main(){
             return 1;
         }
 
-        std::vector<int> years;
-        if(config["years"]){ 
+        if(config["years"] && config["years"].IsSequence()){ 
             auto years = config["years"].as<std::vector<int>>();
             spdlog::info("Years specified in config:");
 
@@ -27,9 +26,8 @@ int main(){
             }
         }
 
-        std::vector<std::string> months;
         if(config["months"]){
-            auto months = config["months"].as<std::vector<std::string>>();
+            const auto months = config["months"].as<std::vector<std::string>>();
             spdlog::info("Months specified in config:");
 
             for(const std::string& month : months){
