@@ -1,4 +1,4 @@
-dataset: nyc_taxi
+dataset: yellow_taxi
 
 years:
   - 2019
