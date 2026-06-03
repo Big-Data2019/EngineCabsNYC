@@ -11,6 +11,9 @@
 #include <arrow/io/api.h>
 #include <arrow/result.h>
 #include <arrow/util/io_util.h>
+#include <iostream>
+
+namespace fs = std::filesystem;
 
 // Struct with the data of the yaml
 struct configYaml{
@@ -55,6 +58,16 @@ int main(int argc, char* argv[]){
         spdlog::info("Dataset to process: {}\n", config.datasetName);
 
         processData(config);
+
+        std::vector<std::string> people = {"Juan_Perez", "Maria_Gomez", "Carlos_Lopez"};
+        fs::path file = "test";
+
+        for (const auto& name : people) {
+        fs::path path = file / name; 
+
+        fs::create_directories(path);
+        std::cout << "File created to: " << name << "\n";
+        }
 
     } catch(const YAML::Exception& e){
         spdlog::error("Error: {}", e.what());
