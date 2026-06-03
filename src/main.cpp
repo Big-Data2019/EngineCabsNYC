@@ -5,70 +5,59 @@
 #include <string>
 #include <vector>
 #include <filesystem>
+#include <future>
+#include <thread>
+#include <arrow/api.h>
+#include <arrow/io/api.h>
+#include <arrow/result.h>
+#include <arrow/util/io_util.h>
 
-namespace fs = std::filesystem;
+// Struct with the data of the yaml
+struct configYaml{
+    std::string datasetName;
+    std::vector<int> years;
+    std::vector<int> months;
 
-int main(){
-    const std::string config_path = "dataset_config.yaml";
+    // Constructor to get the data from the YAML and put it into the variables
+    configYaml(const YAML::Node& configFile){
+        datasetName = configFile["dataset"].as<std::string>();
+        years = configFile["years"].as<std::vector<int>>();
+        months = configFile["months"].as<std::vector<int>>();
+    }
+};
+
+// Function to read the data of YAML configuration
+static void processData(const configYaml& config){
+    for(const auto& year : config.years){
+        spdlog::info("Years to process: {}", year);
+
+        for(const auto& month : config.months){
+            spdlog::info("Months to process: {}", month);
+        }
+    }
+}
+
+int main(int argc, char* argv[]){
+    const std::string configPath = "dataset_config.yaml";
+ 
+    YAML::Node configFile = YAML::LoadFile(configPath);
+    CLI::App app{"EngineCabsNYC: Program to download taxi datasets in New York"};
 
     try{
-        YAML::Node config = YAML::LoadFile(config_path);
+        configYaml config(configFile);
 
-        if(!config["dataset"] || config["dataset"].as<std::string>() != "yellow_taxi"){
-            spdlog::error("Invalid dataset specified in config file.");
-            return 1;
-        }
+        app.add_option("-d, --dataset", config.datasetName, "Change dataset name");
+        app.add_option("-y, --years", config.years, "Change years to process");
+        app.add_option("-m, --months", config.months, "Change months to process");
 
-        auto years = config["years"].as<std::vector<int>>();
-        auto months = config["months"].as<std::vector<std::string>>();
+        CLI11_PARSE(app, argc, argv)
 
-        fs::create_directories("downloads");
+        spdlog::info("Dataset to process: {}\n", config.datasetName);
 
-        spdlog::info("Initializing dataset downloader for dataset: {}", config["dataset"].as<std::string>());
+        processData(config);
 
-        for(int year : years){
-            for(const std::string& month : months){
-                std::string file_name = fmt::format("yellow_tripdata_{}-{}.parquet", year, month);
-                std::string url = fmt::format("https://cloudfront.net{}", file_name); 
-                std::string local_path = fmt::format("downloads/{}", file_name);
-
-                spdlog::info("Processing file: {}", file_name);
-                spdlog::info("   -> URL origin: {}", url);
-                spdlog::info("   -> Local path: {}", local_path);
-            }
-        }
-
-        // if(config["dataset"]){
-        //     std::string dataset_name = config["dataset"].as<std::string>();
-        //     spdlog::info("Dataset specified in config: {}", dataset_name);
-        // } else{
-        //     spdlog::warn("No dataset specified in config file.");
-        //     return 1;
-        // }
-
-        // if(config["years"] && config["years"].IsSequence()){ 
-        //     auto years = config["years"].as<std::vector<int>>();
-        //     spdlog::info("Years specified in config:");
-
-        //     for(int year : years){
-        //         fmt::print("- {}\n", year);
-        //     }
-        // }
-
-        // if(config["months"]){
-        //     const auto months = config["months"].as<std::vector<std::string>>();
-        //     spdlog::info("Months specified in config:");
-
-        //     for(const std::string& month : months){
-        //         fmt::print("- {}\n", month);
-        //     }
-        // }
-
-    } catch(const YAML::BadFile & e){
-        spdlog::error("Failed to load config file: {}", config_path);
-        return 1;
-    } catch(const YAML::Exception & e){
-        spdlog::error("Error loading YAML file: {}", e.what());
+    } catch(const YAML::Exception& e){
+        spdlog::error("Error: {}", e.what());
         return 1;
     }
 
