@@ -9,3 +9,5 @@ months:
   - 02
   - 03
   - 04
+
+output_dir: data/raw/yellow

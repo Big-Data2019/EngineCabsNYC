@@ -20,17 +20,19 @@ struct configYaml{
     std::string datasetName;
     std::vector<int> years;
     std::vector<int> months;
+    std::string outputDirectory;
 
     // Constructor to get the data from the YAML and put it into the variables
     configYaml(const YAML::Node& configFile){
         datasetName = configFile["dataset"].as<std::string>();
         years = configFile["years"].as<std::vector<int>>();
         months = configFile["months"].as<std::vector<int>>();
+        outputDirectory = configFile["output_dir"].as<std::string>();
     }
 };
 
 // Function to read the data of YAML configuration
-static void processData(const configYaml& config){
+static void processDataYaml(const configYaml& config){
     for(const auto& year : config.years){
         spdlog::info("Years to process: {}", year);
 
@@ -42,12 +44,27 @@ static void processData(const configYaml& config){
 
 int main(int argc, char* argv[]){
     const std::string configPath = "dataset_config.yaml";
- 
-    YAML::Node configFile = YAML::LoadFile(configPath);
+
     CLI::App app{"EngineCabsNYC: Program to download taxi datasets in New York"};
 
+    if(!fs::exists(configPath)){
+        spdlog::error("The configuration file: {} was not found", configPath);
+        spdlog::info("Make sure the configuration file is in the same directory");
+        return 1;
+    }
+
     try{
+        YAML::Node configFile = YAML::LoadFile(configPath);
+
         configYaml config(configFile);
+
+        fs::path currentWorkingDir = fs::current_path();
+
+        fs::path routeDownload = currentWorkingDir / config.outputDirectory;
+
+        if(fs::create_directories(routeDownload)){
+            spdlog::info("The directory to download datasets was created");
+        }
 
         app.add_option("-d, --dataset", config.datasetName, "Change dataset name");
         app.add_option("-y, --years", config.years, "Change years to process");
@@ -57,20 +74,13 @@ int main(int argc, char* argv[]){
 
         spdlog::info("Dataset to process: {}\n", config.datasetName);
 
-        processData(config);
-
-        std::vector<std::string> people = {"Juan_Perez", "Maria_Gomez", "Carlos_Lopez"};
-        fs::path file = "test";
-
-        for (const auto& name : people) {
-        fs::path path = file / name; 
-
-        fs::create_directories(path);
-        std::cout << "File created to: " << name << "\n";
-        }
+        processDataYaml(config);
 
     } catch(const YAML::Exception& e){
-        spdlog::error("Error: {}", e.what());
+        spdlog::error("Error Yaml: {}", e.what());
+        return 1;
+    } catch(const fs::filesystem_error& e){
+        spdlog::error("Error system file: {}", e.what());
         return 1;
     }
 
