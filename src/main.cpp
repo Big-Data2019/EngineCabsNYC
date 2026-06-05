@@ -73,6 +73,21 @@ static std::string getTypeDataset(const configYaml& config){
     return carType;
 }
 
+static void generateUrlDownload(const configYaml& config){
+    const std::string initialUrl = "https://d37ci6vzurychx.cloudfront.net/trip-data";
+    std::string carType = getTypeDataset(config);
+
+    spdlog::info("Links where they will be downloaded: ");
+
+    for(const auto& year : config.years){
+        for(const auto& month : config.months){
+            std::string endUrl = fmt::format("{}/{}_tripdata_{}-{:02}.parquet", initialUrl, carType, year, month);
+
+            spdlog::info(endUrl);
+        }
+    }
+}
+
 int main(int argc, char* argv[]){
     const std::string configPath = "dataset_config.yaml";
 
@@ -107,17 +122,7 @@ int main(int argc, char* argv[]){
 
         processDataYaml(config);
 
-        const std::string url = "https://d37ci6vzurychx.cloudfront.net/trip-data";
-
-        std::string carType = getTypeDataset(config);
-
-        for(const auto& year : config.years){
-            for(const auto &month : config.months){
-            std::string url2 = fmt::format("{}/{}_tripdata_{}-{}.parquet", url, carType, year, month);
-
-            spdlog::info("url1: {}", url2);
-            }
-        }
+        generateUrlDownload(config);
 
     } catch(const YAML::Exception& e){
         spdlog::error("Error Yaml: {}", e.what());
