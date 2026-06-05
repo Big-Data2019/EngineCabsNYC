@@ -11,7 +11,7 @@
 #include <arrow/io/api.h>
 #include <arrow/result.h>
 #include <arrow/util/io_util.h>
-#include <iostream>
+#include <re2/re2.h>
 
 namespace fs = std::filesystem;
 
@@ -45,8 +45,6 @@ static void processDataYaml(const configYaml& config){
 int main(int argc, char* argv[]){
     const std::string configPath = "dataset_config.yaml";
 
-    CLI::App app{"EngineCabsNYC: Program to download taxi datasets in New York"};
-
     if(!fs::exists(configPath)){
         spdlog::error("The configuration file: {} was not found", configPath);
         spdlog::info("Make sure the configuration file is in the same directory");
@@ -55,8 +53,16 @@ int main(int argc, char* argv[]){
 
     try{
         YAML::Node configFile = YAML::LoadFile(configPath);
+        CLI::App app{"EngineCabsNYC: Program to download taxi datasets in New York"};
 
         configYaml config(configFile);
+
+        app.add_option("-n, --dataset", config.datasetName, "Change dataset name");
+        app.add_option("-y, --years", config.years, "Change years to process");
+        app.add_option("-m, --months", config.months, "Change months to process");
+        app.add_option("-d, --directory", config.outputDirectory, "Change the directory file");
+
+        CLI11_PARSE(app, argc, argv)
 
         fs::path currentWorkingDir = fs::current_path();
 
@@ -66,15 +72,34 @@ int main(int argc, char* argv[]){
             spdlog::info("The directory to download datasets was created");
         }
 
-        app.add_option("-d, --dataset", config.datasetName, "Change dataset name");
-        app.add_option("-y, --years", config.years, "Change years to process");
-        app.add_option("-m, --months", config.months, "Change months to process");
-
-        CLI11_PARSE(app, argc, argv)
-
         spdlog::info("Dataset to process: {}\n", config.datasetName);
 
         processDataYaml(config);
+
+        const std::string url = "https://d37ci6vzurychx.cloudfront.net/trip-data";
+
+        std::string carType;
+
+        RE2::Options options;
+        options.set_case_sensitive(false);
+
+        re2::RE2 patron("(fhvhv|fhv|yellow|green)", options);
+
+        if(RE2::PartialMatch(config.datasetName, patron, &carType)){
+            spdlog::info("Type of dataset to download: {}", carType);
+
+            for(char& c : carType){
+                c = std::tolower(static_cast<unsigned char>(c));
+            }
+        }
+
+        for(const auto& year : config.years){
+            for(const auto &month : config.months){
+            std::string url2 = fmt::format("{}/{}_tripdata_{}-{}", url, carType, year, month);
+
+            spdlog::info("url1: {}", url2);
+            }
+        }
 
     } catch(const YAML::Exception& e){
         spdlog::error("Error Yaml: {}", e.what());

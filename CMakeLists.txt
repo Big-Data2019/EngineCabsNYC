@@ -12,7 +12,7 @@ find_package(fmt CONFIG REQUIRED)
 find_package(CLI11 CONFIG REQUIRED)
 find_package(Arrow CONFIG REQUIRED)
 find_package(Parquet CONFIG REQUIRED)
-
+find_package(re2 CONFIG REQUIRED)
 
 # Add main executable
 add_executable(EngineCabsNYC src/main.cpp)
@@ -24,6 +24,7 @@ target_link_libraries(EngineCabsNYC PRIVATE
     CLI11::CLI11
     Arrow::arrow_shared
     Parquet::parquet_shared
+    re2::re2
 )
 
 # Add test executable
