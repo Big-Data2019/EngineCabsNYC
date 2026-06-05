@@ -57,11 +57,13 @@ static std::string toLowercase(std::string text){
 static std::string getTypeDataset(const configYaml& config){
     std::string carType;
 
+    // Ignore uppercase and lowercase letters
     RE2::Options options;
     options.set_case_sensitive(false);
 
     re2::RE2 patron("(fhvhv|fhv|yellow|green)", options);
 
+    // Search for one of the previously stated words
     if(RE2::PartialMatch(config.datasetName, patron, &carType)){
         spdlog::info("Type of dataset to download: {}", carType);
 
@@ -70,7 +72,6 @@ static std::string getTypeDataset(const configYaml& config){
 
     return carType;
 }
-
 
 int main(int argc, char* argv[]){
     const std::string configPath = "dataset_config.yaml";
@@ -112,11 +113,12 @@ int main(int argc, char* argv[]){
 
         for(const auto& year : config.years){
             for(const auto &month : config.months){
-            std::string url2 = fmt::format("{}/{}_tripdata_{}-{}", url, carType, year, month);
+            std::string url2 = fmt::format("{}/{}_tripdata_{}-{}.parquet", url, carType, year, month);
 
             spdlog::info("url1: {}", url2);
             }
         }
+
     } catch(const YAML::Exception& e){
         spdlog::error("Error Yaml: {}", e.what());
         return 1;
