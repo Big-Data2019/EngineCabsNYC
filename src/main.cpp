@@ -40,7 +40,37 @@ static void processDataYaml(const configYaml& config){
             spdlog::info("Months to process: {}", month);
         }
     }
+    fmt::print("\n");
 }
+
+// Function to transform text into lowercase
+static std::string toLowercase(std::string text){
+    std::transform(text.begin(), text.end(), text.begin(),
+        [](unsigned char c){ 
+            return std::tolower(c);
+    });
+
+    return text;
+}
+
+// Function to search the type of dataset in the datasetName
+static std::string getTypeDataset(const configYaml& config){
+    std::string carType;
+
+    RE2::Options options;
+    options.set_case_sensitive(false);
+
+    re2::RE2 patron("(fhvhv|fhv|yellow|green)", options);
+
+    if(RE2::PartialMatch(config.datasetName, patron, &carType)){
+        spdlog::info("Type of dataset to download: {}", carType);
+
+        return toLowercase(carType);
+    }
+
+    return carType;
+}
+
 
 int main(int argc, char* argv[]){
     const std::string configPath = "dataset_config.yaml";
@@ -78,20 +108,7 @@ int main(int argc, char* argv[]){
 
         const std::string url = "https://d37ci6vzurychx.cloudfront.net/trip-data";
 
-        std::string carType;
-
-        RE2::Options options;
-        options.set_case_sensitive(false);
-
-        re2::RE2 patron("(fhvhv|fhv|yellow|green)", options);
-
-        if(RE2::PartialMatch(config.datasetName, patron, &carType)){
-            spdlog::info("Type of dataset to download: {}", carType);
-
-            for(char& c : carType){
-                c = std::tolower(static_cast<unsigned char>(c));
-            }
-        }
+        std::string carType = getTypeDataset(config);
 
         for(const auto& year : config.years){
             for(const auto &month : config.months){
@@ -100,7 +117,6 @@ int main(int argc, char* argv[]){
             spdlog::info("url1: {}", url2);
             }
         }
-
     } catch(const YAML::Exception& e){
         spdlog::error("Error Yaml: {}", e.what());
         return 1;
