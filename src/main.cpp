@@ -44,13 +44,14 @@ static void processDataYaml(const configYaml& config){
 }
 
 // Function to transform text into lowercase
-static std::string toLowercase(std::string text){
+static std::string toLowercase(std::string&& text){
     std::transform(text.begin(), text.end(), text.begin(),
         [](unsigned char c){ 
             return std::tolower(c);
     });
 
-    return text;
+    // Receive and send the data
+    return std::move(text);
 }
 
 // Function to search the type of dataset in the datasetName
@@ -67,10 +68,13 @@ static std::string getTypeDataset(const configYaml& config){
     if(RE2::PartialMatch(config.datasetName, patron, &carType)){
         spdlog::info("Type of dataset to download: {}", carType);
 
-        return toLowercase(carType);
-    }
+        // Send and receive the carType at function toLowercase
+        return toLowercase(std::move(carType));
+    } 
 
-    return carType;
+    spdlog::error("No dataset type was found within the name");
+    spdlog::info("You can try put some values like yellow or fhv");
+    exit(1);
 }
 
 static void generateUrlDownload(const configYaml& config){
