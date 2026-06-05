@@ -77,6 +77,7 @@ static std::string getTypeDataset(const configYaml& config){
     exit(1);
 }
 
+// Function to create the final URL where the datasets are downloaded
 static void generateUrlDownload(const configYaml& config){
     const std::string initialUrl = "https://d37ci6vzurychx.cloudfront.net/trip-data";
     std::string carType = getTypeDataset(config);
