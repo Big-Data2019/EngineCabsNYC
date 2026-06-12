@@ -71,13 +71,21 @@ static std::optional<std::string> getTypeDataset(const configYaml& config){
         // Send and receive the carType at function toLowercase
         return toLowercase(std::move(carType));
     } 
+
+    return std::nullopt;
 }
 
 // Function to create the final URL where the datasets are downloaded
 static void generateUrlDownload(const configYaml& config){
     const std::string initialUrl = "https://d37ci6vzurychx.cloudfront.net/trip-data";
-    auto carType = getTypeDataset(config);
+    auto carTypeOpt = getTypeDataset(config);
 
+    if(!carTypeOpt.has_value()){
+        spdlog::error("The type of car is not specified in the name");
+        return;
+    }
+
+    std::string carType = *carTypeOpt;
     spdlog::info("Links where they will be downloaded: ");
 
     for(const auto& year : config.years){
