@@ -12,8 +12,7 @@
 #include <arrow/result.h>
 #include <arrow/util/io_util.h>
 #include <re2/re2.h>
-
-namespace fs = std::filesystem;
+#include <memory>
 
 // Struct with the data of the yaml
 struct configYaml{
@@ -32,14 +31,15 @@ struct configYaml{
 };
 
 // Function to read the data of YAML configuration
-static void processDataYaml(const configYaml& config){
+static void showDataYaml(const configYaml& config){
     for(const auto& year : config.years){
         spdlog::info("Years to process: {}", year);
 
         for(const auto& month : config.months){
-            spdlog::info("Months to process: {}", month);
+            spdlog::info("Months to process: {:02}", month);
         }
     }
+
     fmt::print("\n");
 }
 
@@ -55,14 +55,14 @@ static std::string toLowercase(std::string&& text){
 }
 
 // Function to search the type of dataset in the datasetName
-static std::string getTypeDataset(const configYaml& config){
+static std::optional<std::string> getTypeDataset(const configYaml& config){
     std::string carType;
 
     // Ignore uppercase and lowercase letters
     RE2::Options options;
     options.set_case_sensitive(false);
 
-    re2::RE2 patron("(fhvhv|fhv|yellow|green)", options);
+    static const re2::RE2 patron("(fhvhv|fhv|yellow|green)", options);
 
     // Search for one of the previously stated words
     if(RE2::PartialMatch(config.datasetName, patron, &carType)){
@@ -71,16 +71,12 @@ static std::string getTypeDataset(const configYaml& config){
         // Send and receive the carType at function toLowercase
         return toLowercase(std::move(carType));
     } 
-
-    spdlog::error("No dataset type was found within the name");
-    spdlog::info("You can try put some values like yellow or fhv");
-    exit(1);
 }
 
 // Function to create the final URL where the datasets are downloaded
 static void generateUrlDownload(const configYaml& config){
     const std::string initialUrl = "https://d37ci6vzurychx.cloudfront.net/trip-data";
-    std::string carType = getTypeDataset(config);
+    auto carType = getTypeDataset(config);
 
     spdlog::info("Links where they will be downloaded: ");
 
@@ -96,7 +92,7 @@ static void generateUrlDownload(const configYaml& config){
 int main(int argc, char* argv[]){
     const std::string configPath = "dataset_config.yaml";
 
-    if(!fs::exists(configPath)){
+    if(!std::filesystem::exists(configPath)){
         spdlog::error("The configuration file: {} was not found", configPath);
         spdlog::info("Make sure the configuration file is in the same directory");
         return 1;
@@ -115,27 +111,27 @@ int main(int argc, char* argv[]){
 
         CLI11_PARSE(app, argc, argv)
 
-        fs::path currentWorkingDir = fs::current_path();
+        std::filesystem::path currentWorkingDir = std::filesystem::current_path();
 
-        fs::path routeDownload = currentWorkingDir / config.outputDirectory;
+        std::filesystem::path routeDownload = currentWorkingDir / config.outputDirectory;
 
-        if(fs::create_directories(routeDownload)){
+        if(std::filesystem::create_directories(routeDownload)){
             spdlog::info("The directory to download datasets was created");
         }
 
         spdlog::info("Dataset to process: {}\n", config.datasetName);
 
-        processDataYaml(config);
+        showDataYaml(config);
 
         generateUrlDownload(config);
 
     } catch(const YAML::Exception& e){
         spdlog::error("Error Yaml: {}", e.what());
         return 1;
-    } catch(const fs::filesystem_error& e){
+    } catch(const std::filesystem::filesystem_error& e){
         spdlog::error("Error system file: {}", e.what());
         return 1;
-    }
+    } 
 
     return 0;
 }

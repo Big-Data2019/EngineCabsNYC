@@ -2,12 +2,8 @@ dataset: nyc-tlc-yellow
 
 years:
   - 2024
-  - 2025
 
 months:
   - 01
-  - 02
-  - 03
-  - 04
 
 output_dir: data/raw/yellow
