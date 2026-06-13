@@ -32,6 +32,8 @@ struct configYaml{
 
 // Function to show the data of YAML configuration
 static void showDataYaml(const configYaml& config){
+    spdlog::info("Dataset to process: {}\n", config.datasetName);
+
     for(const auto& year : config.years){
         spdlog::info("Years to process: {}", year);
 
@@ -39,8 +41,6 @@ static void showDataYaml(const configYaml& config){
             spdlog::info("Months to process: {:02}", month);
         }
     }
-
-    fmt::print("\n");
 }
 
 // Function to transform text into lowercase
@@ -66,7 +66,7 @@ static std::optional<std::string> getTypeDataset(const configYaml& config){
 
     // Search for one of the previously stated words
     if(RE2::PartialMatch(config.datasetName, patron, &carType)){
-        spdlog::info("Type of dataset to download: {}", carType);
+        spdlog::info("Type of dataset to download: {}\n", carType);
 
         // Send and receive the carType at function toLowercase
         return toLowercase(std::move(carType));
@@ -86,7 +86,7 @@ static void generateUrlDownload(const configYaml& config){
     }
 
     std::string carType = *carTypeOpt;
-    spdlog::info("Links where they will be downloaded: ");
+    spdlog::info("Links to where the datasets will be downloaded: ");
 
     for(const auto& year : config.years){
         for(const auto& month : config.months){
@@ -97,8 +97,23 @@ static void generateUrlDownload(const configYaml& config){
     }
 }
 
+static bool ensureOutputDirectory(const configYaml& config){
+    std::filesystem::path currentWorkingDir = std::filesystem::current_path();
+    std::filesystem::path routeDownload = currentWorkingDir / config.outputDirectory;
+
+    std::error_code errorCode;
+    std::filesystem::create_directories(routeDownload, errorCode);
+
+    if(std::filesystem::is_directory(routeDownload) && !errorCode){
+        return true;
+    }
+    
+    spdlog::error("Folder failed to load because: {}", errorCode.message());
+    return false;
+}
+
 int main(int argc, char* argv[]){
-    const std::string configPath = "dataset_config.yaml";
+    std::string configPath = "dataset_config.yaml";
 
     if(!std::filesystem::exists(configPath)){
         spdlog::error("The configuration file: {} was not found", configPath);
@@ -119,15 +134,9 @@ int main(int argc, char* argv[]){
 
         CLI11_PARSE(app, argc, argv)
 
-        std::filesystem::path currentWorkingDir = std::filesystem::current_path();
-
-        std::filesystem::path routeDownload = currentWorkingDir / config.outputDirectory;
-
-        if(std::filesystem::create_directories(routeDownload)){
-            spdlog::info("The directory to download datasets was created");
-        } 
-
-        spdlog::info("Dataset to process: {}\n", config.datasetName);
+        if(!ensureOutputDirectory(config)){
+            return 1;
+        }
 
         showDataYaml(config);
 
