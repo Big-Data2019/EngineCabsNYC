@@ -97,6 +97,10 @@ static void generateUrlDownload(const configYaml& config){
     }
 }
 
+/*
+Function to return true if the directory exists and is ready to use, 
+false if an error occurs or there is a file obstructing the path
+ */
 static bool ensureOutputDirectory(const configYaml& config){
     std::filesystem::path currentWorkingDir = std::filesystem::current_path();
     std::filesystem::path routeDownload = currentWorkingDir / config.outputDirectory;
