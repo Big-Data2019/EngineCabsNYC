@@ -30,7 +30,7 @@ struct configYaml{
     }
 };
 
-// Function to read the data of YAML configuration
+// Function to show the data of YAML configuration
 static void showDataYaml(const configYaml& config){
     for(const auto& year : config.years){
         spdlog::info("Years to process: {}", year);
@@ -54,7 +54,7 @@ static std::string toLowercase(std::string&& text){
     return std::move(text);
 }
 
-// Function to search the type of dataset in the datasetName
+// Function to search the type of dataset in the datasetName with optional for exceptions
 static std::optional<std::string> getTypeDataset(const configYaml& config){
     std::string carType;
 
@@ -125,7 +125,7 @@ int main(int argc, char* argv[]){
 
         if(std::filesystem::create_directories(routeDownload)){
             spdlog::info("The directory to download datasets was created");
-        }
+        } 
 
         spdlog::info("Dataset to process: {}\n", config.datasetName);
 
