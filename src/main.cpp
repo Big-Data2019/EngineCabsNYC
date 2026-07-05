@@ -5,14 +5,14 @@
 #include <string>
 #include <vector>
 #include <filesystem>
-#include <future>
-#include <thread>
-#include <arrow/api.h>
-#include <arrow/io/api.h>
-#include <arrow/result.h>
-#include <arrow/util/io_util.h>
 #include <re2/re2.h>
 #include <memory>
+#include <cstdlib>
+#include <arrow/io/file.h>
+#include <parquet/arrow/reader.h>
+#include <nlohmann/json.hpp>
+#include <curl/curl.h>
+#include <fstream>
 
 // Struct with the data of the yaml
 struct configYaml{
