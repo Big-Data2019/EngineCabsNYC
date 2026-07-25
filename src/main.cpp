@@ -19,6 +19,45 @@
 #include <utility>
 #include <locale>
 
+class CurlGlobal{
+public:
+    CurlGlobal(long flags = CURL_GLOBAL_ALL){
+        if(curl_global_init(flags) != 0){
+            throw std::runtime_error("Failed to global initialize libcurl handler");
+        }
+    }
+    ~CurlGlobal(){
+        curl_global_cleanup();
+    }
+
+    CurlGlobal(const CurlGlobal&) = delete;
+    CurlGlobal& operator = (const CurlGlobal&) = delete;
+};
+
+class CurlEasy{
+private:
+    CURL* curl;
+
+public:
+    CurlEasy(){
+        curl = curl_easy_init();
+        if(!curl){
+            throw std::runtime_error("Failed to easy initialize libcurl handler");
+        }
+    }
+    ~CurlEasy(){
+        if(curl){
+            curl_easy_cleanup(curl);
+        }
+    }
+    CURL* get() const{
+        return curl;
+    }
+
+    CurlEasy(const CurlEasy&) = delete;
+    CurlEasy& operator = (const CurlEasy&) = delete;
+};
+
 struct configYaml{
     std::string datasetName;
     std::vector<int> years;
@@ -130,13 +169,12 @@ static bool isOpen(const T& object, std::string_view message){
 }
 
 static bool setDownload(const std::string& url, const std::string& output){
-    CURL* curl = curl_easy_init();
-    if(!validateOrLog(curl, "Failed to initialize libcurl handler")) return false;
+    CurlEasy curlEasyInit;
+    CURL* curl = curlEasyInit.get();
 
     // Open the outputFile in binary form 
     std::ofstream outputFile(output, std::ios::binary);
     if(!isOpen(outputFile, "Failed to create or open local outputfile")){
-        curl_easy_cleanup(curl);
         return false;
     }
 
@@ -157,12 +195,9 @@ static bool setDownload(const std::string& url, const std::string& output){
         }
 
         spdlog::error("Libcurl transfer failed: {}", curl_easy_strerror(resCode));
-
-        curl_easy_cleanup(curl);
         return false;
     }
 
-    curl_easy_cleanup(curl);
     return true;
 }
 
@@ -327,7 +362,7 @@ int main(int argc, char **argv){
         return 1;
     }
 
-    curl_global_init(CURL_GLOBAL_DEFAULT);
+    CurlGlobal curlGlobalInit;
 
     CLI::App app{"EngineCabsNYC: Analysis engine for intelligent decision-making based on hard data"};
 
@@ -350,14 +385,12 @@ int main(int argc, char **argv){
             spdlog::info("Type of dataset: {}\n", configGl.carType);
 
             if(!validateOrLog(ensureOutputDir(dataYAML.outputDir), "The output file could not be secured")){
-                curl_global_cleanup();
                 return 1;
             }
 
              spdlog::info("Manifest: {}", generateJsonFile(dataYAML, configGl) 
                 ? "created" : "could not be created");
             
-            curl_global_cleanup();
             return 0;
         }
 
@@ -366,34 +399,26 @@ int main(int argc, char **argv){
 
             if(!status.ok()){
                 spdlog::error("{}", status.ToString());
-                curl_global_cleanup();
                 return 1;
             }
 
-            curl_global_cleanup();
             return 0;
         }
 
         if(argc == 1){
             spdlog::info(app.help());
-            curl_global_cleanup();
             return 0;
         }
 
     } catch(const YAML::Exception& e){
         spdlog::error("Error YAML: {}", e.what());
-        curl_global_cleanup();
         return 1;
     }catch(const std::filesystem::filesystem_error& e){
         spdlog::error("Error system file: {}", e.what());
-        curl_global_cleanup();
         return 1;
     } catch(const CLI::ParseError& e){
-        // spdlog::error("Error CLI: {}", e.what());
-        curl_global_cleanup();
         return app.exit(e);
     }
 
-    curl_global_cleanup();
     return 0;
 }
