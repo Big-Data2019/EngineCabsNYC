@@ -58,30 +58,6 @@ public:
     CurlEasy& operator = (const CurlEasy&) = delete;
 };
 
-class InspectComand{
-private:    
-    CLI::App* cliChild;
-    std::string file;
-    void execute(){
-        auto status = inspectSchema(file);
-
-        if(!status.ok()){
-            spdlog::error("{}", status.ToString());
-        }
-    }
-
-public:
-    explicit InspectComand(CLI::App* cliParent){
-        cliChild = cliParent->add_subcommand("inspect", "Shortcut to inspect a file structure");
-        cliChild->add_option("path", file, "Path to input Parquet file for inspect")
-            ->check(CLI::ExistingFile);
-        
-        cliChild->callback([this]{
-            this->execute();
-        });
-    }
-};
-
 struct configYaml{
     std::string datasetName;
     std::vector<int> years;
@@ -377,6 +353,45 @@ static arrow::Status inspectSchema(const std::string& file){
     return arrow::Status::OK();
 }
 
+class ICommand{
+public:
+    virtual ~ICommand() = default;
+};
+
+class InspectCommand : public ICommand{
+private:
+    CLI::App* cliChild;
+    std::string file;
+    void execute(){
+        auto status = inspectSchema(file);
+        
+        if(!status.ok()){
+            spdlog::error("{}", status.ToString());
+        }
+    }
+
+public:
+    explicit InspectCommand(CLI::App* cliParent){
+        cliChild = cliParent->add_subcommand("inspect", "Shortcut to inspect a file structure");
+        cliChild->add_option("path", file, "Path to input Parquet file for inspect")
+            ->check(CLI::ExistingFile);
+
+        cliChild->callback([this]{
+            this->execute();
+        });
+    }
+};
+
+class CommandHandler{
+private:
+    std::vector<std::unique_ptr<ICommand>> commandList;
+
+public:
+    void setUp(CLI::App& app){
+        commandList.push_back(std::make_unique<InspectCommand>(&app));
+    }
+};
+
 int main(int argc, char **argv){
     std::locale::global(std::locale("en_US.UTF-8"));
 
@@ -389,6 +404,8 @@ int main(int argc, char **argv){
     CurlGlobal curlGlobalInit;
 
     CLI::App app{"EngineCabsNYC: Analysis engine for intelligent decision-making based on hard data"};
+    CommandHandler manejar;
+    manejar.setUp(app);
 
     try{
         YAML::Node configFile = YAML::LoadFile(configPath);
@@ -396,8 +413,6 @@ int main(int argc, char **argv){
         configGlobal configGl(dataYAML);
 
         auto* downloadParquet = app.add_subcommand("download", "Download .parquet files");
-
-        InspectComand cmdInspect(&app);
 
         CLI11_PARSE(app, argc, argv);
 
@@ -408,7 +423,7 @@ int main(int argc, char **argv){
                 return 1;
             }
 
-             spdlog::info("Manifest: {}", generateJsonFile(dataYAML, configGl) 
+            spdlog::info("Manifest: {}", generateJsonFile(dataYAML, configGl) 
                 ? "created" : "could not be created");
             
             return 0;
