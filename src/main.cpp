@@ -58,6 +58,30 @@ public:
     CurlEasy& operator = (const CurlEasy&) = delete;
 };
 
+class InspectComand{
+private:    
+    CLI::App* cliChild;
+    std::string file;
+    void execute(){
+        auto status = inspectSchema(file);
+
+        if(!status.ok()){
+            spdlog::error("{}", status.ToString());
+        }
+    }
+
+public:
+    explicit InspectComand(CLI::App* cliParent){
+        cliChild = cliParent->add_subcommand("inspect", "Shortcut to inspect a file structure");
+        cliChild->add_option("path", file, "Path to input Parquet file for inspect")
+            ->check(CLI::ExistingFile);
+        
+        cliChild->callback([this]{
+            this->execute();
+        });
+    }
+};
+
 struct configYaml{
     std::string datasetName;
     std::vector<int> years;
@@ -371,13 +395,9 @@ int main(int argc, char **argv){
         configYaml dataYAML(configFile);
         configGlobal configGl(dataYAML);
 
-        std::string file;
-
-        auto* inspectComand = app.add_subcommand("inspect", "Show the schema, numbers of row and columns");
-        inspectComand->add_option("path", file, "Path to input Parquet file for inspect")
-            ->check(CLI::ExistingFile);
-
         auto* downloadParquet = app.add_subcommand("download", "Download .parquet files");
+
+        InspectComand cmdInspect(&app);
 
         CLI11_PARSE(app, argc, argv);
 
@@ -391,17 +411,6 @@ int main(int argc, char **argv){
              spdlog::info("Manifest: {}", generateJsonFile(dataYAML, configGl) 
                 ? "created" : "could not be created");
             
-            return 0;
-        }
-
-        if(*inspectComand){
-            auto status = inspectSchema(file);
-
-            if(!status.ok()){
-                spdlog::error("{}", status.ToString());
-                return 1;
-            }
-
             return 0;
         }
 
