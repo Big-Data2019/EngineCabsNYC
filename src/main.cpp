@@ -356,11 +356,43 @@ static arrow::Status inspectSchema(const std::string& file){
 class ICommand{
 public:
     virtual ~ICommand() = default;
+    virtual void registerCommand(CLI::App& app) = 0;
+};
+
+class DownloadCommand : public ICommand{
+private:
+    const configYaml& dataYAML;
+    const configGlobal& configGl;    
+
+    void execute(){
+        spdlog::info("Type of dataset: {}\n", configGl.carType);
+
+        if(!validateOrLog(ensureOutputDir(dataYAML.outputDir), "The output file could not be secured")){
+            return;
+        }
+
+        spdlog::info("Manifest: {}", generateJsonFile(dataYAML, configGl) 
+            ? "created" : "could not be created");
+            
+        return;
+    }
+
+public:
+    DownloadCommand(const configYaml& dataYAML_, const configGlobal& configGl_)
+        : dataYAML(dataYAML_), configGl(configGl_)
+    {}
+
+    void registerCommand(CLI::App& app) override{
+        auto cmd = app.add_subcommand("download", "Download .parquet files");
+
+        cmd->callback([this]{
+            this->execute();
+        });
+    }
 };
 
 class InspectCommand : public ICommand{
 private:
-    CLI::App* cliChild;
     std::string file;
     void execute(){
         auto status = inspectSchema(file);
@@ -371,13 +403,14 @@ private:
     }
 
 public:
-    explicit InspectCommand(CLI::App* cliParent){
-        cliChild = cliParent->add_subcommand("inspect", "Shortcut to inspect a file structure");
-        cliChild->add_option("path", file, "Path to input Parquet file for inspect")
+    void registerCommand(CLI::App& app) override{
+        auto* cmd = app.add_subcommand("inspect", "Shortcut to inspect a file structure");
+        cmd->add_option("path", file, "Path to input Parquet file for inspect")
+            ->required()
             ->check(CLI::ExistingFile);
-
-        cliChild->callback([this]{
-            this->execute();
+        
+        cmd->callback([this]{
+            execute();
         });
     }
 };
@@ -387,59 +420,47 @@ private:
     std::vector<std::unique_ptr<ICommand>> commandList;
 
 public:
-    void setUp(CLI::App& app){
-        commandList.push_back(std::make_unique<InspectCommand>(&app));
+    CommandHandler(CLI::App& app, const configYaml& dataYAML, const configGlobal& configGl){
+        commandList.push_back(std::make_unique<InspectCommand>());
+        commandList.push_back(std::make_unique<DownloadCommand>(dataYAML, configGl));
+    }
+
+    void registerCommands(CLI::App& app){
+        for(auto& command : commandList){
+            command->registerCommand(app);
+        }
     }
 };
 
 int main(int argc, char **argv){
     std::locale::global(std::locale("en_US.UTF-8"));
-
     const std::string configPath = "dataset_config.yaml";
     if(!std::filesystem::exists(configPath)){
         spdlog::error("The configuration file: {} was not found", configPath);
         return 1;
     }
 
+    YAML::Node configFile = YAML::LoadFile(configPath);
     CurlGlobal curlGlobalInit;
-
     CLI::App app{"EngineCabsNYC: Analysis engine for intelligent decision-making based on hard data"};
-    CommandHandler manejar;
-    manejar.setUp(app);
+
+    configYaml dataYAML(configFile);
+    configGlobal configGl(dataYAML);
+
+    CommandHandler handler(app, dataYAML, configGl);
+    handler.registerCommands(app);
 
     try{
-        YAML::Node configFile = YAML::LoadFile(configPath);
-        configYaml dataYAML(configFile);
-        configGlobal configGl(dataYAML);
-
-        auto* downloadParquet = app.add_subcommand("download", "Download .parquet files");
-
         CLI11_PARSE(app, argc, argv);
-
-        if(*downloadParquet){
-            spdlog::info("Type of dataset: {}\n", configGl.carType);
-
-            if(!validateOrLog(ensureOutputDir(dataYAML.outputDir), "The output file could not be secured")){
-                return 1;
-            }
-
-            spdlog::info("Manifest: {}", generateJsonFile(dataYAML, configGl) 
-                ? "created" : "could not be created");
-            
-            return 0;
-        }
 
         if(argc == 1){
             spdlog::info(app.help());
             return 0;
         }
 
-    } catch(const YAML::Exception& e){
-        spdlog::error("Error YAML: {}", e.what());
-        return 1;
-    }catch(const std::filesystem::filesystem_error& e){
-        spdlog::error("Error system file: {}", e.what());
-        return 1;
+    // } catch(const YAML::Exception& e){
+    //     spdlog::error("Error YAML: {}", e.what());
+    //     return 1;
     } catch(const CLI::ParseError& e){
         return app.exit(e);
     }
