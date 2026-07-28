@@ -167,6 +167,17 @@ static bool isOpen(const T& element, std::string_view message){
     return true;
 }
 
+template <typename T>
+[[nodiscard("Error: You need to put the function in an if statement")]]
+static bool isOk(const T& element, std::string_view message){
+    if(!element.ok()){
+        spdlog::error(message);
+        return false;
+    }
+
+    return true;
+}
+
 static bool setDownload(const std::string& url, const std::string& output){
     CurlEasy curlEasyInit;
     CURL* curl = curlEasyInit.get();
@@ -379,7 +390,7 @@ public:
     {}
 
     void registerCommand(CLI::App& app) override{
-        auto cmd = app.add_subcommand("download", "Download .parquet files");
+        auto* cmd = app.add_subcommand("download", "Download .parquet files");
 
         cmd->callback([this]{
             this->execute();
@@ -390,12 +401,10 @@ public:
 class InspectCommand : public ICommand{
 private:
     std::string file;
+
     void execute(){
         auto status = inspectSchema(file);
-
-        if(!status.ok()){
-            spdlog::error("{}", status.ToString());
-        }
+        if(!isOk(status, "Error of the status")) return;
     }
 
 public:
