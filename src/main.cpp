@@ -373,8 +373,6 @@ private:
 
         spdlog::info("Manifest: {}", generateJsonFile(dataYAML, configGl) 
             ? "created" : "could not be created");
-            
-        return;
     }
 
 public:
@@ -433,36 +431,29 @@ public:
 };
 
 int main(int argc, char **argv){
+    CLI::App app{"EngineCabsNYC: Analysis engine for intelligent decision based on hard data"};
     std::locale::global(std::locale("en_US.UTF-8"));
-    const std::string configPath = "dataset_config.yaml";
-    if(!std::filesystem::exists(configPath)){
-        spdlog::error("The configuration file: {} was not found", configPath);
-        return 1;
-    }
-
-    YAML::Node configFile = YAML::LoadFile(configPath);
     CurlGlobal curlGlobalInit;
-    CLI::App app{"EngineCabsNYC: Analysis engine for intelligent decision-making based on hard data"};
-
-    configYaml dataYAML(configFile);
-    configGlobal configGl(dataYAML);
-
-    CommandHandler handler(app, dataYAML, configGl);
-    handler.registerCommands(app);
 
     try{
+        YAML::Node configFile = YAML::LoadFile("dataset_config.yaml");
+        configYaml dataYAML(configFile);
+        configGlobal configGl(dataYAML);
+
+        CommandHandler handler(app, dataYAML, configGl);
+        handler.registerCommands(app);
+
         CLI11_PARSE(app, argc, argv);
-
-        if(argc == 1){
-            spdlog::info(app.help());
-            return 0;
-        }
-
-    // } catch(const YAML::Exception& e){
-    //     spdlog::error("Error YAML: {}", e.what());
-    //     return 1;
+    } catch(const YAML::ParserException& e){
+        spdlog::error("Error YAML: {}", e.what());
+        return 1;
     } catch(const CLI::ParseError& e){
         return app.exit(e);
+    }
+
+    if(argc == 1){
+        spdlog::info(app.help());
+        return 0;
     }
 
     return 0;
