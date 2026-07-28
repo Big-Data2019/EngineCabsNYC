@@ -103,9 +103,8 @@ struct configGlobal{
     const std::string carType;
     const std::string outputDir;
 
-    configGlobal(const configYaml& dataYAML) :
-        carType(getTypeDataset(dataYAML.datasetName)),
-        outputDir(dataYAML.outputDir)
+    configGlobal(const configYaml& dataYAML)
+        : carType(getTypeDataset(dataYAML.datasetName)), outputDir(dataYAML.outputDir)
     {}
 
     std::string getDownloadUrl(int year, int month) const{
@@ -140,7 +139,7 @@ static size_t writeDataCallback(void* ptr, size_t size, size_t numberMember, voi
     outputFile->write(static_cast<const char*>(ptr), totalBytes);
 
     /*
-    Returns totalBytes because if the amount is 0 it means a failure, 
+    Returns totalBytes because if the amount is 0 it means a failure,
     either due to lack of space or a download error
     */
     return totalBytes;
@@ -148,8 +147,8 @@ static size_t writeDataCallback(void* ptr, size_t size, size_t numberMember, voi
 
 template <typename T>
 [[nodiscard("Error: You need to put the function in an if statement")]]
-static bool validateOrLog(const T& object, std::string_view message){
-    if(!object){
+static bool hasValue(const T& element, std::string_view message){
+    if(!element){
         spdlog::error(message);
         return false;
     }
@@ -159,8 +158,8 @@ static bool validateOrLog(const T& object, std::string_view message){
 
 template <typename T>
 [[nodiscard("Error: You need to put the function in an if statement")]]
-static bool isOpen(const T& object, std::string_view message){
-    if(!object.is_open()){
+static bool isOpen(const T& element, std::string_view message){
+    if(!element.is_open()){                                                      
         spdlog::error(message);
         return false;
     }
@@ -172,11 +171,9 @@ static bool setDownload(const std::string& url, const std::string& output){
     CurlEasy curlEasyInit;
     CURL* curl = curlEasyInit.get();
 
-    // Open the outputFile in binary form 
+    // Open the outputFile in binary form
     std::ofstream outputFile(output, std::ios::binary);
-    if(!isOpen(outputFile, "Failed to create or open local outputfile")){
-        return false;
-    }
+    if(!isOpen(outputFile, "Failed to create or open local outputfile")) return false;
 
     curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeDataCallback);
@@ -253,9 +250,9 @@ static bool verifyDownload(const configYaml& dataYAML, const configGlobal& confi
     iteration(dataYAML, [&](int year, int month){
         std::string outputPath = configGl.getOutputPath(year, month);
         std::string url = configGl.getDownloadUrl(year, month);
-        bool exists = existsFile(configGl.getOutputPath(year, month));
+        bool exists = existsFile(outputPath);
 
-        spdlog::info("link: {}", configGl.getDownloadUrl(year, month));
+        spdlog::info("link: {}", url);
         ready = (!readyToProcess(outputPath, url, exists)) ? false : true;
     });
 
@@ -263,7 +260,7 @@ static bool verifyDownload(const configYaml& dataYAML, const configGlobal& confi
 }
 
 template <typename Func, typename... Args>
-// allows an indefinite number of arguments 
+// Measures the duration from the start to an end time
 auto timeLapse(Func&& function, Args&&... args){
     auto start = std::chrono::high_resolution_clock::now();
     /*
@@ -278,13 +275,13 @@ auto timeLapse(Func&& function, Args&&... args){
     return std::make_pair(seconds, result);
 }
 
-static nlohmann::ordered_json buildManifestJson(const configYaml& dataYAML, const configGlobal& configGl){
+nlohmann::ordered_json buildManifestJson(const configYaml& dataYAML, const configGlobal& configGl){
     nlohmann::ordered_json dataJson;
     auto [time, download] = timeLapse(verifyDownload, dataYAML, configGl);
     dataJson["dataset"] = dataYAML.datasetName;
     dataJson["files"] = nlohmann::ordered_json::array();
     dataJson["download_time"] = std::to_string(time) + "s";
-    
+
     iteration(dataYAML, [&](int year, int month){
         dataJson["files"].push_back({
             {"year", year},
@@ -317,20 +314,21 @@ static bool generateJsonFile(const configYaml& dataYAML, const configGlobal& con
         std::string fileName = generateTimestamp(manifest);
 
         std::ofstream file(fileName);
-        if(!isOpen(file, "Failed to open or create local output file")) return false; 
+        if(!isOpen(file, "Failed to open or create local output file")) return false;
 
         auto jsonData = buildManifestJson(dataYAML, configGl);
         file<<std::setw(4)<<jsonData;
         return file.good();
-    } catch(const nlohmann::json::exception& e){
-        spdlog::error("Json error: {}", e.what());
+    } catch(const std::exception& e){
+        spdlog::error("Error: {}", e.what());
         return false;
     }
 }
 
-static arrow::Status inspectSchema(const std::string& file){  
+// Print the entire schema, numbers of columns and rows
+static arrow::Status inspectSchema(const std::string& file){
     arrow::MemoryPool* pool = arrow::default_memory_pool();
-    std::shared_ptr<arrow::io::RandomAccessFile> input; 
+    std::shared_ptr<arrow::io::RandomAccessFile> input;
     ARROW_ASSIGN_OR_RAISE(input, arrow::io::ReadableFile::Open(file));
 
     // Create a readerFile
@@ -362,16 +360,16 @@ public:
 class DownloadCommand : public ICommand{
 private:
     const configYaml& dataYAML;
-    const configGlobal& configGl;    
+    const configGlobal& configGl;
 
     void execute(){
         spdlog::info("Type of dataset: {}\n", configGl.carType);
 
-        if(!validateOrLog(ensureOutputDir(dataYAML.outputDir), "The output file could not be secured")){
+        if(!hasValue(ensureOutputDir(dataYAML.outputDir), "The output file could not be secured")){
             return;
         }
 
-        spdlog::info("Manifest: {}", generateJsonFile(dataYAML, configGl) 
+        spdlog::info("Manifest: {}", generateJsonFile(dataYAML, configGl)
             ? "created" : "could not be created");
     }
 
@@ -394,7 +392,7 @@ private:
     std::string file;
     void execute(){
         auto status = inspectSchema(file);
-        
+
         if(!status.ok()){
             spdlog::error("{}", status.ToString());
         }
