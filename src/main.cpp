@@ -390,7 +390,7 @@ public:
     {}
 
     void registerCommand(CLI::App& app) override{
-        auto* cmd = app.add_subcommand("download", "Download .parquet files");
+        auto* cmd = app.add_subcommand("download", "Download the .parquet files from the yaml");
 
         cmd->callback([this]{
             this->execute();
@@ -409,7 +409,7 @@ private:
 
 public:
     void registerCommand(CLI::App& app) override{
-        auto* cmd = app.add_subcommand("inspect", "Shortcut to inspect a file structure");
+        auto* cmd = app.add_subcommand("inspect", "show number of columns, rows, and the schema");
         cmd->add_option("path", file, "Path to input Parquet file for inspect")
             ->required()
             ->check(CLI::ExistingFile);
