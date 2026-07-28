@@ -281,10 +281,10 @@ auto timeLapse(Func&& function, Args&&... args){
 static nlohmann::ordered_json buildManifestJson(const configYaml& dataYAML, const configGlobal& configGl){
     nlohmann::ordered_json dataJson;
     auto [time, download] = timeLapse(verifyDownload, dataYAML, configGl);
-    dataJson["download_time"] = std::to_string(time) + "s";
     dataJson["dataset"] = dataYAML.datasetName;
     dataJson["files"] = nlohmann::ordered_json::array();
-
+    dataJson["download_time"] = std::to_string(time) + "s";
+    
     iteration(dataYAML, [&](int year, int month){
         dataJson["files"].push_back({
             {"year", year},
