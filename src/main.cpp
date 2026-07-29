@@ -1,15 +1,11 @@
 #include <fmt/core.h>
 #include <spdlog/spdlog.h>
-#include <yaml-cpp/yaml.h>
 #include <CLI/CLI.hpp>
 #include <string>
 #include <vector>
 #include <filesystem>
 #include <memory>
 #include <cstdlib>
-#include <arrow/api.h>
-#include <arrow/io/file.h>
-#include <parquet/arrow/reader.h>
 #include <nlohmann/json.hpp>
 #include <fstream>
 #include <chrono>
@@ -22,21 +18,7 @@
 #include "Utils/MeasureTime.hpp"
 #include "Filesystem/EnsureDirectory.hpp"
 #include "Download/parquetFiles.hpp"
-
-// Function to receive the network data and insert in the outputFile
-// static size_t writeDataCallback(void* ptr, size_t size, size_t numberMember, void* stream){
-//     size_t totalBytes = size * numberMember;
-//     std::ofstream* outputFile = static_cast<std::ofstream*>(stream);
-
-    // Insert the binary data from the .parquet file into the outputFile
-    // outputFile->write(static_cast<const char*>(ptr), totalBytes);
-
-    /*
-    Returns totalBytes because if the amount is 0 it means a failure,
-    either due to lack of space or a download error
-    */
-//     return totalBytes;
-// }
+#include "Parquet/Inspect.hpp"
 
 template <typename T>
 [[nodiscard("Error: You need to put the function in an if statement")]]
@@ -70,37 +52,6 @@ static bool isOk(const T& element, std::string_view message){
 
     return true;
 }
-
-// static bool setDownload(const std::string& url, const std::string& output){
-//     netEasy::CurlEasy curll;
-//     CURL* curl = curll.get();
-
-//     Open the outputFile in binary form
-//     std::ofstream outputFile(output, std::ios::binary);
-//     if(!isOpen(outputFile, "Failed to create or open local outputfile")) return false;
-
-//     curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-//     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeDataCallback);
-//     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &outputFile);
-//     curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
-//     curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 1L);
-
-//     Starts the file transfer
-//     CURLcode resCode = curl_easy_perform(curl);
-//     outputFile.close();
-
-//     if(resCode != CURLE_OK){
-//         If the download failed halfway through, delete the incomplete file to prevent corruption
-//         if(std::filesystem::exists(output)){
-//             std::filesystem::remove(output);
-//         }
-
-//         spdlog::error("Libcurl transfer failed: {}", curl_easy_strerror(resCode));
-//         return false;
-//     }
-
-//     return true;
-// }
 
 template <typename InternalFunction>
 [[nodiscard("ERROR: You need to put some action in the function")]]
@@ -208,30 +159,30 @@ static bool generateJsonFile(const configYaml& dataYAML, const configGlobal& con
 }
 
 // Print the entire schema, numbers of columns and rows
-static arrow::Status inspectSchema(const std::string& file){
-    arrow::MemoryPool* pool = arrow::default_memory_pool();
-    std::shared_ptr<arrow::io::RandomAccessFile> input;
-    ARROW_ASSIGN_OR_RAISE(input, arrow::io::ReadableFile::Open(file));
+// static arrow::Status inspectSchema(const std::string& file){
+//     arrow::MemoryPool* pool = arrow::default_memory_pool();
+//     std::shared_ptr<arrow::io::RandomAccessFile> input;
+//     ARROW_ASSIGN_OR_RAISE(input, arrow::io::ReadableFile::Open(file));
 
-    // Create a readerFile
-    std::unique_ptr<parquet::arrow::FileReader> reader;
-    ARROW_ASSIGN_OR_RAISE(reader, parquet::arrow::OpenFile(input, arrow::default_memory_pool()));
+//     // Create a readerFile
+//     std::unique_ptr<parquet::arrow::FileReader> reader;
+//     ARROW_ASSIGN_OR_RAISE(reader, parquet::arrow::OpenFile(input, arrow::default_memory_pool()));
 
-    // Get the schema
-    std::shared_ptr<arrow::Schema> schema;
-    ARROW_RETURN_NOT_OK(reader->GetSchema(&schema));
+//     // Get the schema
+//     std::shared_ptr<arrow::Schema> schema;
+//     ARROW_RETURN_NOT_OK(reader->GetSchema(&schema));
 
-    // Read the metadata
-    auto metadata = reader->parquet_reader()->metadata();
+//     // Read the metadata
+//     auto metadata = reader->parquet_reader()->metadata();
 
-    spdlog::info("File: {}", file);
-    spdlog::info("Num Columns: {}", metadata->num_columns());
-    spdlog::info("Num Rows: {:L}", metadata->num_rows());
-    spdlog::info("Num Row Groups: {}", metadata->num_row_groups());
-    spdlog::info("Schema:\n{}", schema->ToString());
+//     spdlog::info("File: {}", file);
+//     spdlog::info("Num Columns: {}", metadata->num_columns());
+//     spdlog::info("Num Rows: {:L}", metadata->num_rows());
+//     spdlog::info("Num Row Groups: {}", metadata->num_row_groups());
+//     spdlog::info("Schema:\n{}", schema->ToString());
 
-    return arrow::Status::OK();
-}
+//     return arrow::Status::OK();
+// }
 
 class ICommand{
 public:
