@@ -142,8 +142,6 @@ static bool isOk(const T& element, std::string_view message){
 }
 
 static bool setDownload(const std::string& url, const std::string& output){
-    // CurlEasy curlEasyInit;
-    // CURL* curl = curlEasyInit.get();
     netEasy::CurlEasy curll;
     CURL* curl = curll.get();
 
@@ -406,7 +404,6 @@ int main(int argc, char **argv){
     CLI::App app{"EngineCabsNYC: Analysis engine for intelligent decision based on hard data"};
     std::locale::global(std::locale("en_US.UTF-8"));
     netGlobal::CurlGlobal curlGlobal;
-    // CurlGlobal curlGlobalInit;
 
     try{
         YAML::Node configFile = YAML::LoadFile("dataset_config.yaml");
