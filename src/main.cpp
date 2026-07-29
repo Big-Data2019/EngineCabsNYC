@@ -18,45 +18,8 @@
 #include <ctime>
 #include <utility>
 #include <locale>
-
-class CurlGlobal{
-public:
-    explicit CurlGlobal(long flags = CURL_GLOBAL_ALL){
-        if(curl_global_init(flags) != 0){
-            throw std::runtime_error("Failed to global initialize libcurl handler");
-        }
-    }
-    ~CurlGlobal(){
-        curl_global_cleanup();
-    }
-
-    CurlGlobal(const CurlGlobal&) = delete;
-    CurlGlobal& operator = (const CurlGlobal&) = delete;
-};
-
-class CurlEasy{
-private:
-    CURL* curl;
-
-public:
-    CurlEasy(){
-        curl = curl_easy_init();
-        if(!curl){
-            throw std::runtime_error("Failed to easy initialize libcurl handler");
-        }
-    }
-    ~CurlEasy(){
-        if(curl){
-            curl_easy_cleanup(curl);
-        }
-    }
-    CURL* get() const{
-        return curl;
-    }
-
-    CurlEasy(const CurlEasy&) = delete;
-    CurlEasy& operator = (const CurlEasy&) = delete;
-};
+#include "Network/CurlGlobal.hpp"
+#include "Network/CurlEasy.hpp"
 
 struct configYaml{
     std::string datasetName;
@@ -179,8 +142,10 @@ static bool isOk(const T& element, std::string_view message){
 }
 
 static bool setDownload(const std::string& url, const std::string& output){
-    CurlEasy curlEasyInit;
-    CURL* curl = curlEasyInit.get();
+    // CurlEasy curlEasyInit;
+    // CURL* curl = curlEasyInit.get();
+    netEasy::CurlEasy curll;
+    CURL* curl = curll.get();
 
     // Open the outputFile in binary form
     std::ofstream outputFile(output, std::ios::binary);
@@ -440,7 +405,8 @@ public:
 int main(int argc, char **argv){
     CLI::App app{"EngineCabsNYC: Analysis engine for intelligent decision based on hard data"};
     std::locale::global(std::locale("en_US.UTF-8"));
-    CurlGlobal curlGlobalInit;
+    netGlobal::CurlGlobal curlGlobal;
+    // CurlGlobal curlGlobalInit;
 
     try{
         YAML::Node configFile = YAML::LoadFile("dataset_config.yaml");
