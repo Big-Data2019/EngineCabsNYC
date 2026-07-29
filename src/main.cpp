@@ -20,64 +20,9 @@
 #include <locale>
 #include "Network/CurlGlobal.hpp"
 #include "Network/CurlEasy.hpp"
-
-struct configYaml{
-    std::string datasetName;
-    std::vector<int> years;
-    std::vector<int> months;
-    std::string outputDir;
-
-    // Constructor to get the data from the YAML and put it into variables
-    configYaml(const YAML::Node& configFile){
-        datasetName = configFile["dataset"].as<std::string>();
-        years = configFile["years"].as<std::vector<int>>();
-        months = configFile["months"].as<std::vector<int>>();
-        outputDir = configFile["output_dir"].as<std::string>();
-    }
-};
-
-static std::string toLowercase(std::string&& text){
-    std::transform(text.begin(), text.end(), text.begin(),
-        [](unsigned char c){
-            return std::tolower(c);
-    });
-
-    return std::move(text);
-}
-
-static std::string getTypeDataset(const std::string datasetName){
-    // Function lambda to ignore uppercase and lowercase letters
-    static const re2::RE2 patron = [](){
-        RE2::Options options;
-        options.set_case_sensitive(false);
-        return re2::RE2("(fhvhv|fhv|yellow|green)", options);
-    }();
-
-    // Search for one of the previously stated words
-    if(std::string carType; RE2::PartialMatch(datasetName, patron, &carType)){
-        return toLowercase(std::move(carType));
-    } else{
-        return "";
-    }
-}
-
-struct configGlobal{
-    static constexpr std::string_view baseUrl = "https://d37ci6vzurychx.cloudfront.net/trip-data";
-    const std::string carType;
-    const std::string outputDir;
-
-    configGlobal(const configYaml& dataYAML)
-        : carType(getTypeDataset(dataYAML.datasetName)), outputDir(dataYAML.outputDir)
-    {}
-
-    std::string getDownloadUrl(int year, int month) const{
-        return fmt::format("{}/{}_tripdata_{}-{:02}.parquet", baseUrl, carType, year, month);
-    }
-
-    std::string getOutputPath(int year, int month) const{
-        return fmt::format("{}/dataset_{}-{:02}.parquet", outputDir, year, month);
-    }
-};
+#include "Config/ConfigGlobal.hpp"
+#include "Config/ConfigYaml.hpp"
+#include "Utils/MeasureTime.hpp"
 
 static bool ensureOutputDir(const std::string& outputDir){
     std::filesystem::path currentWorkingDir = std::filesystem::current_path();
@@ -198,13 +143,6 @@ static bool existsFile(const std::string& file){
     }
 }
 
-static double calculateMegabytes(const std::string& outputPath){
-    std::uintmax_t bytes = std::filesystem::file_size(outputPath);
-    double megabytes = bytes / (1024.0 * 1024.0);
-
-    return megabytes;
-}
-
 static bool readyToProcess(const std::string& outputPath, const std::string& url, bool exists){
     if(!exists){
         if(!setDownload(url, outputPath)){
@@ -213,7 +151,8 @@ static bool readyToProcess(const std::string& outputPath, const std::string& url
         }
     }
 
-    double megabytes = calculateMegabytes(outputPath);
+    std::uintmax_t bytes = std::filesystem::file_size(outputPath);
+    double megabytes = bytes / (1024.0 * 1024.0);
     spdlog::info("File size: {:.2f} Mb\n", megabytes);
     return true;
 }
@@ -233,21 +172,21 @@ static bool verifyDownload(const configYaml& dataYAML, const configGlobal& confi
     return (!ready) ? false : true;
 }
 
-template <typename Func, typename... Args>
+// template <typename Func, typename... Args>
 // Measures the duration from the start to an end time
-auto timeLapse(Func&& function, Args&&... args){
-    auto start = std::chrono::high_resolution_clock::now();
-    /*
-    Call the function, Forward the arguments exactly as they arrived
-    And it stores the result of the function in the variable "result"
-    */
-    auto result = std::forward<Func>(function)(std::forward<Args>(args)...);
-    auto end = std::chrono::high_resolution_clock::now();
+// auto timeLapse(Func&& function, Args&&... args){
+//     auto start = std::chrono::high_resolution_clock::now();
+//     // /*
+//     // Call the function, Forward the arguments exactly as they arrived
+//     // And it stores the result of the function in the variable "result"
+//     // */
+//     auto result = std::forward<Func>(function)(std::forward<Args>(args)...);
+//     auto end = std::chrono::high_resolution_clock::now();
 
-    long long seconds = std::chrono::duration_cast<std::chrono::seconds>(end - start).count();
+//     long long seconds = std::chrono::duration_cast<std::chrono::seconds>(end - start).count();
 
-    return std::make_pair(seconds, result);
-}
+//     return std::make_pair(seconds, result);
+// }
 
 nlohmann::ordered_json buildManifestJson(const configYaml& dataYAML, const configGlobal& configGl){
     nlohmann::ordered_json dataJson;

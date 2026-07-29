@@ -1,4 +1,5 @@
 #include "Network/CurlEasy.hpp"
+#include <stdexcept>
 
 namespace netEasy{
 CurlEasy::CurlEasy()

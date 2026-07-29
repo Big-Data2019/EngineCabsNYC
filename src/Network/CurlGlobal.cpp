@@ -1,4 +1,5 @@
 #include "Network/CurlGlobal.hpp"
+#include <stdexcept>
 
 namespace netGlobal{
 CurlGlobal::CurlGlobal(long flags){
