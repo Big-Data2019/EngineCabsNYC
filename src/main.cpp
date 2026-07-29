@@ -5,54 +5,38 @@
 #include <string>
 #include <vector>
 #include <filesystem>
-#include <re2/re2.h>
 #include <memory>
 #include <cstdlib>
 #include <arrow/api.h>
 #include <arrow/io/file.h>
 #include <parquet/arrow/reader.h>
 #include <nlohmann/json.hpp>
-#include <curl/curl.h>
 #include <fstream>
 #include <chrono>
 #include <ctime>
 #include <utility>
 #include <locale>
 #include "Network/CurlGlobal.hpp"
-#include "Network/CurlEasy.hpp"
 #include "Config/ConfigGlobal.hpp"
 #include "Config/ConfigYaml.hpp"
 #include "Utils/MeasureTime.hpp"
 #include "Filesystem/EnsureDirectory.hpp"
-
-// static bool ensureOutputDir(const std::string& outputDir){
-//     std::filesystem::path currentWorkingDir = std::filesystem::current_path();
-//     std::filesystem::path routeToDownload = currentWorkingDir / outputDir;
-//     std::error_code errorCode;
-
-//     std::filesystem::create_directories(routeToDownload, errorCode);
-//     if(std::filesystem::is_directory(routeToDownload) && !errorCode){
-//         return true;
-//     } else{
-//         spdlog::error("Folder failed to load because: {}", errorCode.message());
-//         return false;
-//     }
-// }
+#include "Download/parquetFiles.hpp"
 
 // Function to receive the network data and insert in the outputFile
-static size_t writeDataCallback(void* ptr, size_t size, size_t numberMember, void* stream){
-    size_t totalBytes = size * numberMember;
-    std::ofstream* outputFile = static_cast<std::ofstream*>(stream);
+// static size_t writeDataCallback(void* ptr, size_t size, size_t numberMember, void* stream){
+//     size_t totalBytes = size * numberMember;
+//     std::ofstream* outputFile = static_cast<std::ofstream*>(stream);
 
     // Insert the binary data from the .parquet file into the outputFile
-    outputFile->write(static_cast<const char*>(ptr), totalBytes);
+    // outputFile->write(static_cast<const char*>(ptr), totalBytes);
 
     /*
     Returns totalBytes because if the amount is 0 it means a failure,
     either due to lack of space or a download error
     */
-    return totalBytes;
-}
+//     return totalBytes;
+// }
 
 template <typename T>
 [[nodiscard("Error: You need to put the function in an if statement")]]
@@ -87,36 +71,36 @@ static bool isOk(const T& element, std::string_view message){
     return true;
 }
 
-static bool setDownload(const std::string& url, const std::string& output){
-    netEasy::CurlEasy curll;
-    CURL* curl = curll.get();
+// static bool setDownload(const std::string& url, const std::string& output){
+//     netEasy::CurlEasy curll;
+//     CURL* curl = curll.get();
 
-    // Open the outputFile in binary form
-    std::ofstream outputFile(output, std::ios::binary);
-    if(!isOpen(outputFile, "Failed to create or open local outputfile")) return false;
+//     Open the outputFile in binary form
+//     std::ofstream outputFile(output, std::ios::binary);
+//     if(!isOpen(outputFile, "Failed to create or open local outputfile")) return false;
 
-    curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeDataCallback);
-    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &outputFile);
-    curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
-    curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 1L);
+//     curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+//     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeDataCallback);
+//     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &outputFile);
+//     curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
+//     curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 1L);
 
-    // Starts the file transfer
-    CURLcode resCode = curl_easy_perform(curl);
-    outputFile.close();
+//     Starts the file transfer
+//     CURLcode resCode = curl_easy_perform(curl);
+//     outputFile.close();
 
-    if(resCode != CURLE_OK){
-        // If the download failed halfway through, delete the incomplete file to prevent corruption
-        if(std::filesystem::exists(output)){
-            std::filesystem::remove(output);
-        }
+//     if(resCode != CURLE_OK){
+//         If the download failed halfway through, delete the incomplete file to prevent corruption
+//         if(std::filesystem::exists(output)){
+//             std::filesystem::remove(output);
+//         }
 
-        spdlog::error("Libcurl transfer failed: {}", curl_easy_strerror(resCode));
-        return false;
-    }
+//         spdlog::error("Libcurl transfer failed: {}", curl_easy_strerror(resCode));
+//         return false;
+//     }
 
-    return true;
-}
+//     return true;
+// }
 
 template <typename InternalFunction>
 [[nodiscard("ERROR: You need to put some action in the function")]]
@@ -146,7 +130,7 @@ static bool existsFile(const std::string& file){
 
 static bool readyToProcess(const std::string& outputPath, const std::string& url, bool exists){
     if(!exists){
-        if(!setDownload(url, outputPath)){
+        if(!downloadFiles(url, outputPath)){
             spdlog::error("The download failed for the period");
             return false;
         }

@@ -25,6 +25,7 @@ add_executable(EngineCabsNYC
     src/Config/ConfigGlobal.cpp
     src/Config/DatasetType.cpp
     src/Filesystem/EnsureDirectory.cpp
+    src/Download/parquetFiles.cpp
 )
 
 target_link_libraries(EngineCabsNYC PRIVATE 
