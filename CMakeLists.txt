@@ -24,6 +24,7 @@ add_executable(EngineCabsNYC
     src/Config/ConfigYaml.cpp
     src/Config/ConfigGlobal.cpp
     src/Config/DatasetType.cpp
+    src/Filesystem/EnsureDirectory.cpp
 )
 
 target_link_libraries(EngineCabsNYC PRIVATE 

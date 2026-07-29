@@ -23,20 +23,21 @@
 #include "Config/ConfigGlobal.hpp"
 #include "Config/ConfigYaml.hpp"
 #include "Utils/MeasureTime.hpp"
+#include "Filesystem/EnsureDirectory.hpp"
 
-static bool ensureOutputDir(const std::string& outputDir){
-    std::filesystem::path currentWorkingDir = std::filesystem::current_path();
-    std::filesystem::path routeToDownload = currentWorkingDir / outputDir;
-    std::error_code errorCode;
+// static bool ensureOutputDir(const std::string& outputDir){
+//     std::filesystem::path currentWorkingDir = std::filesystem::current_path();
+//     std::filesystem::path routeToDownload = currentWorkingDir / outputDir;
+//     std::error_code errorCode;
 
-    std::filesystem::create_directories(routeToDownload, errorCode);
-    if(std::filesystem::is_directory(routeToDownload) && !errorCode){
-        return true;
-    } else{
-        spdlog::error("Folder failed to load because: {}", errorCode.message());
-        return false;
-    }
-}
+//     std::filesystem::create_directories(routeToDownload, errorCode);
+//     if(std::filesystem::is_directory(routeToDownload) && !errorCode){
+//         return true;
+//     } else{
+//         spdlog::error("Folder failed to load because: {}", errorCode.message());
+//         return false;
+//     }
+// }
 
 // Function to receive the network data and insert in the outputFile
 static size_t writeDataCallback(void* ptr, size_t size, size_t numberMember, void* stream){
@@ -171,22 +172,6 @@ static bool verifyDownload(const configYaml& dataYAML, const configGlobal& confi
 
     return (!ready) ? false : true;
 }
-
-// template <typename Func, typename... Args>
-// Measures the duration from the start to an end time
-// auto timeLapse(Func&& function, Args&&... args){
-//     auto start = std::chrono::high_resolution_clock::now();
-//     // /*
-//     // Call the function, Forward the arguments exactly as they arrived
-//     // And it stores the result of the function in the variable "result"
-//     // */
-//     auto result = std::forward<Func>(function)(std::forward<Args>(args)...);
-//     auto end = std::chrono::high_resolution_clock::now();
-
-//     long long seconds = std::chrono::duration_cast<std::chrono::seconds>(end - start).count();
-
-//     return std::make_pair(seconds, result);
-// }
 
 nlohmann::ordered_json buildManifestJson(const configYaml& dataYAML, const configGlobal& configGl){
     nlohmann::ordered_json dataJson;
