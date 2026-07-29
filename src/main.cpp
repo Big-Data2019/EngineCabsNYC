@@ -21,7 +21,7 @@
 
 class CurlGlobal{
 public:
-    CurlGlobal(long flags = CURL_GLOBAL_ALL){
+    explicit CurlGlobal(long flags = CURL_GLOBAL_ALL){
         if(curl_global_init(flags) != 0){
             throw std::runtime_error("Failed to global initialize libcurl handler");
         }
@@ -116,7 +116,7 @@ struct configGlobal{
     }
 };
 
-static bool ensureOutputDir(const std::string outputDir){
+static bool ensureOutputDir(const std::string& outputDir){
     std::filesystem::path currentWorkingDir = std::filesystem::current_path();
     std::filesystem::path routeToDownload = currentWorkingDir / outputDir;
     std::error_code errorCode;
@@ -400,17 +400,17 @@ public:
 
 class InspectCommand : public ICommand{
 private:
-    std::string file;
+    std::string path;
 
     void execute(){
-        auto status = inspectSchema(file);
+        auto status = inspectSchema(path);
         if(!isOk(status, "Error of the status")) return;
     }
 
 public:
     void registerCommand(CLI::App& app) override{
         auto* cmd = app.add_subcommand("inspect", "show number of columns, rows, and the schema");
-        cmd->add_option("path", file, "Path to input Parquet file for inspect")
+        cmd->add_option("path", path, "Path to input Parquet file for inspect")
             ->required()
             ->check(CLI::ExistingFile);
         

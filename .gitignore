@@ -7,3 +7,5 @@ out/
 Release/
 
 Debug/
+
+*.vscode
