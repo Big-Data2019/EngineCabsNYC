@@ -17,7 +17,11 @@ find_package(nlohmann_json CONFIG REQUIRED)
 find_package(CURL CONFIG REQUIRED)
 
 # Add main executable
-add_executable(EngineCabsNYC src/main.cpp)
+add_executable(EngineCabsNYC 
+    src/main.cpp
+    src/Network/CurlGlobal.cpp
+    src/Network/CurlEasy.cpp
+)
 
 target_link_libraries(EngineCabsNYC PRIVATE 
     yaml-cpp 
@@ -31,7 +35,6 @@ target_link_libraries(EngineCabsNYC PRIVATE
     CURL::libcurl
 )
 
-# Add test executable
 add_executable(EngineCabsNYC_tests tests/test_main.cpp)
 
 target_link_libraries(EngineCabsNYC_tests PRIVATE 
@@ -39,7 +42,6 @@ target_link_libraries(EngineCabsNYC_tests PRIVATE
     GTest::gtest_main
 )
 
-# Add benchmark executable
 add_executable(EngineCabsNYC_bench benchmarks/bench_main.cpp)
 
 target_link_libraries(EngineCabsNYC_bench PRIVATE 
@@ -51,4 +53,8 @@ configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/dataset_config.yaml 
     ${CMAKE_CURRENT_BINARY_DIR}/dataset_config.yaml 
     COPYONLY
+)
+
+target_include_directories(EngineCabsNYC PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/Include
 )
