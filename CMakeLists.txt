@@ -21,6 +21,9 @@ add_executable(EngineCabsNYC
     src/main.cpp
     src/Network/CurlGlobal.cpp
     src/Network/CurlEasy.cpp
+    src/Config/ConfigYaml.cpp
+    src/Config/ConfigGlobal.cpp
+    src/Config/DatasetType.cpp
 )
 
 target_link_libraries(EngineCabsNYC PRIVATE 

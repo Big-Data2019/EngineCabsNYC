@@ -1,6 +1,5 @@
 #pragma once
 #include <curl/curl.h>
-#include <stdexcept>
 
 namespace netGlobal{
 class CurlGlobal{
