@@ -3,12 +3,12 @@
 #include "Cli/Commands/InspectCommand.hpp"
 
 CommandRegister::CommandRegister(const configYaml& dataYaml, const configGlobal& configGl){
-    commandList.push_back(std::make_unique<InspectCommand>());
-    commandList.push_back(std::make_unique<DownloadCommand>(dataYaml, configGl));
+    registerCommand<InspectCommand>();
+    registerCommand<DownloadCommand>(dataYaml, configGl);
 }
 
-void CommandRegister::registerCommands(CLI::App& app){
-    for(auto& command : commandList){
+void CommandRegister::logCommands(CLI::App& app){
+    for(const auto& command : commandList){
         command->registerCommand(app);
     }
 }

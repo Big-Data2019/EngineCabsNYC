@@ -16,8 +16,8 @@ int main(int argc, char **argv){
         configYaml dataYAML(configFile);
         configGlobal configGl(dataYAML);
 
-        CommandRegister handler(dataYAML, configGl);
-        handler.registerCommands(app);
+        CommandRegister registry(dataYAML, configGl);
+        registry.logCommands(app);
 
         CLI11_PARSE(app, argc, argv);
     } catch(const YAML::ParserException& e){
