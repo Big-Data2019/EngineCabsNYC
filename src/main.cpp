@@ -1,8 +1,5 @@
 #include <spdlog/spdlog.h>
 #include <CLI/CLI.hpp>
-#include <arrow/api.h>
-#include <arrow/io/file.h>
-#include <parquet/arrow/reader.h>
 #include <locale>
 #include "Network/CurlGlobal.hpp"
 #include "Config/ConfigGlobal.hpp"
