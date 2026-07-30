@@ -4,7 +4,7 @@
 
 class InspectCommand final : public ICommand{
 private:
-    std::string path;
+    std::string file;
     void execute() override;
 
 public:
