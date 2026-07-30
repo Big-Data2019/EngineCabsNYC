@@ -10,6 +10,9 @@
 #include <fstream>
 #include <chrono>
 #include <ctime>
+#include <arrow/api.h>
+#include <arrow/io/file.h>
+#include <parquet/arrow/reader.h>
 #include <utility>
 #include <locale>
 #include "Network/CurlGlobal.hpp"
@@ -19,6 +22,8 @@
 #include "Filesystem/EnsureDirectory.hpp"
 #include "Download/parquetFiles.hpp"
 #include "Parquet/Inspect.hpp"
+#include "Manifest/BuildJson.hpp"
+#include "Manifest/GenerateJson.hpp"
 
 template <typename T>
 [[nodiscard("Error: You need to put the function in an if statement")]]
@@ -64,124 +69,98 @@ static void iteration(const configYaml& dataYaml, InternalFunction action){
     }
 }
 
-static bool existsFile(const std::string& file){
-    if(std::filesystem::exists(file)){
-        if(std::filesystem::file_size(file) > 0){
-            spdlog::info("File already exists locally, skipping download");
-            return true;
-        } else{
-            spdlog::warn("File {} is corrupted, re-downloading", file);
-            std::filesystem::remove(file);
-            return false;
-        }
-    } else{
-        return false;
-    }
-}
+// static bool existsFile(const std::string& file){
+//     if(std::filesystem::exists(file)){
+//         if(std::filesystem::file_size(file) > 0){
+//             spdlog::info("File already exists locally, skipping download");
+//             return true;
+//         } else{
+//             spdlog::warn("File {} is corrupted, re-downloading", file);
+//             std::filesystem::remove(file);
+//             return false;
+//         }
+//     } else{
+//         return false;
+//     }
+// }
 
-static bool readyToProcess(const std::string& outputPath, const std::string& url, bool exists){
-    if(!exists){
-        if(!downloadFiles(url, outputPath)){
-            spdlog::error("The download failed for the period");
-            return false;
-        }
-    }
+// static bool readyToProcess(const std::string& outputPath, const std::string& url, bool exists){
+//     if(!exists){
+//         if(!downloadFiles(url, outputPath)){
+//             spdlog::error("The download failed for the period");
+//             return false;
+//         }
+//     }
 
-    std::uintmax_t bytes = std::filesystem::file_size(outputPath);
-    double megabytes = bytes / (1024.0 * 1024.0);
-    spdlog::info("File size: {:.2f} Mb\n", megabytes);
-    return true;
-}
+//     std::uintmax_t bytes = std::filesystem::file_size(outputPath);
+//     double megabytes = bytes / (1024.0 * 1024.0);
+//     spdlog::info("File size: {:.2f} Mb\n", megabytes);
+//     return true;
+// }
 
-static bool verifyDownload(const configYaml& dataYAML, const configGlobal& configGl){
-    bool ready = true;
+// static bool verifyDownload(const configYaml& dataYAML, const configGlobal& configGl){
+//     bool ready = true;
 
-    iteration(dataYAML, [&](int year, int month){
-        std::string outputPath = configGl.getOutputPath(year, month);
-        std::string url = configGl.getDownloadUrl(year, month);
-        bool exists = existsFile(outputPath);
+//     iteration(dataYAML, [&](int year, int month){
+//         std::string outputPath = configGl.getOutputPath(year, month);
+//         std::string url = configGl.getDownloadUrl(year, month);
+//         bool exists = existsFile(outputPath);
 
-        spdlog::info("link: {}", url);
-        ready = (!readyToProcess(outputPath, url, exists)) ? false : true;
-    });
+//         spdlog::info("link: {}", url);
+//         ready = (!readyToProcess(outputPath, url, exists)) ? false : true;
+//     });
 
-    return (!ready) ? false : true;
-}
+//     return (!ready) ? false : true;
+// }
 
-nlohmann::ordered_json buildManifestJson(const configYaml& dataYAML, const configGlobal& configGl){
-    nlohmann::ordered_json dataJson;
-    auto [time, download] = timeLapse(verifyDownload, dataYAML, configGl);
-    dataJson["dataset"] = dataYAML.datasetName;
-    dataJson["files"] = nlohmann::ordered_json::array();
-    dataJson["download_time"] = std::to_string(time) + "s";
+// nlohmann::ordered_json buildManifestJson(const configYaml& dataYAML, const configGlobal& configGl){
+//     nlohmann::ordered_json dataJson;
+//     auto [time, download] = timeLapse(verifyDownload, dataYAML, configGl);
+//     dataJson["dataset"] = dataYAML.datasetName;
+//     dataJson["files"] = nlohmann::ordered_json::array();
+//     dataJson["download_time"] = std::to_string(time) + "s";
 
-    iteration(dataYAML, [&](int year, int month){
-        dataJson["files"].push_back({
-            {"year", year},
-            {"month", month},
-            {"path", configGl.getOutputPath(year, month)},
-            {"source", "nyc_tlc"},
-            {"status", download ? "Downloaded" : "Failed"}
-        });
-    });
+//     iteration(dataYAML, [&](int year, int month){
+//         dataJson["files"].push_back({
+//             {"year", year},
+//             {"month", month},
+//             {"path", configGl.getOutputPath(year, month)},
+//             {"source", "nyc_tlc"},
+//             {"status", download ? "Downloaded" : "Failed"}
+//         });
+//     });
 
-    return dataJson;
-}
+//     return dataJson;
+// }
 
-static std::string generateTimestamp(const std::string& name){
-    auto now = std::chrono::system_clock::now();
-    time_t timeActual = std::chrono::system_clock::to_time_t(now);
-    // Divide it into a format of year, month, day, etc
-    tm* timePart = localtime(&timeActual);
+// static std::string generateTimestamp(const std::string& name){
+//     auto now = std::chrono::system_clock::now();
+//     time_t timeActual = std::chrono::system_clock::to_time_t(now);
+//     // Divide it into a format of year, month, day, etc
+//     tm* timePart = localtime(&timeActual);
 
-    std::stringstream ss;
-    ss<<std::put_time(timePart, "%Y%m%d%H%M%S");
+//     std::stringstream ss;
+//     ss<<std::put_time(timePart, "%Y%m%d%H%M%S");
 
-    std::string timestamp = ss.str() + name;
-    return timestamp;
-}
+//     std::string timestamp = ss.str() + name;
+//     return timestamp;
+// }
 
-static bool generateJsonFile(const configYaml& dataYAML, const configGlobal& configGl){
-    try{
-        const std::string manifest = "-manifest.json";
-        std::string fileName = generateTimestamp(manifest);
+// static bool generateJsonFile(const configYaml& dataYAML, const configGlobal& configGl){
+//     try{
+//         const std::string manifest = "-manifest.json";
+//         std::string fileName = generateTimestamp(manifest);
 
-        std::ofstream file(fileName);
-        if(!isOpen(file, "Failed to open or create local output file")) return false;
+//         std::ofstream file(fileName);
+//         if(!isOpen(file, "Failed to open or create local output file")) return false;
 
-        auto jsonData = buildManifestJson(dataYAML, configGl);
-        file<<std::setw(4)<<jsonData;
-        return file.good();
-    } catch(const std::exception& e){
-        spdlog::error("Error: {}", e.what());
-        return false;
-    }
-}
-
-// Print the entire schema, numbers of columns and rows
-// static arrow::Status inspectSchema(const std::string& file){
-//     arrow::MemoryPool* pool = arrow::default_memory_pool();
-//     std::shared_ptr<arrow::io::RandomAccessFile> input;
-//     ARROW_ASSIGN_OR_RAISE(input, arrow::io::ReadableFile::Open(file));
-
-//     // Create a readerFile
-//     std::unique_ptr<parquet::arrow::FileReader> reader;
-//     ARROW_ASSIGN_OR_RAISE(reader, parquet::arrow::OpenFile(input, arrow::default_memory_pool()));
-
-//     // Get the schema
-//     std::shared_ptr<arrow::Schema> schema;
-//     ARROW_RETURN_NOT_OK(reader->GetSchema(&schema));
-
-//     // Read the metadata
-//     auto metadata = reader->parquet_reader()->metadata();
-
-//     spdlog::info("File: {}", file);
-//     spdlog::info("Num Columns: {}", metadata->num_columns());
-//     spdlog::info("Num Rows: {:L}", metadata->num_rows());
-//     spdlog::info("Num Row Groups: {}", metadata->num_row_groups());
-//     spdlog::info("Schema:\n{}", schema->ToString());
-
-//     return arrow::Status::OK();
+//         auto jsonData = buildManifestJson(dataYAML, configGl);
+//         file<<std::setw(4)<<jsonData;
+//         return file.good();
+//     } catch(const std::exception& e){
+//         spdlog::error("Error: {}", e.what());
+//         return false;
+//     }
 // }
 
 class ICommand{
