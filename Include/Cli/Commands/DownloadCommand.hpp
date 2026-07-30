@@ -7,7 +7,7 @@ class DownloadCommand final : public ICommand{
 private:
     const configYaml& dataYAML;
     const configGlobal& configGl;
-    void execute();
+    void execute() override;
 
 public:
     DownloadCommand(const configYaml& dataYAML_, const configGlobal& configGl_);

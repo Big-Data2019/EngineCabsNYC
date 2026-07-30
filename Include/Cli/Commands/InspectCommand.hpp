@@ -5,7 +5,7 @@
 class InspectCommand final : public ICommand{
 private:
     std::string path;
-    void execute();
+    void execute() override;
 
 public:
     void registerCommand(CLI::App& app) override;
