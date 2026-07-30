@@ -7,7 +7,7 @@
 struct configYaml;
 struct configGlobal;
 
-class CommandRegister{
+class CommandRegister final{
 private:
     std::vector<std::unique_ptr<ICommand>> commandList;
 

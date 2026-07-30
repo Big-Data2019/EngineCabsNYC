@@ -2,7 +2,7 @@
 #include "Cli/ICommand.hpp"
 #include <string>
 
-class InspectCommand : public ICommand{
+class InspectCommand final : public ICommand{
 private:
     std::string path;
     void execute();

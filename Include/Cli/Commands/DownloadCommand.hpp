@@ -3,7 +3,7 @@
 #include "Config/ConfigYaml.hpp"
 #include "Config/ConfigGlobal.hpp"
 
-class DownloadCommand : public ICommand{
+class DownloadCommand final : public ICommand{
 private:
     const configYaml& dataYAML;
     const configGlobal& configGl;
