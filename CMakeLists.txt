@@ -31,6 +31,9 @@ add_executable(EngineCabsNYC
     src/Manifest/Generatejson.cpp
     src/Filesystem/File.cpp
     src/Download/CheckDownload.cpp
+    src/Cli/Commands/DownloadCommand.cpp
+    src/Cli/Commands/InspectCommand.cpp
+    src/Cli/CommandHandler.cpp
 )
 
 target_link_libraries(EngineCabsNYC PRIVATE 
