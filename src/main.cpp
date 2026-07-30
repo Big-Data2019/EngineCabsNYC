@@ -4,7 +4,7 @@
 #include "Network/CurlGlobal.hpp"
 #include "Config/ConfigGlobal.hpp"
 #include "Config/ConfigYaml.hpp"
-#include "Cli/CommandHandler.hpp"
+#include "Cli/CommandRegister.hpp"
 
 int main(int argc, char **argv){
     CLI::App app{"EngineCabsNYC: Analysis engine for intelligent decision based on hard data"};
@@ -16,7 +16,7 @@ int main(int argc, char **argv){
         configYaml dataYAML(configFile);
         configGlobal configGl(dataYAML);
 
-        CommandHandler handler(dataYAML, configGl);
+        CommandRegister handler(dataYAML, configGl);
         handler.registerCommands(app);
 
         CLI11_PARSE(app, argc, argv);

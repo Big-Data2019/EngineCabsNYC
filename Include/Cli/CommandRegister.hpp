@@ -6,12 +6,12 @@
 struct configYaml;
 struct configGlobal;
 
-class CommandHandler{
+class CommandRegister{
 private:
     std::vector<std::unique_ptr<ICommand>> commandList;
 
 public:
-    CommandHandler(const configYaml& dataYAML, const configGlobal& configGl);
+    CommandRegister(const configYaml& dataYAML, const configGlobal& configGl);
 
     void registerCommands(CLI::App& app);
 };

@@ -33,7 +33,7 @@ add_executable(EngineCabsNYC
     src/Download/CheckDownload.cpp
     src/Cli/Commands/DownloadCommand.cpp
     src/Cli/Commands/InspectCommand.cpp
-    src/Cli/CommandHandler.cpp
+    src/Cli/CommandRegister.cpp
 )
 
 target_link_libraries(EngineCabsNYC PRIVATE 
