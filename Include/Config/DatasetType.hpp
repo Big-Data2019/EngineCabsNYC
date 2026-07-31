@@ -1,4 +1,4 @@
 #pragma once
 #include <string>
 
-std::string getTypeDataset(const std::string& datasetName);
+std::string getDatasetType(const std::string& datasetName);
