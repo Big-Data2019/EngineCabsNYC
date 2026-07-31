@@ -1,9 +1,9 @@
-#include <spdlog/spdlog.h>
-#include <CLI/CLI.hpp>
-#include <locale>
 #include "Network/CurlGlobal.hpp"
 #include "Config/Config.hpp"
 #include "Cli/CommandRegister.hpp"
+#include <spdlog/spdlog.h>
+#include <CLI/CLI.hpp>
+#include <locale>
 
 int main(int argc, char **argv){
     CLI::App app{"EngineCabsNYC: Analysis engine for intelligent decision based on hard data"};
