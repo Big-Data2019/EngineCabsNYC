@@ -12,7 +12,7 @@ void DownloadCommand::execute(){
     spdlog::info("Type of dataset: {}", getTypeDataset(config.datasetName()));
 
     if(!createOutputDir(config.outputDir())){
-        spdlog::error("The output file could not be secured");
+        spdlog::error("The output file {} could not be secured", config.outputDir());
         return;
     }
 
