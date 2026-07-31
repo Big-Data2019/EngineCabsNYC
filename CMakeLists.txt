@@ -23,7 +23,7 @@ add_executable(EngineCabsNYC
     src/Network/CurlEasy.cpp
     src/Config/Config.cpp
     src/Config/DatasetType.cpp
-    src/Filesystem/EnsureDirectory.cpp
+    src/Filesystem/CreateOutputDir.cpp
     src/Download/parquetFiles.cpp
     src/Parquet/Inspect.cpp
     src/Filesystem/File.cpp
