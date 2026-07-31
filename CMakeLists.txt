@@ -36,7 +36,7 @@ add_executable(EngineCabsNYC
 )
 
 target_link_libraries(EngineCabsNYC PRIVATE 
-    yaml-cpp 
+    yaml-cpp::yaml-cpp
     spdlog::spdlog
     fmt::fmt
     CLI11::CLI11
