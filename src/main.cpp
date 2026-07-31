@@ -2,8 +2,7 @@
 #include <CLI/CLI.hpp>
 #include <locale>
 #include "Network/CurlGlobal.hpp"
-#include "Config/ConfigGlobal.hpp"
-#include "Config/ConfigYaml.hpp"
+#include "Config/Config.hpp"
 #include "Cli/CommandRegister.hpp"
 
 int main(int argc, char **argv){
@@ -13,10 +12,9 @@ int main(int argc, char **argv){
 
     try{
         YAML::Node configFile = YAML::LoadFile("dataset_config.yaml");
-        configYaml dataYAML(configFile);
-        configGlobal configGl(dataYAML);
+        Config config("dataset_config.yaml");
 
-        CommandRegister registry(dataYAML, configGl);
+        CommandRegister registry(config);
         registry.logCommands(app);
 
         CLI11_PARSE(app, argc, argv);

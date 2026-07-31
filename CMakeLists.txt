@@ -26,13 +26,14 @@ add_executable(EngineCabsNYC
     src/Filesystem/EnsureDirectory.cpp
     src/Download/parquetFiles.cpp
     src/Parquet/Inspect.cpp
-    src/Manifest/BuildJson.cpp
-    src/Manifest/Generatejson.cpp
     src/Filesystem/File.cpp
     src/Download/CheckDownload.cpp
     src/Cli/Commands/DownloadCommand.cpp
     src/Cli/Commands/InspectCommand.cpp
     src/Cli/CommandRegister.cpp
+    src/Manifest/Json/ParquetDownload.cpp
+    src/Manifest/JsonBuilder.cpp
+    src/Manifest/JsonGenerator.cpp
 )
 
 target_link_libraries(EngineCabsNYC PRIVATE 
