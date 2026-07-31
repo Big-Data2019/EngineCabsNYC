@@ -15,7 +15,7 @@ Config::Config(const YAML::Node& node) :
 
 std::string Config::downloadUrl(int year, int month) const{
     return fmt::format("{}/{}_tripdata_{}-{:02}.parquet",
-        baseUrl, getDatasetType(datasetName_), year, month
+        baseUrl, getTypeDataset(datasetName_), year, month
     );
 }
 
