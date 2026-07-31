@@ -11,9 +11,8 @@ int main(int argc, char **argv){
     netGlobal::CurlGlobal curlGlobal;
 
     try{
-        YAML::Node configFile = YAML::LoadFile("dataset_config.yaml");
         Config config("dataset_config.yaml");
-
+        
         CommandRegister registry(config);
         registry.logCommands(app);
 
