@@ -15,7 +15,7 @@ bool readyToProcess(const std::string& outputPath, const std::string& url, bool 
 
     std::uintmax_t bytes = std::filesystem::file_size(outputPath);
     double megabytes = bytes / (1024.0 * 1024.0);
-    spdlog::info("File size: {:.2f} Mb", megabytes);
+    spdlog::info("File size: {:.2f} Mb\n", megabytes);
     return true;
 }
 }
