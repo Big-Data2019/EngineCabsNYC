@@ -1,11 +1,9 @@
 #pragma once
 #include "Cli/ICommand.hpp"
+#include "Config/Config.hpp"
 #include <vector>
 #include <memory>
 #include <utility>
-
-struct configYaml;
-struct configGlobal;
 
 class CommandRegister final{
 private:
@@ -19,6 +17,6 @@ private:
     }
 
 public:
-    CommandRegister(const configYaml& dataYAML, const configGlobal& configGl);
+    CommandRegister(const Config& config);
     void logCommands(CLI::App& app);
 };

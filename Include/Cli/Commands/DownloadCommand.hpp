@@ -1,15 +1,13 @@
 #pragma once
 #include "Cli/ICommand.hpp"
-#include "Config/ConfigYaml.hpp"
-#include "Config/ConfigGlobal.hpp"
+#include "Config/Config.hpp"
 
 class DownloadCommand final : public ICommand{
 private:
-    const configYaml& dataYAML;
-    const configGlobal& configGl;
+    const Config& config;
     void execute() override;
 
 public:
-    DownloadCommand(const configYaml& dataYAML_, const configGlobal& configGl_);
+    DownloadCommand(const Config& config_);
     void registerCommand(CLI::App& app) override;
 };

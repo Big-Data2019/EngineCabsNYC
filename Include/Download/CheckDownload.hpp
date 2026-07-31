@@ -1,5 +1,4 @@
 #pragma once
-#include "Config/ConfigYaml.hpp"
-#include "Config/ConfigGlobal.hpp"
+#include "Config/Config.hpp"
 
-bool verifyDownload(const configYaml& dataYaml, const configGlobal& configGl);
+bool verifyDownload(const Config& config);

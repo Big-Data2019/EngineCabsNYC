@@ -20,13 +20,13 @@ bool readyToProcess(const std::string& outputPath, const std::string& url, bool 
 }
 }
 
-bool verifyDownload(const configYaml& dataYaml, const configGlobal& configGl){
+bool verifyDownload(const Config& config){
     bool ready = true;
 
-    for(auto& year : dataYaml.years){
-        for(auto& month : dataYaml.months){
-            std::string outputPath = configGl.getOutputPath(year, month);
-            std::string url = configGl.getDownloadUrl(year, month);
+    for(auto& year : config.years()){
+        for(auto& month : config.months()){
+            std::string outputPath = config.outputPath(year, month);
+            std::string url = config.downloadUrl(year, month);
             bool exists = existsFile(outputPath);
 
             spdlog::info("Link: {}", url);
