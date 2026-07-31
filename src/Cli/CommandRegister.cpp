@@ -2,9 +2,9 @@
 #include "Cli/Commands/DownloadCommand.hpp"
 #include "Cli/Commands/InspectCommand.hpp"
 
-CommandRegister::CommandRegister(const configYaml& dataYaml, const configGlobal& configGl){
+CommandRegister::CommandRegister(const Config& config){
     registerCommand<InspectCommand>();
-    registerCommand<DownloadCommand>(dataYaml, configGl);
+    registerCommand<DownloadCommand>(config);
 }
 
 void CommandRegister::logCommands(CLI::App& app){

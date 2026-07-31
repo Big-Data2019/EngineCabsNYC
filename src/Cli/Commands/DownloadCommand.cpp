@@ -1,22 +1,22 @@
 #include "Cli/Commands/DownloadCommand.hpp"
-#include "Filesystem/EnsureDirectory.hpp"
-#include "Manifest/GenerateJson.hpp"
+#include "Filesystem/CreateOutputDir.hpp"
+#include "Config/DatasetType.hpp"
+#include "Manifest/Json/ParquetDownload.hpp"
 #include <spdlog/spdlog.h>
 
-DownloadCommand::DownloadCommand(const configYaml& dataYaml_, const configGlobal& configGl_)
-    : dataYAML(dataYaml_), configGl(configGl_)
+DownloadCommand::DownloadCommand(const Config& config_)
+    : config(config_)
 {}
 
 void DownloadCommand::execute(){
-    spdlog::info("Type of dataset: {}", configGl.carType);
+    spdlog::info("Type of dataset: {}", getTypeDataset(config.datasetName()));
 
-    if(!ensureOutputDir(dataYAML.outputDir)){
+    if(!createOutputDir(config.outputDir())){
         spdlog::error("The output file could not be secured");
         return;
     }
 
-    spdlog::info("Manifest: {}", generateJsonFile(dataYAML, configGl)
-        ? "created" : "could not be created");
+    Manifest::generateDownloadManifest(config);
 }
 
 void DownloadCommand::registerCommand(CLI::App& app){
