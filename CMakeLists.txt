@@ -16,11 +16,19 @@ find_package(re2 CONFIG REQUIRED)
 find_package(nlohmann_json CONFIG REQUIRED)
 find_package(CURL CONFIG REQUIRED)
 
-# Add main executable
-add_executable(EngineCabsNYC 
-    src/main.cpp
+add_library(Network
     src/Network/CurlGlobal.cpp
     src/Network/CurlEasy.cpp
+)
+
+target_include_directories(Network PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
+
+target_link_libraries(Network PRIVATE 
+    CURL::libcurl
+)
+
+add_executable(EngineCabsNYC 
+    src/main.cpp
     src/Config/Config.cpp
     src/Config/DatasetType.cpp
     src/Filesystem/CreateOutputDir.cpp
@@ -45,7 +53,7 @@ target_link_libraries(EngineCabsNYC PRIVATE
     Parquet::parquet_shared
     re2::re2
     nlohmann_json::nlohmann_json
-    CURL::libcurl
+    Network
 )
 
 add_executable(EngineCabsNYC_tests tests/test_main.cpp)
