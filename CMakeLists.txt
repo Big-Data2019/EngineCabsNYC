@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.16)
 project(EngineCabsNYC)
 
 set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Add source files
 find_package(GTest CONFIG REQUIRED)
@@ -58,6 +60,8 @@ target_link_libraries(Manifest
 PRIVATE
     spdlog::spdlog
 PUBLIC
+    Config
+    Download
     nlohmann_json::nlohmann_json
 )
 
@@ -71,7 +75,11 @@ target_include_directories(Download PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
 
 target_link_libraries(Download
 PRIVATE
+    Network
+    Filesystem
     spdlog::spdlog
+PUBLIC
+    Config
 )
 
 # Filesystem library
@@ -113,8 +121,12 @@ target_include_directories(Cli PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
 
 target_link_libraries(Cli
 PRIVATE
+    Manifest
+    Filesystem
+    Parquet
     spdlog::spdlog
 PUBLIC
+    Config
     CLI11::CLI11
 )
 
@@ -123,15 +135,11 @@ add_executable(EngineCabsNYC src/main.cpp)
 
 target_link_libraries(EngineCabsNYC
 PRIVATE
-    spdlog::spdlog
-    CLI11::CLI11
     Network
     Config
-    Manifest
-    Download
-    Filesystem
-    Parquet
     Cli
+    spdlog::spdlog
+    CLI11::CLI11
 )
 
 # Test executable
