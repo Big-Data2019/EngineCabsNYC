@@ -16,6 +16,7 @@ find_package(re2 CONFIG REQUIRED)
 find_package(nlohmann_json CONFIG REQUIRED)
 find_package(CURL CONFIG REQUIRED)
 
+# Network library
 add_library(Network
     src/Network/CurlGlobal.cpp
     src/Network/CurlEasy.cpp
@@ -28,6 +29,7 @@ PUBLIC
     CURL::libcurl
 )
 
+# Config library
 add_library(Config
     src/Config/Config.cpp
     src/Config/DatasetType.cpp
@@ -43,6 +45,7 @@ PUBLIC
     yaml-cpp::yaml-cpp
 )
 
+# Manifest library
 add_library(Manifest
     src/Manifest/Json/ParquetDownload.cpp
     src/Manifest/JsonBuilder.cpp
@@ -58,6 +61,7 @@ PUBLIC
     nlohmann_json::nlohmann_json
 )
 
+# Download library
 add_library(Download
     src/Download/parquetFiles.cpp
     src/Download/CheckDownload.cpp
@@ -70,6 +74,7 @@ PRIVATE
     spdlog::spdlog
 )
 
+# Filesystem library
 add_library(Filesystem
     src/Filesystem/CreateOutputDir.cpp
     src/Filesystem/File.cpp
@@ -82,6 +87,7 @@ PRIVATE
     spdlog::spdlog
 )
 
+# Parquet library
 add_library(Parquet
     src/Parquet/Inspect.cpp
 )
@@ -96,6 +102,7 @@ PUBLIC
     Parquet::parquet_shared
 )
 
+# Cli library
 add_library(Cli
     src/Cli/Commands/DownloadCommand.cpp
     src/Cli/Commands/InspectCommand.cpp
@@ -111,9 +118,8 @@ PUBLIC
     CLI11::CLI11
 )
 
-add_executable(EngineCabsNYC
-    src/main.cpp
-)
+# Main executable
+add_executable(EngineCabsNYC src/main.cpp)
 
 target_link_libraries(EngineCabsNYC
 PRIVATE
@@ -128,7 +134,8 @@ PRIVATE
     Cli
 )
 
-add_executable(EngineCabsNYC_tests tests/test_main.cpp)
+# Test executable
+add_executable(EngineCabsNYC_tests Tests/test_main.cpp)
 
 target_link_libraries(EngineCabsNYC_tests
 PRIVATE
@@ -136,6 +143,7 @@ PRIVATE
     GTest::gtest_main
 )
 
+# Benchmark executable
 add_executable(EngineCabsNYC_bench benchmarks/bench_main.cpp)
 
 target_link_libraries(EngineCabsNYC_bench
