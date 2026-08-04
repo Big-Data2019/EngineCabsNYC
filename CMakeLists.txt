@@ -135,18 +135,18 @@ PRIVATE
 )
 
 # Test executable
-add_executable(EngineCabsNYC_tests Tests/test_main.cpp)
+add_executable(EngineCabsNYCTests Tests/TestMain.cpp)
 
-target_link_libraries(EngineCabsNYC_tests
+target_link_libraries(EngineCabsNYCTests
 PRIVATE
     GTest::gtest
     GTest::gtest_main
 )
 
 # Benchmark executable
-add_executable(EngineCabsNYC_bench benchmarks/bench_main.cpp)
+add_executable(EngineCabsNYCBench Benchmarks/BenchMain.cpp)
 
-target_link_libraries(EngineCabsNYC_bench
+target_link_libraries(EngineCabsNYCBench
 PRIVATE
     benchmark::benchmark
 )
