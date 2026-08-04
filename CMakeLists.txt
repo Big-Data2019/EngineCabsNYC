@@ -43,6 +43,21 @@ target_link_libraries(Config
         yaml-cpp::yaml-cpp
 )
 
+add_library(Manifest
+    src/Manifest/Json/ParquetDownload.cpp
+    src/Manifest/JsonBuilder.cpp
+    src/Manifest/JsonGenerator.cpp
+)
+
+target_include_directories(Manifest PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
+
+target_link_libraries(Manifest
+    PRIVATE
+        spdlog::spdlog
+    PUBLIC
+        nlohmann_json::nlohmann_json
+)
+
 add_executable(EngineCabsNYC 
     src/main.cpp
     src/Filesystem/CreateOutputDir.cpp
@@ -53,9 +68,6 @@ add_executable(EngineCabsNYC
     src/Cli/Commands/DownloadCommand.cpp
     src/Cli/Commands/InspectCommand.cpp
     src/Cli/CommandRegister.cpp
-    src/Manifest/Json/ParquetDownload.cpp
-    src/Manifest/JsonBuilder.cpp
-    src/Manifest/JsonGenerator.cpp
 )
 
 target_link_libraries(EngineCabsNYC PRIVATE 
@@ -63,9 +75,9 @@ target_link_libraries(EngineCabsNYC PRIVATE
     CLI11::CLI11
     Arrow::arrow_shared
     Parquet::parquet_shared
-    nlohmann_json::nlohmann_json
     Network
     Config
+    Manifest
 )
 
 add_executable(EngineCabsNYC_tests tests/test_main.cpp)
