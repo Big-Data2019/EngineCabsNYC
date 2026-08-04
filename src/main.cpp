@@ -17,13 +17,10 @@ int main(int argc, char **argv){
         registry.logCommands(app);
 
         CLI11_PARSE(app, argc, argv);
-    } catch(const YAML::ParserException& e){
-        spdlog::error("Error YAML: {}", e.what());
-        return 1;
     } catch(const CLI::ParseError& e){
         return app.exit(e);
     }
-    
+
     if(argc == 1){
         spdlog::info(app.help());
         return 0;
