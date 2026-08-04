@@ -23,7 +23,7 @@ int main(int argc, char **argv){
     } catch(const CLI::ParseError& e){
         return app.exit(e);
     }
-
+    
     if(argc == 1){
         spdlog::info(app.help());
         return 0;

@@ -96,22 +96,36 @@ target_link_libraries(Parquet
         Parquet::parquet_shared
 )
 
-add_executable(EngineCabsNYC 
-    src/main.cpp
+add_library(Cli
     src/Cli/Commands/DownloadCommand.cpp
     src/Cli/Commands/InspectCommand.cpp
     src/Cli/CommandRegister.cpp
 )
 
-target_link_libraries(EngineCabsNYC PRIVATE 
-    spdlog::spdlog
-    CLI11::CLI11
-    Network
-    Config
-    Manifest
-    Download
-    Filesystem
-    Parquet
+target_include_directories(Cli PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
+
+target_link_libraries(Cli
+    PRIVATE
+        spdlog::spdlog
+    PUBLIC
+        CLI11::CLI11
+)
+
+add_executable(EngineCabsNYC 
+    src/main.cpp
+)
+
+target_link_libraries(EngineCabsNYC
+    PRIVATE
+        spdlog::spdlog
+        CLI11::CLI11
+        Network
+        Config
+        Manifest
+        Download
+        Filesystem
+        Parquet
+        Cli
 )
 
 add_executable(EngineCabsNYC_tests tests/test_main.cpp)
@@ -132,8 +146,4 @@ configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/dataset_config.yaml 
     ${CMAKE_CURRENT_BINARY_DIR}/dataset_config.yaml 
     COPYONLY
-)
-
-target_include_directories(EngineCabsNYC PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/Include
 )
