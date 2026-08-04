@@ -23,14 +23,28 @@ add_library(Network
 
 target_include_directories(Network PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
 
-target_link_libraries(Network PUBLIC 
-    CURL::libcurl
+target_link_libraries(Network 
+    PUBLIC 
+        CURL::libcurl
+)
+
+add_library(Config
+    src/Config/Config.cpp
+    src/Config/DatasetType.cpp
+)
+
+target_include_directories(Config PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
+
+target_link_libraries(Config
+    PRIVATE
+        re2::re2
+        fmt::fmt
+    PUBLIC
+        yaml-cpp::yaml-cpp
 )
 
 add_executable(EngineCabsNYC 
     src/main.cpp
-    src/Config/Config.cpp
-    src/Config/DatasetType.cpp
     src/Filesystem/CreateOutputDir.cpp
     src/Download/parquetFiles.cpp
     src/Parquet/Inspect.cpp
@@ -45,15 +59,13 @@ add_executable(EngineCabsNYC
 )
 
 target_link_libraries(EngineCabsNYC PRIVATE 
-    yaml-cpp::yaml-cpp
     spdlog::spdlog
-    fmt::fmt
     CLI11::CLI11
     Arrow::arrow_shared
     Parquet::parquet_shared
-    re2::re2
     nlohmann_json::nlohmann_json
     Network
+    Config
 )
 
 add_executable(EngineCabsNYC_tests tests/test_main.cpp)
