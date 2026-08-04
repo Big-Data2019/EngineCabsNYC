@@ -70,11 +70,21 @@ target_link_libraries(Download
         spdlog::spdlog
 )
 
+add_library(Filesystem
+    src/Filesystem/CreateOutputDir.cpp
+    src/Filesystem/File.cpp
+)
+
+target_include_directories(Filesystem PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
+
+target_link_libraries(Filesystem
+    PRIVATE
+        spdlog::spdlog
+)
+
 add_executable(EngineCabsNYC 
     src/main.cpp
-    src/Filesystem/CreateOutputDir.cpp
     src/Parquet/Inspect.cpp
-    src/Filesystem/File.cpp
     src/Cli/Commands/DownloadCommand.cpp
     src/Cli/Commands/InspectCommand.cpp
     src/Cli/CommandRegister.cpp
@@ -89,6 +99,7 @@ target_link_libraries(EngineCabsNYC PRIVATE
     Config
     Manifest
     Download
+    Filesystem
 )
 
 add_executable(EngineCabsNYC_tests tests/test_main.cpp)
