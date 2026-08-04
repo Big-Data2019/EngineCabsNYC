@@ -58,13 +58,23 @@ target_link_libraries(Manifest
         nlohmann_json::nlohmann_json
 )
 
+add_library(Download
+    src/Download/parquetFiles.cpp
+    src/Download/CheckDownload.cpp
+)
+
+target_include_directories(Download PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
+
+target_link_libraries(Download
+    PRIVATE
+        spdlog::spdlog
+)
+
 add_executable(EngineCabsNYC 
     src/main.cpp
     src/Filesystem/CreateOutputDir.cpp
-    src/Download/parquetFiles.cpp
     src/Parquet/Inspect.cpp
     src/Filesystem/File.cpp
-    src/Download/CheckDownload.cpp
     src/Cli/Commands/DownloadCommand.cpp
     src/Cli/Commands/InspectCommand.cpp
     src/Cli/CommandRegister.cpp
@@ -78,6 +88,7 @@ target_link_libraries(EngineCabsNYC PRIVATE
     Network
     Config
     Manifest
+    Download
 )
 
 add_executable(EngineCabsNYC_tests tests/test_main.cpp)
