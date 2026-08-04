@@ -82,9 +82,22 @@ target_link_libraries(Filesystem
         spdlog::spdlog
 )
 
+add_library(Parquet
+    src/Parquet/Inspect.cpp
+)
+
+target_include_directories(Parquet PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
+
+target_link_libraries(Parquet
+    PRIVATE
+        spdlog::spdlog
+    PUBLIC
+        Arrow::arrow_shared
+        Parquet::parquet_shared
+)
+
 add_executable(EngineCabsNYC 
     src/main.cpp
-    src/Parquet/Inspect.cpp
     src/Cli/Commands/DownloadCommand.cpp
     src/Cli/Commands/InspectCommand.cpp
     src/Cli/CommandRegister.cpp
@@ -93,13 +106,12 @@ add_executable(EngineCabsNYC
 target_link_libraries(EngineCabsNYC PRIVATE 
     spdlog::spdlog
     CLI11::CLI11
-    Arrow::arrow_shared
-    Parquet::parquet_shared
     Network
     Config
     Manifest
     Download
     Filesystem
+    Parquet
 )
 
 add_executable(EngineCabsNYC_tests tests/test_main.cpp)
