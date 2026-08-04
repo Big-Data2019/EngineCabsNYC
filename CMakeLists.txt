@@ -23,9 +23,9 @@ add_library(Network
 
 target_include_directories(Network PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
 
-target_link_libraries(Network 
-    PUBLIC 
-        CURL::libcurl
+target_link_libraries(Network
+PUBLIC
+    CURL::libcurl
 )
 
 add_library(Config
@@ -36,11 +36,11 @@ add_library(Config
 target_include_directories(Config PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
 
 target_link_libraries(Config
-    PRIVATE
-        re2::re2
-        fmt::fmt
-    PUBLIC
-        yaml-cpp::yaml-cpp
+PRIVATE
+    re2::re2
+    fmt::fmt
+PUBLIC
+    yaml-cpp::yaml-cpp
 )
 
 add_library(Manifest
@@ -52,10 +52,10 @@ add_library(Manifest
 target_include_directories(Manifest PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
 
 target_link_libraries(Manifest
-    PRIVATE
-        spdlog::spdlog
-    PUBLIC
-        nlohmann_json::nlohmann_json
+PRIVATE
+    spdlog::spdlog
+PUBLIC
+    nlohmann_json::nlohmann_json
 )
 
 add_library(Download
@@ -66,8 +66,8 @@ add_library(Download
 target_include_directories(Download PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
 
 target_link_libraries(Download
-    PRIVATE
-        spdlog::spdlog
+PRIVATE
+    spdlog::spdlog
 )
 
 add_library(Filesystem
@@ -78,8 +78,8 @@ add_library(Filesystem
 target_include_directories(Filesystem PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
 
 target_link_libraries(Filesystem
-    PRIVATE
-        spdlog::spdlog
+PRIVATE
+    spdlog::spdlog
 )
 
 add_library(Parquet
@@ -89,11 +89,11 @@ add_library(Parquet
 target_include_directories(Parquet PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
 
 target_link_libraries(Parquet
-    PRIVATE
-        spdlog::spdlog
-    PUBLIC
-        Arrow::arrow_shared
-        Parquet::parquet_shared
+PRIVATE
+    spdlog::spdlog
+PUBLIC
+    Arrow::arrow_shared
+    Parquet::parquet_shared
 )
 
 add_library(Cli
@@ -105,45 +105,47 @@ add_library(Cli
 target_include_directories(Cli PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
 
 target_link_libraries(Cli
-    PRIVATE
-        spdlog::spdlog
-    PUBLIC
-        CLI11::CLI11
+PRIVATE
+    spdlog::spdlog
+PUBLIC
+    CLI11::CLI11
 )
 
-add_executable(EngineCabsNYC 
+add_executable(EngineCabsNYC
     src/main.cpp
 )
 
 target_link_libraries(EngineCabsNYC
-    PRIVATE
-        spdlog::spdlog
-        CLI11::CLI11
-        Network
-        Config
-        Manifest
-        Download
-        Filesystem
-        Parquet
-        Cli
+PRIVATE
+    spdlog::spdlog
+    CLI11::CLI11
+    Network
+    Config
+    Manifest
+    Download
+    Filesystem
+    Parquet
+    Cli
 )
 
 add_executable(EngineCabsNYC_tests tests/test_main.cpp)
 
-target_link_libraries(EngineCabsNYC_tests PRIVATE 
-    GTest::gtest 
+target_link_libraries(EngineCabsNYC_tests
+PRIVATE
+    GTest::gtest
     GTest::gtest_main
 )
 
 add_executable(EngineCabsNYC_bench benchmarks/bench_main.cpp)
 
-target_link_libraries(EngineCabsNYC_bench PRIVATE 
-    benchmark::benchmark 
+target_link_libraries(EngineCabsNYC_bench
+PRIVATE
+    benchmark::benchmark
 )
 
 # Copy the dataset configuration file to the build directory
 configure_file(
-    ${CMAKE_CURRENT_SOURCE_DIR}/dataset_config.yaml 
-    ${CMAKE_CURRENT_BINARY_DIR}/dataset_config.yaml 
+    ${CMAKE_CURRENT_SOURCE_DIR}/dataset_config.yaml
+    ${CMAKE_CURRENT_BINARY_DIR}/dataset_config.yaml
     COPYONLY
 )
