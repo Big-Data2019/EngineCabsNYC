@@ -134,6 +134,22 @@ PUBLIC
     CLI11::CLI11
 )
 
+# Processors library
+add_library(Processors
+    src/Processors/RawCounter.cpp
+)
+
+target_include_directories(Processors PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
+
+target_link_libraries(Processors
+    PRIVATE
+        Arrow::arrow_shared
+        Parquet::parquet_shared
+        spdlog::spdlog
+    PUBLIC
+        Config
+)
+
 # Main executable
 add_executable(EngineCabsNYC src/main.cpp)
 
@@ -142,6 +158,7 @@ PRIVATE
     Network
     Config
     Cli
+    Processors
     spdlog::spdlog
     CLI11::CLI11
 )
