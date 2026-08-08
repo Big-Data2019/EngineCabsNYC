@@ -29,10 +29,10 @@ int main(int argc, char **argv){
         return app.exit(e);
     }
 
-    // if(argc == 1){
-    //     spdlog::info(app.help());
-    //     return 0;
-    // }
+    if(argc == 1){
+        spdlog::info(app.help());
+        return 0;
+    }
 
     return 0;
 }
