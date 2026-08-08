@@ -146,8 +146,6 @@ target_link_libraries(Processors
         Arrow::arrow_shared
         Parquet::parquet_shared
         spdlog::spdlog
-    PUBLIC
-        Config
 )
 
 # Main executable
