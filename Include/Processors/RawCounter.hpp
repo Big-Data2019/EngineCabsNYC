@@ -9,5 +9,15 @@ private:
 
 public:
     explicit RawCounter(const Config& _config);
-    arrow::Status process() override;
+
+    std::string name() const override;
+
+    std::vector<std::string> requiredColumns() const override;
+
+    arrow::Status process(
+        const arrow::RecordBatch& batch,
+        const BatchContext& context
+    ) override;
+
+    void finish() override;
 };
