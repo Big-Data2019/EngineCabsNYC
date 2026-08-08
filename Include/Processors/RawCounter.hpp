@@ -5,6 +5,7 @@
 class RawCounter final : public TripBatchProcessor{
 private:
     const Config& config;
+    int64_t numRows = 0;
 
 public:
     explicit RawCounter(const Config& _config);
