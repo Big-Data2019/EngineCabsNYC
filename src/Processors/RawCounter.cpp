@@ -4,6 +4,7 @@
 #include <arrow/record_batch.h>
 #include <vector>
 #include <spdlog/spdlog.h>
+#include <filesystem>
 
 RawCounter::RawCounter(const Config& _config)
     : config(_config)
@@ -45,6 +46,12 @@ arrow::Status RawCounter::process(){
             batchCounter++;
         }
     }
+
+    std::uintmax_t bytes = std::filesystem::file_size(config.outputPath(2024, 01));
+    double megabytes = bytes / (1024.0 * 1024.0);
+    spdlog::info("File size: {:.2f} Mb", megabytes);
+    spdlog::info("Num Rows: {}", numRows);
+    spdlog::info("Batches: {}", batchCounter);
 
     return arrow::Status::OK();
 }
