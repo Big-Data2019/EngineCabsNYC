@@ -1,3 +1,4 @@
+#pragma once
 #include "Cli/ICommand.hpp"
 
 class RunCommand final : public ICommand{
