@@ -25,6 +25,12 @@ void RunCommand::registerCommand(CLI::App& app){
         "Set the batch size of the processors"
     )->required();
 
+    cmd->add_option(
+        "--output",
+        output,
+        "Where the stats will be saved"
+    );
+
     cmd->callback([this]{
         execute();
     });
