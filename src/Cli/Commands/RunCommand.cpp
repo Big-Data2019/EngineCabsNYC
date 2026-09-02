@@ -17,7 +17,7 @@ void RunCommand::registerCommand(CLI::App& app){
         "--processors",
         processors,
         "Processors that will run the files"
-    );
+    )->required();
 
     cmd->callback([this]{
         execute();
