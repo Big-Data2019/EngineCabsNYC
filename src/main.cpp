@@ -17,13 +17,6 @@ int main(int argc, char **argv){
         CommandRegister registry(config);
         registry.logCommands(app);
 
-        std::shared_ptr<RawCounter> object = std::make_shared<RawCounter>(config);
-
-        arrow::Status status = object->process();
-        if(!status.ok()){
-            spdlog::error("Error Batch: {}", status.ToString());
-        }
-
         CLI11_PARSE(app, argc, argv);
     } catch(const CLI::ParseError& e){
         return app.exit(e);
