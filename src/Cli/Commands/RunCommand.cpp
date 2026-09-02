@@ -19,6 +19,12 @@ void RunCommand::registerCommand(CLI::App& app){
         "Processors that will run the files"
     )->required();
 
+    cmd->add_option(
+        "--batch",
+        batchSize,
+        "Set the batch size of the processors"
+    )->required();
+
     cmd->callback([this]{
         execute();
     });
