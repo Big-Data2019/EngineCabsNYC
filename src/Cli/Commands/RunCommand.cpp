@@ -13,6 +13,12 @@ void RunCommand::registerCommand(CLI::App& app){
         "Files that will be processed"
     )->required();
 
+    cmd->add_option(
+        "--processors",
+        processors,
+        "Processors that will run the files"
+    );
+
     cmd->callback([this]{
         execute();
     });
