@@ -1,6 +1,5 @@
 #pragma once
 #include <arrow/api.h>
-#include <filesystem>
 #include <string>
 
 class TripBatchProcessor{
