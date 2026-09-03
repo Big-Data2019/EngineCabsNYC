@@ -11,25 +11,27 @@ void RunCommand::registerCommand(CLI::App& app){
         "--files",
         filesToProcess,
         "Files that will be processed"
-    )->required();
+    );
 
     cmd->add_option(
         "--processors",
         processors,
         "Processors that will run the files"
-    )->required();
+    );
 
     cmd->add_option(
         "--batch",
         batchSize,
         "Set the batch size of the processors"
-    )->required();
+    );
 
     cmd->add_option(
         "--output",
         output,
         "Where the stats will be saved"
     );
+
+    cmd->require_option(4);
 
     cmd->callback([this]{
         execute();
