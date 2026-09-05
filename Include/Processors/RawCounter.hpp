@@ -7,13 +7,11 @@ private:
 
 public:
     std::string name() const override;
-
-    std::vector<std::string> requiredColumns() const override;
-
+    
     arrow::Status process(
-        const arrow::RecordBatch& batch,
-        const BatchContext& context
+        const int64_t& batchSize,
+        const std::vector<std::string>& files
     ) override;
 
-    void finish() override;
+    void finish(const std::filesystem::path& output) override;
 };
