@@ -1,57 +1,39 @@
 #include "Processors/RawCounter.hpp"
 #include <arrow/io/api.h>
 #include <parquet/arrow/reader.h>
-#include <arrow/record_batch.h>
-#include <vector>
 #include <spdlog/spdlog.h>
-#include <filesystem>
 
-RawCounter::RawCounter(const Config& _config)
-    : config(_config)
-{}
+arrow::Status RawCounter::process(const int64_t& batchSize, const std::vector<std::string>& files){
+    for(auto& file : files){
+        std::shared_ptr<arrow::io::ReadableFile> input;
+        ARROW_ASSIGN_OR_RAISE(input, arrow::io::ReadableFile::Open(file));
 
-arrow::Status RawCounter::process(){
-    std::shared_ptr<arrow::io::ReadableFile> input;
-    ARROW_ASSIGN_OR_RAISE(input, arrow::io::ReadableFile::Open(config.outputPath(2024, 01)));
+        parquet::ArrowReaderProperties readerProperties;
+        readerProperties.set_batch_size(batchSize);
 
-    parquet::ArrowReaderProperties readerProperties;
-    readerProperties.set_batch_size(65536);
+        // Builder to create the properties
+        parquet::arrow::FileReaderBuilder readerBuilder;
+        ARROW_RETURN_NOT_OK(readerProperties);
 
-    // Builder to create the properties
-    parquet::arrow::FileReaderBuilder readerBuilder;
-    ARROW_RETURN_NOT_OK(readerBuilder.Open(input));
-    readerBuilder.properties(readerProperties);
+        std::unique_ptr<parquet::arrow::FileReader> arrowReader;
+        ARROW_ASSIGN_OR_RAISE(arrowReader, readerBuilder.Build());
 
-    std::unique_ptr<parquet::arrow::FileReader> arrowReader;
-    ARROW_ASSIGN_OR_RAISE(arrowReader, readerBuilder.Build());
+        int idxColumn = 0;
 
-    int idxColumn = 0;
-    int batchCounter = 0;
-    
-    for(int idxRowGroup = 0; idxRowGroup < arrowReader->num_row_groups(); idxRowGroup++){
-        std::shared_ptr<arrow::RecordBatch> batch;
-        std::shared_ptr<arrow::RecordBatchReader> batchReader;
+        for(int idxRowGroup = 0; idxRowGroup < arrowReader->num_row_groups(); idxRowGroup++){
+            std::shared_ptr<arrow::RecordBatch> batch;
+            std::shared_ptr<arrow::RecordBatchReader> batchReader;
 
-        ARROW_ASSIGN_OR_RAISE(batchReader,
-            arrowReader->GetRecordBatchReader({idxRowGroup}, {idxColumn})
-        );
+            ARROW_ASSIGN_OR_RAISE(batchReader,
+            arrowReader->GetRecordBatchReader({idxRowGroup}, {idxColumn}));
+                    
+            while(true){
+                ARROW_RETURN_NOT_OK(batchReader->ReadNext(&batch));
+                // Break the while loop when there are no more batches left
+                if(!batch) break;
 
-        while(true){
-            ARROW_RETURN_NOT_OK(batchReader->ReadNext(&batch));
-            if(!batch) break;
-
-            spdlog::info("Info: {}", batch->num_rows());
-
-            numRows += batch->num_rows();
-            batchCounter++;
+                spdlog::info(batch->num_rows());
+            }
         }
     }
-
-    std::uintmax_t bytes = std::filesystem::file_size(config.outputPath(2024, 01));
-    double megabytes = bytes / (1024.0 * 1024.0);
-    spdlog::info("File size: {:.2f} Mb", megabytes);
-    spdlog::info("Num Rows: {}", numRows);
-    spdlog::info("Batches: {}", batchCounter);
-
-    return arrow::Status::OK();
 }
