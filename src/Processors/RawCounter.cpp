@@ -4,7 +4,7 @@
 #include <spdlog/spdlog.h>
 
 arrow::Status RawCounter::process(const int64_t& batchSize, const std::vector<std::string>& files){
-    for(auto& file : files){
+    for(const auto& file : files){
         std::shared_ptr<arrow::io::ReadableFile> input;
         ARROW_ASSIGN_OR_RAISE(input, arrow::io::ReadableFile::Open(file));
 
