@@ -13,7 +13,7 @@ arrow::Status RawCounter::process(const int64_t& batchSize, const std::vector<st
 
         // Builder to create the properties
         parquet::arrow::FileReaderBuilder readerBuilder;
-        ARROW_RETURN_NOT_OK(readerProperties);
+        readerBuilder.properties(readerProperties);
 
         std::unique_ptr<parquet::arrow::FileReader> arrowReader;
         ARROW_ASSIGN_OR_RAISE(arrowReader, readerBuilder.Build());
