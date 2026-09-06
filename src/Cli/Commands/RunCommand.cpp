@@ -1,12 +1,13 @@
 #include "Cli/Commands/RunCommand.hpp"
-#include "Include/Processors/GetProcessors.hpp"
+#include "Include/Processors/ProcessorRegister.hpp"
 
 RunCommand::RunCommand(ProcessorData& data_)
     : data(data_)
 {}
 
 void RunCommand::execute(){
-    getProcessors(data);
+    ProcessorRegister processR;
+    processR.searchProcessor(data);
 }
 
 void RunCommand::registerCommand(CLI::App& app){
