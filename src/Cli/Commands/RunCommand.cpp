@@ -1,8 +1,12 @@
-#include <Cli/Commands/RunCommand.hpp>
-#include <iostream>
+#include "Cli/Commands/RunCommand.hpp"
+#include "Include/Processors/GetProcessors.hpp"
+
+RunCommand::RunCommand(ProcessorData& data_)
+    : data(data_)
+{}
 
 void RunCommand::execute(){
-
+    getProcessors(data);
 }
 
 void RunCommand::registerCommand(CLI::App& app){
@@ -10,25 +14,25 @@ void RunCommand::registerCommand(CLI::App& app){
 
     cmd->add_option(
         "--files",
-        filesToProcess,
+        data.filesToProcess,
         "Files that will be processed"
     );
 
     cmd->add_option(
         "--processors",
-        processors,
+        data.processors,
         "Processors that will run the files"
     );
 
     cmd->add_option(
         "--batch",
-        batchSize,
+        data.batchSize,
         "Set the batch size of the processors"
     );
 
     cmd->add_option(
         "--output",
-        output,
+        data.output,
         "Where the stats will be saved"
     );
 
