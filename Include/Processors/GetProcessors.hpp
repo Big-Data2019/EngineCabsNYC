@@ -1,4 +1,4 @@
 #pragma once
-#include "Include/Processors/RawCounter.hpp"
+#include "Include/Processors/ProcessorData.hpp"
 
 void getProcessors(const ProcessorData& data);
