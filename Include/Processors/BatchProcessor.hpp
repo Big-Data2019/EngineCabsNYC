@@ -1,5 +1,4 @@
 #pragma once
-
 #include <arrow/api.h>
 #include <string>
 #include <filesystem>
