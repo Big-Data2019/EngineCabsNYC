@@ -15,4 +15,7 @@ private:
                 const std::vector<std::string>& files
         ) >
     > processors;
+
+public:
+    void registerProcessors();
 };
