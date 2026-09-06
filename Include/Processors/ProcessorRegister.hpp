@@ -6,7 +6,7 @@
 #include <arrow/result.h>
 
 class ProcessorRegister final{
-public:
+private:
     std::unordered_map <   
         std::string, 
         std::function <
@@ -14,5 +14,5 @@ public:
                 const int64_t& batchSize,
                 const std::vector<std::string>& files
         ) >
-    > registerProcessor;
+    > processors;
 };
