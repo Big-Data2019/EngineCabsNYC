@@ -1,5 +1,6 @@
 #pragma once
 #include "Processors/BatchProcessor.hpp"
+#include <vector>
 
 class RawCounter final : public TripBatchProcessor{
 private:
