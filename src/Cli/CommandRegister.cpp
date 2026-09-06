@@ -1,10 +1,12 @@
 #include "Cli/CommandRegister.hpp"
 #include "Cli/Commands/DownloadCommand.hpp"
 #include "Cli/Commands/InspectCommand.hpp"
+#include "Cli/Commands/RunCommand.hpp"
 
 CommandRegister::CommandRegister(const Config& config){
     registerCommand<InspectCommand>();
     registerCommand<DownloadCommand>(config);
+    registerCommand<RunCommand>();
 }
 
 void CommandRegister::logCommands(CLI::App& app){
