@@ -1,7 +1,6 @@
 #include "Network/CurlGlobal.hpp"
 #include "Config/Config.hpp"
 #include "Cli/CommandRegister.hpp"
-#include "Processors/RawCounter.hpp"
 #include <spdlog/spdlog.h>
 #include <CLI/CLI.hpp>
 #include <locale>
