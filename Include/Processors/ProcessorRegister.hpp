@@ -1,20 +1,13 @@
 #pragma once
+
+#include "Include/Processors/BatchProcessor.hpp"
 #include <unordered_map>
-#include <functional>
 #include <string>
-#include <vector>
-#include <arrow/result.h>
+#include <memory>
 
 class ProcessorRegister final{
 private:
-    std::unordered_map <   
-        std::string, 
-        std::function <
-            arrow::Status(
-                const int64_t& batchSize,
-                const std::vector<std::string>& files
-        ) >
-    > processors;
+    std::unordered_map<std::string, std::unique_ptr<TripBatchProcessor>> processors;
 
 public:
     void registerProcessors();
