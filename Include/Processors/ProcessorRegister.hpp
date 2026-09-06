@@ -1,6 +1,6 @@
 #pragma once
-
 #include "Include/Processors/BatchProcessor.hpp"
+#include "Include/Processors/ProcessorData.hpp"
 #include <unordered_map>
 #include <string>
 #include <memory>
@@ -11,4 +11,6 @@ private:
 
 public:
     void registerProcessors();
+
+    void searchProcessor(const ProcessorData& data);
 };
