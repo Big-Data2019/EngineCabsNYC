@@ -1,4 +1,5 @@
 #pragma once
+
 #include "Cli/ICommand.hpp"
 #include "Config/Config.hpp"
 #include <vector>

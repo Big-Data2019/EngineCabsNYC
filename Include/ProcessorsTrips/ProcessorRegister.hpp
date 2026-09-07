@@ -1,6 +1,7 @@
 #pragma once
-#include "Include/Processors/BatchProcessor.hpp"
-#include "Include/Processors/ProcessorData.hpp"
+
+#include "ProcessorsTrips/BatchProcessor.hpp"
+#include "ProcessorsTrips/ProcessorData.hpp"
 #include <unordered_map>
 #include <string>
 #include <memory>

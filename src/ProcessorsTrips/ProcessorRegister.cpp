@@ -1,5 +1,5 @@
-#include "Include/Processors/ProcessorRegister.hpp"
-#include "Include/Processors/RawCounter.hpp"
+#include "ProcessorsTrips/ProcessorRegister.hpp"
+#include "ProcessorsTrips/Processors/RawCounter.hpp"
 
 void ProcessorRegister::registerProcessors(){
     processors["raw"] = std::make_unique<RawCounter>();

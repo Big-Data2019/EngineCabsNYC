@@ -1,4 +1,5 @@
 #pragma once
+
 #include "Config/Config.hpp"
 
 namespace Manifest{

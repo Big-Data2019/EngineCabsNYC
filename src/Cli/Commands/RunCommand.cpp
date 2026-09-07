@@ -1,5 +1,5 @@
 #include "Cli/Commands/RunCommand.hpp"
-#include "Include/Processors/ProcessorRegister.hpp"
+#include "ProcessorsTrips/ProcessorRegister.hpp"
 
 RunCommand::RunCommand(ProcessorData& data_)
     : data(data_)

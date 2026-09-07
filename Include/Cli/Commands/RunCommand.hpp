@@ -1,6 +1,7 @@
 #pragma once
+
 #include "Cli/ICommand.hpp"
-#include "Processors/ProcessorData.hpp"
+#include "ProcessorsTrips/ProcessorData.hpp"
 
 class RunCommand final : public ICommand{
 private:
