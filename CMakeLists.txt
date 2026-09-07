@@ -109,9 +109,9 @@ target_include_directories(Parquet PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
 target_link_libraries(Parquet
 PRIVATE
     spdlog::spdlog
+    Parquet::parquet_shared
 PUBLIC
     Arrow::arrow_shared
-    Parquet::parquet_shared
 )
 
 # Cli library
