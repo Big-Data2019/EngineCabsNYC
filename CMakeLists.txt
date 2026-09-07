@@ -63,9 +63,9 @@ target_include_directories(Manifest PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
 target_link_libraries(Manifest
 PRIVATE
     spdlog::spdlog
+    Download
 PUBLIC
     Config
-    Download
     nlohmann_json::nlohmann_json
 )
 
