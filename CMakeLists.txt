@@ -132,6 +132,7 @@ PRIVATE
     spdlog::spdlog
 PUBLIC
     Config
+    Processors
     CLI11::CLI11
 )
 
