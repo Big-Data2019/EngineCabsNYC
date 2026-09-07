@@ -145,10 +145,11 @@ add_library(Processors
 target_include_directories(Processors PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
 
 target_link_libraries(Processors
-    PRIVATE
-        Arrow::arrow_shared
-        Parquet::parquet_shared
-        spdlog::spdlog
+PRIVATE
+    Parquet::parquet_shared
+    spdlog::spdlog
+PUBLIC
+    Arrow::arrow_shared
 )
 
 # Main executable
@@ -159,7 +160,6 @@ PRIVATE
     Network
     Config
     Cli
-    Processors
     spdlog::spdlog
     CLI11::CLI11
 )

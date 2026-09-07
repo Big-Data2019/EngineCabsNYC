@@ -1,6 +1,6 @@
 #pragma once
 
-#include <arrow/api.h>
+#include <arrow/result.h>
 #include <string>
 #include <filesystem>
 
