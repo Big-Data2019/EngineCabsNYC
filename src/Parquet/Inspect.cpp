@@ -1,4 +1,7 @@
 #include "Parquet/Inspect.hpp"
+#include <arrow/api.h>
+#include <arrow/io/file.h>
+#include <parquet/arrow/reader.h>
 #include <spdlog/spdlog.h>
 
 arrow::Status inspectSchema(const std::string& file){
