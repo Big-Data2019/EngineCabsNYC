@@ -118,6 +118,7 @@ PUBLIC
 add_library(Cli
     src/Cli/Commands/DownloadCommand.cpp
     src/Cli/Commands/InspectCommand.cpp
+    src/Cli/Commands/RunCommand.cpp
     src/Cli/CommandRegister.cpp
 )
 
@@ -136,7 +137,8 @@ PUBLIC
 
 # Processors library
 add_library(Processors
-    src/Processors/RawCounter.cpp
+    src/ProcessorsTrips/Processors/RawCounter.cpp
+    src/Processors/ProcessorRegister.cpp
 )
 
 target_include_directories(Processors PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
