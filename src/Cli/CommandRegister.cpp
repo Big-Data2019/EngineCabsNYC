@@ -3,10 +3,10 @@
 #include "Cli/Commands/InspectCommand.hpp"
 #include "Cli/Commands/RunCommand.hpp"
 
-CommandRegister::CommandRegister(const Config& config){
+CommandRegister::CommandRegister(const Config& config, ProcessorData& data){
     registerCommand<InspectCommand>();
     registerCommand<DownloadCommand>(config);
-    registerCommand<RunCommand>();
+    registerCommand<RunCommand>(data);
 }
 
 void CommandRegister::logCommands(CLI::App& app){

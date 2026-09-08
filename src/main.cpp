@@ -1,5 +1,6 @@
 #include "Network/CurlGlobal.hpp"
 #include "Config/Config.hpp"
+#include "ProcessorsTrips/ProcessorData.hpp"
 #include "Cli/CommandRegister.hpp"
 #include <spdlog/spdlog.h>
 #include <CLI/CLI.hpp>
@@ -12,8 +13,9 @@ int main(int argc, char **argv){
 
     try{
         Config config("dataset_config.yaml");
-        
-        CommandRegister registry(config);
+        ProcessorData data;
+
+        CommandRegister registry(config, data);
         registry.logCommands(app);
 
         CLI11_PARSE(app, argc, argv);

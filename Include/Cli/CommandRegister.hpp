@@ -2,6 +2,7 @@
 
 #include "Cli/ICommand.hpp"
 #include "Config/Config.hpp"
+#include "ProcessorsTrips/ProcessorData.hpp"
 #include <vector>
 #include <memory>
 #include <utility>
@@ -18,6 +19,6 @@ private:
     }
 
 public:
-    CommandRegister(const Config& config);
+    CommandRegister(const Config& config, ProcessorData& data);
     void logCommands(CLI::App& app);
 };
