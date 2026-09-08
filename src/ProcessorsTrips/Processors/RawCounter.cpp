@@ -46,7 +46,3 @@ arrow::Status RawCounter::process(const int64_t& batchSize, const std::vector<st
 
     return arrow::Status::OK();
 }
-
-void RawCounter::finish(const std::filesystem::path& output){
-    spdlog::info("test function");
-}
