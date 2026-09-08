@@ -54,6 +54,7 @@ PUBLIC
 # Manifest library
 add_library(Manifest
     src/Manifest/Json/ParquetDownload.cpp
+    src/Manifest/Json/RawProcessor.cpp
     src/Manifest/JsonBuilder.cpp
     src/Manifest/JsonGenerator.cpp
 )
@@ -64,6 +65,7 @@ target_link_libraries(Manifest
 PRIVATE
     spdlog::spdlog
     Download
+    Processors
 PUBLIC
     Config
     nlohmann_json::nlohmann_json
