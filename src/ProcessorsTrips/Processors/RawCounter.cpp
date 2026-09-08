@@ -20,6 +20,8 @@ arrow::Status RawCounter::process(const int64_t& batchSize, const std::vector<st
         parquet::arrow::FileReaderBuilder readerBuilder;
         readerBuilder.properties(readerProperties);
 
+        ARROW_RETURN_NOT_OK(readerBuilder.Open(input));
+
         std::unique_ptr<parquet::arrow::FileReader> arrowReader;
         ARROW_ASSIGN_OR_RAISE(arrowReader, readerBuilder.Build());
 
@@ -37,10 +39,14 @@ arrow::Status RawCounter::process(const int64_t& batchSize, const std::vector<st
                 // Break the while loop when there are no more batches left
                 if(!batch) break;
 
-                spdlog::info(batch->num_rows());
+                spdlog::info("info: {}", batch->num_rows());
             }
         }
     }
 
     return arrow::Status::OK();
+}
+
+void RawCounter::finish(const std::filesystem::path& output){
+    spdlog::info("test function");
 }
