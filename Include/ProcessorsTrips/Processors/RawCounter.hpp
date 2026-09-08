@@ -7,10 +7,16 @@ struct RawStats{
     int64_t numRows = 0;
     int64_t batchCounter = 0;
     int64_t bytesProcessed = 0;
-    
+    int64_t numBatch = 0.0;
+
     double elapsedSeconds = 0.0;
-    double rowsPerSecond = 0.0;
-    double megabytesPerSecond = 0.0;
+    double rowsPerSecond() const{
+        return numRows / elapsedSeconds;
+    }
+
+    double megabytesPerSecond() const{
+        return bytesProcessed / 1024.0 / 1024.0 / elapsedSeconds;
+    }
 };
 
 class RawCounter final : public TripBatchProcessor{
