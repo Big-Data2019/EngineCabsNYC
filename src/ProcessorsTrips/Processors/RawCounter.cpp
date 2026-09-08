@@ -4,8 +4,8 @@
 #include <parquet/arrow/reader.h>
 #include <spdlog/spdlog.h>
 
-RawCounter::RawCounter(int64_t& numRows_)
-    : numRows(numRows_)
+RawCounter::RawCounter(RawStats& stats_)
+    : stats(stats_)
 {}
 
 arrow::Status RawCounter::process(const int64_t& batchSize, const std::vector<std::string>& files){
