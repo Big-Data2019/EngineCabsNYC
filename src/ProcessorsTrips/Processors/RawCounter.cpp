@@ -1,4 +1,4 @@
-#include "Processors/RawCounter.hpp"
+#include "ProcessorsTrips/Processors/RawCounter.hpp"
 #include <arrow/io/api.h>
 #include <arrow/api.h>
 #include <parquet/arrow/reader.h>

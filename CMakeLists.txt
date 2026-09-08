@@ -139,7 +139,7 @@ PUBLIC
 # Processors library
 add_library(Processors
     src/ProcessorsTrips/Processors/RawCounter.cpp
-    src/Processors/ProcessorRegister.cpp
+    src/ProcessorsTrips/ProcessorRegister.cpp
 )
 
 target_include_directories(Processors PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
