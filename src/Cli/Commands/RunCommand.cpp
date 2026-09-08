@@ -7,6 +7,7 @@ RunCommand::RunCommand(ProcessorData& data_)
 
 void RunCommand::execute(){
     ProcessorRegister processR;
+    processR.registerProcessors();
     processR.searchProcessor(data);
 }
 
