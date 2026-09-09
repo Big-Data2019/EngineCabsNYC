@@ -3,7 +3,6 @@
 #include <vector>
 #include <string>
 #include <filesystem>
-
 struct ProcessorData{
     int64_t batchSize;
     std::vector<std::string> processors;
