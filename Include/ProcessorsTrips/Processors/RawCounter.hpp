@@ -7,7 +7,7 @@ struct RawStats{
     int64_t numRows = 0;
     int64_t batchCounter = 0;
     int64_t bytesProcessed = 0;
-    int64_t numBatch = 0.0;
+    int64_t numBatch = 0;
 
     double elapsedSeconds = 0.0;
     double rowsPerSecond() const{
