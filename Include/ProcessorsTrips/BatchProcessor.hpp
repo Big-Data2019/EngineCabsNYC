@@ -3,6 +3,7 @@
 #include <arrow/result.h>
 #include <string>
 #include <filesystem>
+
 class TripBatchProcessor{
 public:
     virtual ~TripBatchProcessor() = default;
