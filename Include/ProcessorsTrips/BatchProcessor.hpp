@@ -1,6 +1,7 @@
 #pragma once
 
 #include <arrow/result.h>
+#include <vector>
 #include <string>
 
 class TripBatchProcessor{
