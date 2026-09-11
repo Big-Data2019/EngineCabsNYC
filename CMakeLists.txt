@@ -54,7 +54,6 @@ PUBLIC
 # Manifest library
 add_library(Manifest
     src/Manifest/Json/ParquetDownload.cpp
-    src/Manifest/Json/RawProcessor.cpp
     src/Manifest/JsonBuilder.cpp
     src/Manifest/JsonGenerator.cpp
 )
