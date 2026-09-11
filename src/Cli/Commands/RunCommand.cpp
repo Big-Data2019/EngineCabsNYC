@@ -6,8 +6,10 @@ RunCommand::RunCommand(ProcessorData& data_)
 {}
 
 void RunCommand::execute(){
+    RawStats stats;
     ProcessorRegister processR;
-    processR.registerProcessors();
+    
+    processR.registerProcessors(stats);
     processR.searchProcessor(data);
 }
 

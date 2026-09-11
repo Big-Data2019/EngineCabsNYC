@@ -1,8 +1,7 @@
 #include "ProcessorsTrips/ProcessorRegister.hpp"
-#include "ProcessorsTrips/Processors/RawCounter.hpp"
 
-void ProcessorRegister::registerProcessors(){
-    processors["raw"] = std::make_unique<RawCounter>();
+void ProcessorRegister::registerProcessors(RawStats& stats){
+    processors["raw"] = std::make_unique<RawCounter>(stats);
 }
 
 void ProcessorRegister::searchProcessor(const ProcessorData& data){
