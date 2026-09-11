@@ -44,8 +44,6 @@ arrow::Status RawCounter::process(const int64_t& batchSize, const std::vector<st
 
                 stats.batchCounter++;
                 stats.numRows += batch->num_rows();
-
-                spdlog::info("info: {}", batch->num_rows());
             }
         }
 
@@ -59,6 +57,9 @@ arrow::Status RawCounter::process(const int64_t& batchSize, const std::vector<st
     }
     
     stats.numBatch = batchSize;
+
+    spdlog::info("MB/s: {}", stats.megabytesPerSecond());
+    spdlog::info("Rows/s: {}", stats.rowsPerSecond());
 
     return arrow::Status::OK();
 }
