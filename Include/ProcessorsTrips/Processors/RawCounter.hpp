@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ProcessorsTrips/BatchProcessor.hpp"
+#include <string>
 
 struct RawStats{
     int64_t files = 0;
@@ -31,5 +32,5 @@ public:
         const std::vector<std::string>& files
     ) override;
 
-    void finish(const std::filesystem::path& output) override;
+    void finish(const std::string& output) override;
 };

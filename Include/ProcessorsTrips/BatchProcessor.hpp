@@ -2,7 +2,6 @@
 
 #include <arrow/result.h>
 #include <string>
-#include <filesystem>
 
 class TripBatchProcessor{
 public:
@@ -13,5 +12,5 @@ public:
         const std::vector<std::string>& files
     ) = 0;
 
-    virtual void finish(const std::filesystem::path& output) = 0;
+    virtual void finish(const std::string& output) = 0;
 };
