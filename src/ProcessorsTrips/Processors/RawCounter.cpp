@@ -4,6 +4,7 @@
 #include <parquet/arrow/reader.h>
 #include <spdlog/spdlog.h>
 #include <chrono>
+#include <filesystem>
 
 RawCounter::RawCounter(RawStats& stats_)
     : stats(stats_)
@@ -53,13 +54,11 @@ arrow::Status RawCounter::process(const int64_t& batchSize, const std::vector<st
         stats.elapsedSeconds += std::chrono::duration_cast<std::chrono::milliseconds>(end - start)
             .count();
         stats.files++;
-        stats.bytesProcessed += std::filesystem::file_size(file);
+        auto size = std::filesystem::file_size(file);
+        stats.bytesProcessed += size;
     }
+    
     stats.numBatch = batchSize;
 
     return arrow::Status::OK();
-}
-
-void RawCounter::finish(const std::filesystem::path& output){
-    spdlog::info("Test");
 }
