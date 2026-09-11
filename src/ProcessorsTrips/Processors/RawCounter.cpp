@@ -3,6 +3,7 @@
 #include <arrow/api.h>
 #include <parquet/arrow/reader.h>
 #include <spdlog/spdlog.h>
+#include <chrono>
 
 RawCounter::RawCounter(RawStats& stats_)
     : stats(stats_)
@@ -26,6 +27,7 @@ arrow::Status RawCounter::process(const int64_t& batchSize, const std::vector<st
         ARROW_ASSIGN_OR_RAISE(arrowReader, readerBuilder.Build());
 
         int idxColumn = 0;
+        auto start = std::chrono::high_resolution_clock::now();
 
         for(int idxRowGroup = 0; idxRowGroup < arrowReader->num_row_groups(); idxRowGroup++){
             std::shared_ptr<arrow::RecordBatch> batch;
@@ -33,16 +35,31 @@ arrow::Status RawCounter::process(const int64_t& batchSize, const std::vector<st
 
             ARROW_ASSIGN_OR_RAISE(batchReader,
             arrowReader->GetRecordBatchReader({idxRowGroup}, {idxColumn}));
-                    
+            
             while(true){
                 ARROW_RETURN_NOT_OK(batchReader->ReadNext(&batch));
                 // Break the while loop when there are no more batches left
                 if(!batch) break;
 
+                stats.batchCounter++;
+                stats.numRows += batch->num_rows();
+
                 spdlog::info("info: {}", batch->num_rows());
             }
         }
+
+        auto end = std::chrono::high_resolution_clock::now();
+
+        stats.elapsedSeconds += std::chrono::duration_cast<std::chrono::milliseconds>(end - start)
+            .count();
+        stats.files++;
+        stats.bytesProcessed += std::filesystem::file_size(file);
     }
+    stats.numBatch = batchSize;
 
     return arrow::Status::OK();
+}
+
+void RawCounter::finish(const std::filesystem::path& output){
+    spdlog::info("Test");
 }
