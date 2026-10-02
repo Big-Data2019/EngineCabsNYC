@@ -1,7 +1,6 @@
 #pragma once
 
 #include "ProcessorsTrips/BatchProcessor.hpp"
-#include <string>
 
 struct RowStats{
     int64_t files = 0;
