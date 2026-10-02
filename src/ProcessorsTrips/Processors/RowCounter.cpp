@@ -1,4 +1,4 @@
-#include "ProcessorsTrips/Processors/RawCounter.hpp"
+#include "ProcessorsTrips/Processors/RowCounter.hpp"
 #include <arrow/io/api.h>
 #include <arrow/api.h>
 #include <parquet/arrow/reader.h>
@@ -6,11 +6,11 @@
 #include <chrono>
 #include <filesystem>
 
-RawCounter::RawCounter(RawStats& stats_)
+RowCounter::RowCounter(RowStats& stats_)
     : stats(stats_)
 {}
 
-arrow::Status RawCounter::process(const int64_t& batchSize, const std::vector<std::string>& files){
+arrow::Status RowCounter::process(const int64_t& batchSize, const std::vector<std::string>& files){
     for(const auto& file : files){
         std::shared_ptr<arrow::io::ReadableFile> input;
         ARROW_ASSIGN_OR_RAISE(input, arrow::io::ReadableFile::Open(file));

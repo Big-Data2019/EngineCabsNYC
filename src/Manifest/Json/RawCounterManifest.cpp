@@ -1,9 +1,9 @@
 #include "Manifest/JsonBuilder.hpp"
 #include "Manifest/JsonGenerator.hpp"
-#include "ProcessorsTrips/Processors/RawCounter.hpp"
+#include "ProcessorsTrips/Processors/RowCounter.hpp"
 #include <string>
 
-void RawCounter::finish(const std::string& output){
+void RowCounter::finish(const std::string& output){
     JsonBuilder data;
 
     data.newData("Files", stats.files);

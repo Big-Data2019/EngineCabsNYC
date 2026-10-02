@@ -3,7 +3,7 @@
 #include "ProcessorsTrips/BatchProcessor.hpp"
 #include <string>
 
-struct RawStats{
+struct RowStats{
     int64_t files = 0;
     int64_t numRows = 0;
     int64_t batchCounter = 0;
@@ -20,12 +20,12 @@ struct RawStats{
     }
 };
 
-class RawCounter final : public TripBatchProcessor{
+class RowCounter final : public TripBatchProcessor{
 private:
-    RawStats& stats;
+    RowStats& stats;
 
 public:
-    RawCounter(RawStats& stats);
+    RowCounter(RowStats& stats);
 
     arrow::Status process(
         const int64_t& batchSize,

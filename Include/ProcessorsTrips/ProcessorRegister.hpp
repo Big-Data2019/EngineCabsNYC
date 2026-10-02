@@ -2,7 +2,7 @@
 
 #include "ProcessorsTrips/BatchProcessor.hpp"
 #include "ProcessorsTrips/ProcessorData.hpp"
-#include "ProcessorsTrips/Processors/RawCounter.hpp"
+#include "ProcessorsTrips/Processors/RowCounter.hpp"
 #include <unordered_map>
 #include <string>
 #include <memory>
@@ -12,7 +12,7 @@ private:
     std::unordered_map<std::string, std::unique_ptr<TripBatchProcessor>> processors;
 
 public:
-    void registerProcessors(RawStats& stats);
+    void registerProcessors(RowStats& stats);
 
     void searchProcessor(const ProcessorData& data);
 };
