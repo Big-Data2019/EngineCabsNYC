@@ -1,7 +1,8 @@
 #include "ProcessorsTrips/ProcessorRegister.hpp"
 
-void ProcessorRegister::registerProcessors(RowStats& stats){
-    processors["row"] = std::make_unique<RowCounter>(stats);
+void ProcessorRegister::registerProcessors(RowStats& rowStats, RevenueDayStats& revenueDStats){
+    processors["row"] = std::make_unique<RowCounter>(rowStats);
+    processors["revenueD"] = std::make_unique<RevenueByDay>(revenueDStats);
 }
 
 void ProcessorRegister::searchProcessor(const ProcessorData& data){
