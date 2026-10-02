@@ -21,10 +21,10 @@ struct RowStats{
 
 class RowCounter final : public TripBatchProcessor{
 private:
-    RowStats& stats;
+    RowStats& rowStats;
 
 public:
-    RowCounter(RowStats& stats);
+    RowCounter(RowStats& rowStats);
 
     arrow::Status process(
         const int64_t& batchSize,

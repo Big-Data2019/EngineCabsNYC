@@ -7,7 +7,7 @@
 #include <filesystem>
 
 RowCounter::RowCounter(RowStats& stats_)
-    : stats(stats_)
+    : rowStats(stats_)
 {}
 
 arrow::Status RowCounter::process(const int64_t& batchSize, const std::vector<std::string>& files){
@@ -42,24 +42,24 @@ arrow::Status RowCounter::process(const int64_t& batchSize, const std::vector<st
                 // Break the while loop when there are no more batches left
                 if(!batch) break;
 
-                stats.batchCounter++;
-                stats.numRows += batch->num_rows();
+                rowStats.batchCounter++;
+                rowStats.numRows += batch->num_rows();
             }
         }
 
         auto end = std::chrono::high_resolution_clock::now();
 
-        stats.elapsedSeconds += std::chrono::duration_cast<std::chrono::milliseconds>(end - start)
+        rowStats.elapsedSeconds += std::chrono::duration_cast<std::chrono::milliseconds>(end - start)
             .count();
-        stats.files++;
+        rowStats.files++;
         auto size = std::filesystem::file_size(file);
-        stats.bytesProcessed += size;
+        rowStats.bytesProcessed += size;
     }
     
-    stats.numBatch = batchSize;
+    rowStats.numBatch = batchSize;
 
-    spdlog::info("MB/s: {}", stats.megabytesPerSecond());
-    spdlog::info("Rows/s: {}", stats.rowsPerSecond());
+    spdlog::info("MB/s: {}", rowStats.megabytesPerSecond());
+    spdlog::info("Rows/s: {}", rowStats.rowsPerSecond());
 
     return arrow::Status::OK();
 }
