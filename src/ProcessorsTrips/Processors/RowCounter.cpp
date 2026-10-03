@@ -36,7 +36,7 @@ arrow::Status RowCounter::process(const int64_t& batchSize, const std::vector<st
 
             ARROW_ASSIGN_OR_RAISE(batchReader,
             arrowReader->GetRecordBatchReader({idxRowGroup}, {idxColumn}));
-            
+
             while(true){
                 ARROW_RETURN_NOT_OK(batchReader->ReadNext(&batch));
                 // Break the while loop when there are no more batches left
