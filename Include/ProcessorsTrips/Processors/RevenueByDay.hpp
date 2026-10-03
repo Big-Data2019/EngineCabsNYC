@@ -21,10 +21,10 @@ struct RevenueDayStats{
 
 class RevenueByDay final : public TripBatchProcessor{
 private:
-    RevenueDayStats& stats;
+    RevenueDayStats& revenueDStats;
 
 public:
-    RevenueByDay(RevenueDayStats& stats);
+    RevenueByDay(RevenueDayStats& revenueDStats);
 
     virtual arrow::Status process(
         const int64_t& batchSize,
