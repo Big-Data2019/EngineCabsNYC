@@ -55,7 +55,7 @@ arrow::Status RevenueByDay::process(const int64_t& batchSize,const std::vector<s
         }
         auto end = std::chrono::high_resolution_clock::now();
 
-        revenueDStats.elapsedSeconds += std::chrono::duration_cast<std::chrono::milliseconds>
+        revenueDStats.elapsedSeconds += std::chrono::duration_cast<std::chrono::seconds>
             (end - start).count();
         revenueDStats.files++;
         auto size = std::filesystem::file_size(file);
