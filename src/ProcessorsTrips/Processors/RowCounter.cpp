@@ -49,7 +49,7 @@ arrow::Status RowCounter::process(const int64_t& batchSize, const std::vector<st
 
         auto end = std::chrono::high_resolution_clock::now();
 
-        rowStats.elapsedSeconds += std::chrono::duration_cast<std::chrono::milliseconds>(end - start)
+        rowStats.elapsedSeconds += std::chrono::duration_cast<std::chrono::seconds>(end - start)
             .count();
         rowStats.files++;
         auto size = std::filesystem::file_size(file);
