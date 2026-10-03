@@ -20,5 +20,11 @@ arrow::Status inspectSchema(const std::string& file){
     // Read the metadata
     auto metadata = reader->parquet_reader()->metadata();
 
+    spdlog::info("File: {}", file);
+    spdlog::info("Num Columns: {}", metadata->num_columns());
+    spdlog::info("Num Rows: {}", metadata->num_rows());
+    spdlog::info("Num Row Groups: {}", metadata->num_row_groups());
+    spdlog::info("Schema: {}", schema->ToString());
+
     return arrow::Status::OK();
 }
