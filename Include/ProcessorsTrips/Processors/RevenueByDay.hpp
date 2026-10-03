@@ -4,14 +4,15 @@
 
 struct RevenueDayStats{
     int64_t files = 0;
-    int64_t numRows = 0;
     int64_t batchCounter = 0;
     int64_t bytesProcessed = 0;
     int64_t numBatch = 0;
 
     double elapsedSeconds = 0.0;
-    double rowsPerSecond() const{
-        return numRows / elapsedSeconds;
+    double totalAmount = 0;
+
+    double quantityPerSecond() const{
+        return totalAmount / elapsedSeconds;
     }
 
     double megabytesPerSecond() const{
@@ -26,10 +27,10 @@ private:
 public:
     RevenueByDay(RevenueDayStats& revenueDStats);
 
-    virtual arrow::Status process(
+    arrow::Status process(
         const int64_t& batchSize,
         const std::vector<std::string>& files
     ) override;
 
-    virtual void finish(const std::string& output) override;
+    void finish(const std::string& output) override;
 };
