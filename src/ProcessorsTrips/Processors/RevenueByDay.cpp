@@ -49,8 +49,17 @@ arrow::Status RevenueByDay::process(const int64_t& batchSize,const std::vector<s
                 ARROW_RETURN_NOT_OK(batchReader->ReadNext(&batch));
                 // Break the while loop when there are no more batches left
                 if(!batch) break;
-
                 revenueDStats.batchCounter++;
+
+                auto dateArray = std::static_pointer_cast<arrow::TimestampArray>(batch->column(0));
+                for(int64_t i = 0; i < batch->num_rows(); i++){
+                    if(dateArray->IsNull(i)){
+                        continue;
+                    }
+
+                    int64_t timestamp = dateArray->Value(i);
+                    int diaId = timestamp / 86400000000;
+                }
             }
         }
         auto end = std::chrono::high_resolution_clock::now();
