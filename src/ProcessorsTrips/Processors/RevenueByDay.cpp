@@ -58,7 +58,7 @@ arrow::Status RevenueByDay::process(const int64_t& batchSize,const std::vector<s
                     }
 
                     int64_t timestamp = dateArray->Value(i);
-                    int diaId = timestamp / 86400000000;
+                    int64_t diaId = timestamp / 86400000000;
                 }
             }
         }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ProcessorsTrips/BatchProcessor.hpp"
+#include <unordered_map>
 
 struct RevenueDayStats{
     int64_t files = 0;
@@ -21,7 +22,8 @@ struct RevenueDayStats{
 };
 
 class RevenueByDay final : public TripBatchProcessor{
-private:
+private: 
+    std::unordered_map<int64_t, double> Accumulator;
     RevenueDayStats& revenueDStats;
 
 public:
