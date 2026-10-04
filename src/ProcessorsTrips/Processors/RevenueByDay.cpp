@@ -77,7 +77,7 @@ arrow::Status RevenueByDay::process(const int64_t& batchSize,const std::vector<s
     revenueDStats.numBatch = batchSize;
 
     spdlog::info("MB/s: {}", revenueDStats.megabytesPerSecond());
-    spdlog::info("Rows/s: {}", revenueDStats.quantityPerSecond());
+    spdlog::info("Quantity/s: {}", revenueDStats.quantityPerSecond());
 
     return arrow::Status::OK();
 }
