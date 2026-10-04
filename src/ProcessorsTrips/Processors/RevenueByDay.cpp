@@ -52,6 +52,7 @@ arrow::Status RevenueByDay::process(const int64_t& batchSize,const std::vector<s
                 revenueDStats.batchCounter++;
 
                 auto dateArray = std::static_pointer_cast<arrow::TimestampArray>(batch->column(0));
+                auto amountArray = std::static_pointer_cast<arrow::DoubleArray>(batch->column(1));
                 for(int64_t i = 0; i < batch->num_rows(); i++){
                     if(dateArray->IsNull(i)){
                         continue;
@@ -59,6 +60,9 @@ arrow::Status RevenueByDay::process(const int64_t& batchSize,const std::vector<s
 
                     int64_t timestamp = dateArray->Value(i);
                     int64_t diaId = timestamp / 86400000000;
+                    double amount = amountArray->Value(i);
+                    
+                    Accumulator[diaId] += amount;
                 }
             }
         }
