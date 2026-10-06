@@ -54,7 +54,7 @@ arrow::Status RevenueByDay::process(const int64_t& batchSize,const std::vector<s
                 auto dateArray = std::static_pointer_cast<arrow::TimestampArray>(batch->column(0));
                 auto amountArray = std::static_pointer_cast<arrow::DoubleArray>(batch->column(1));
                 for(int64_t i = 0; i < batch->num_rows(); i++){
-                    if(dateArray->IsNull(i)) continue;
+                    if(dateArray->IsNull(i) || amountArray->IsNull(i)) continue;
 
                     int64_t timestamp = dateArray->Value(i); // Get the value in format Timestamp
                     int64_t diaId = timestamp / 86400000000; // the value is in UNIX Epoch
