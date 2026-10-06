@@ -10,7 +10,7 @@ struct RevenueDayStats{
     int64_t numBatch = 0;
 
     double elapsedSeconds = 0.0;
-    double totalAmount = 0;
+    double totalAmount = 0.0;
 
     double revenuePerSecond() const{
         return totalAmount / elapsedSeconds;
