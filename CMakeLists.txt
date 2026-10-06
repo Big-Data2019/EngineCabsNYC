@@ -142,6 +142,7 @@ PUBLIC
 add_library(Processors
     src/ProcessorsTrips/Processors/RevenueByDay.cpp
     src/ProcessorsTrips/Processors/RowCounter.cpp
+    src/ProcessorsTrips/Processors/TripsByHour.cpp
     src/ProcessorsTrips/ProcessorRegister.cpp
 )
 
