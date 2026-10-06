@@ -4,6 +4,7 @@
 #include "ProcessorsTrips/ProcessorData.hpp"
 #include "ProcessorsTrips/Processors/RowCounter.hpp"
 #include "ProcessorsTrips/Processors/RevenueByDay.hpp"
+#include "ProcessorsTrips/Processors/TripsByHour.hpp"
 #include <unordered_map>
 #include <string>
 #include <memory>
@@ -13,7 +14,10 @@ private:
     std::unordered_map<std::string, std::unique_ptr<TripBatchProcessor>> processors;
 
 public:
-    void registerProcessors(RowStats& rowStats, RevenueDayStats& revenueDStats);
+    void registerProcessors(RowStats& rowStats,
+        RevenueDayStats& revenueDStats,
+        TripsHourStats& tripsHStats
+    );
 
     void searchProcessor(const ProcessorData& data);
 };
