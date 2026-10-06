@@ -1,4 +1,5 @@
 #include "ProcessorsTrips/ProcessorRegister.hpp"
+#include <spdlog/spdlog.h>
 
 void ProcessorRegister::registerProcessors(RowStats& rowStats, RevenueDayStats& revenueDStats){
     processors["row"] = std::make_unique<RowCounter>(rowStats);
@@ -10,7 +11,11 @@ void ProcessorRegister::searchProcessor(const ProcessorData& data){
         auto it = processors.find(processor);
 
         if(it != processors.end()){
-            it->second->process(data.batchSize, data.filesToProcess);
+            auto status = it->second->process(data.batchSize, data.filesToProcess);
+            if(!status.ok()){
+                spdlog::error("Processor: {}, failed: {}", processor, status.ToString());
+            }
+
             it->second->finish(data.output);
         }
     }
