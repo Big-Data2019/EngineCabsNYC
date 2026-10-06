@@ -6,14 +6,14 @@
 void RowCounter::finish(const std::string& output){
     JsonBuilder data;
 
-    data.newData("Files", stats.files);
-    data.newData("Batches", stats.batchCounter);
-    data.newData("Rows", stats.numRows);
-    data.newData("Input size", stats.bytesProcessed);
-    data.newData("Elapsed", stats.elapsedSeconds);
-    data.newData("Batch size", stats.numBatch);
-    data.newData("Rows/sec", stats.rowsPerSecond());
-    data.newData("Troughput", stats.megabytesPerSecond());
+    data.newData("Files", rowStats.files);
+    data.newData("Batches", rowStats.batchCounter);
+    data.newData("Rows", rowStats.numRows);
+    data.newData("Input size", rowStats.bytesProcessed);
+    data.newData("Elapsed", rowStats.elapsedSeconds);
+    data.newData("Batch size", rowStats.numBatch);
+    data.newData("Rows/sec", rowStats.rowsPerSecond());
+    data.newData("Troughput", rowStats.megabytesPerSecond());
 
     const std::string fileName = "manifest.json";
 
