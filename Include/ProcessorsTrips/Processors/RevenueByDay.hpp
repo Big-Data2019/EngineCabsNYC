@@ -12,7 +12,7 @@ struct RevenueDayStats{
     double elapsedSeconds = 0.0;
     double totalAmount = 0;
 
-    double quantityPerSecond() const{
+    double revenuePerSecond() const{
         return totalAmount / elapsedSeconds;
     }
 
