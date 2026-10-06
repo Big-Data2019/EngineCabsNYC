@@ -60,15 +60,14 @@ arrow::Status RevenueByDay::process(const int64_t& batchSize,const std::vector<s
                     int64_t diaId = timestamp / 86400000000; // the value is in UNIX Epoch
                     double amount = amountArray->Value(i);
 
-                    // Add up the corresponding values each day
-                    Accumulator[diaId] += amount;
+                    Accumulator[diaId] += amount; // Add up the corresponding values each day
+                    revenueDStats.totalAmount += amount;
                 }
             }
         }
         auto end = std::chrono::high_resolution_clock::now();
 
-        revenueDStats.elapsedSeconds += std::chrono::duration_cast<std::chrono::seconds>
-            (end - start).count();
+        revenueDStats.elapsedSeconds += std::chrono::duration<double>(end - start).count();
         revenueDStats.files++;
         auto size = std::filesystem::file_size(file);
         revenueDStats.bytesProcessed += size;
@@ -77,7 +76,7 @@ arrow::Status RevenueByDay::process(const int64_t& batchSize,const std::vector<s
     revenueDStats.numBatch = batchSize;
 
     spdlog::info("MB/s: {}", revenueDStats.megabytesPerSecond());
-    spdlog::info("Quantity/s: {}", revenueDStats.quantityPerSecond());
+    spdlog::info("Revenue/s: {}", revenueDStats.revenuePerSecond());
 
     return arrow::Status::OK();
 }
