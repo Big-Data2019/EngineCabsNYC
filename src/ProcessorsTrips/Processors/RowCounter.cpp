@@ -54,7 +54,7 @@ arrow::Status RowCounter::process(const int64_t& batchSize, const std::vector<st
         auto size = std::filesystem::file_size(file);
         rowStats.bytesProcessed += size;
     }
-    
+
     rowStats.numBatch = batchSize;
 
     spdlog::info("MB/s: {}", rowStats.megabytesPerSecond());
