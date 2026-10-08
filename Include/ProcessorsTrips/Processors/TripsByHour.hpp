@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ProcessorsTrips/BatchProcessor.hpp"
+#include <map>
 
 struct TripsHourStats{
     int64_t files = 0;
@@ -9,7 +10,7 @@ struct TripsHourStats{
     int64_t numBatch = 0;
 
     double elapsedSeconds = 0.0;
-    double trips = 0.0;
+    int64_t trips = 0.0;
 
     double tripsPerSecond() const{
         return trips / elapsedSeconds;
@@ -22,6 +23,7 @@ struct TripsHourStats{
 
 class TripsByHour final : public TripBatchProcessor{
 private:
+    std::map<int64_t, int64_t> tripsByHour;
     TripsHourStats tripsHStats;
 
 public:
