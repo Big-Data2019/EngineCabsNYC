@@ -57,10 +57,10 @@ arrow::Status RevenueByDay::process(const int64_t& batchSize,const std::vector<s
                     if(dateArray->IsNull(i) || amountArray->IsNull(i)) continue;
 
                     int64_t timestamp = dateArray->Value(i); // Get the value in format Timestamp
-                    int64_t diaId = timestamp / 86400000000; // the value is in UNIX Epoch
+                    int64_t dayId = timestamp / 86400000000; // The value is in UNIX Epoch
                     double amount = amountArray->Value(i);
 
-                    Accumulator[diaId] += amount; // Add up the corresponding values each day
+                    Accumulator[dayId] += amount; // Add up the corresponding values each day
                     revenueDStats.totalAmount += amount;
                 }
             }
@@ -72,7 +72,7 @@ arrow::Status RevenueByDay::process(const int64_t& batchSize,const std::vector<s
         auto size = std::filesystem::file_size(file);
         revenueDStats.bytesProcessed += size;
     }
-    
+
     revenueDStats.numBatch = batchSize;
 
     spdlog::info("MB/s: {}", revenueDStats.megabytesPerSecond());
