@@ -6,6 +6,7 @@
 #include "ProcessorsTrips/Processors/RevenueByDay.hpp"
 #include "ProcessorsTrips/Processors/TripsByHour.hpp"
 #include "ProcessorsTrips/Processors/InvalidTripDetector.hpp"
+#include "ProcessorsTrips/Processors/TopPickupZones.hpp"
 #include <unordered_map>
 #include <string>
 #include <memory>
@@ -18,7 +19,8 @@ public:
     void registerProcessors(RowStats& rowStats,
         RevenueDayStats& revenueDStats,
         TripsHourStats& tripsHStats,
-        InvalidTripStats& invalidTStats
+        InvalidTripStats& invalidTStats,
+        PickupZoneStats& pickupZStats
     );
 
     void searchProcessor(const ProcessorData& data);

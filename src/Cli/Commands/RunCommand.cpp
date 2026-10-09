@@ -10,9 +10,10 @@ void RunCommand::execute(){
     RevenueDayStats RevenueDStats;
     TripsHourStats tripsHStats;
     InvalidTripStats invalidTStats;
+    PickupZoneStats pickupZStats;
     ProcessorRegister processR;
 
-    processR.registerProcessors(rowStats, RevenueDStats, tripsHStats, invalidTStats);
+    processR.registerProcessors(rowStats, RevenueDStats, tripsHStats, invalidTStats, pickupZStats);
     processR.searchProcessor(data);
 }
 
