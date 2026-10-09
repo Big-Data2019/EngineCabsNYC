@@ -99,8 +99,8 @@ arrow::Status InvalidTripDetector::process(const int64_t& batchSize,
 
     spdlog::info("MB/s: {}", invalidTStats.megabytesPerSecond());
     spdlog::info("Rows/s: {}", invalidTStats.rowsPerSecond());
-    spdlog::info("validos: {}", invalidTStats.validTrips);
-    spdlog::info("invalidos: {}", invalidTStats.invalidTrips);
+    spdlog::info("Valids: {}", invalidTStats.validTrips);
+    spdlog::info("Invalids: {}", invalidTStats.invalidTrips);
 
     return arrow::Status::OK();
 }
