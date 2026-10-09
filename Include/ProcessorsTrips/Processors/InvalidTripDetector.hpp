@@ -8,6 +8,8 @@ struct InvalidTripStats{
     int64_t batchCounter = 0;
     int64_t bytesProcessed = 0;
     int64_t numBatch = 0;
+    int64_t validTrips = 0;
+    int64_t invalidTrips = 0;
 
     double elapsedSeconds = 0.0;
     double rowsPerSecond() const{
