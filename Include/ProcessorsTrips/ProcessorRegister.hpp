@@ -5,6 +5,7 @@
 #include "ProcessorsTrips/Processors/RowCounter.hpp"
 #include "ProcessorsTrips/Processors/RevenueByDay.hpp"
 #include "ProcessorsTrips/Processors/TripsByHour.hpp"
+#include "ProcessorsTrips/Processors/InvalidTripDetector.hpp"
 #include <unordered_map>
 #include <string>
 #include <memory>
@@ -16,7 +17,8 @@ private:
 public:
     void registerProcessors(RowStats& rowStats,
         RevenueDayStats& revenueDStats,
-        TripsHourStats& tripsHStats
+        TripsHourStats& tripsHStats,
+        InvalidTripStats& invalidTStats
     );
 
     void searchProcessor(const ProcessorData& data);
