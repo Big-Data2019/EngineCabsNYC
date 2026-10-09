@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ProcessorsTrips/BatchProcessor.hpp"
+#include <unordered_map>
 
 struct PickupZoneStats{
 	int64_t files = 0;
@@ -21,6 +22,7 @@ struct PickupZoneStats{
 
 class TopPickupZones final : public TripBatchProcessor{
 private:
+	std::unordered_map<int32_t, int64_t> pickUpZone;
 	PickupZoneStats& pickupZStats;
 
 public:
