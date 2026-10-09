@@ -144,6 +144,7 @@ add_library(Processors
     src/ProcessorsTrips/Processors/RowCounter.cpp
     src/ProcessorsTrips/Processors/TripsByHour.cpp
     src/ProcessorsTrips/Processors/InvalidTripDetector.cpp
+    src/ProcessorsTrips/Processors/TopPickupZones.cpp
     src/ProcessorsTrips/ProcessorRegister.cpp
 )
 
