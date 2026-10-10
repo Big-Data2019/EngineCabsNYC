@@ -5,13 +5,15 @@ void ProcessorRegister::registerProcessors(RowStats& rowStats,
     RevenueDayStats& revenueDStats,
     TripsHourStats& tripsHStats,
     InvalidTripStats& invalidTStats,
-    PickupZoneStats& pickupZStats
+    PickupZoneStats& pickupZStats,
+    FareDistributionStats& fareDisStats
 ){
     processors["row"] = std::make_unique<RowCounter>(rowStats);
     processors["revenueD"] = std::make_unique<RevenueByDay>(revenueDStats);
     processors["tripsH"] = std::make_unique<TripsByHour>(tripsHStats);
     processors["invalid"] = std::make_unique<InvalidTripDetector>(invalidTStats);
     processors["pickupZ"] = std::make_unique<TopPickupZones>(pickupZStats);
+    processors["fareDis"] = std::make_unique<FareDistribution>(fareDisStats);
 }
 
 void ProcessorRegister::searchProcessor(const ProcessorData& data){
