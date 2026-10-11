@@ -57,7 +57,6 @@ arrow::Status TripsByHour::process(const int64_t& batchSize, const std::vector<s
                     int64_t hourId = timestamp / 3600000000; // The value is in UNIX Epoch                  
 
                     tripsByHour[hourId]++;
-                    tripsHStats.trips++;
                 }
             }
         }
@@ -71,7 +70,7 @@ arrow::Status TripsByHour::process(const int64_t& batchSize, const std::vector<s
     tripsHStats.numBatch = batchSize;
 
     spdlog::info("MB/s: {}", tripsHStats.megabytesPerSecond());
-    spdlog::info("Trips/s: {}", tripsHStats.tripsPerSecond());
+    spdlog::info("Rows/s: {}", tripsHStats.rowsPerSecond());
 
     return arrow::Status::OK();
 }

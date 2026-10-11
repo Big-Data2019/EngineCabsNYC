@@ -61,7 +61,6 @@ arrow::Status RevenueByDay::process(const int64_t& batchSize,const std::vector<s
                     double amount = amountArray->Value(i);
 
                     Accumulator[dayId] += amount; // Add up the corresponding values each day
-                    revenueDStats.totalAmount += amount;
                 }
             }
         }
@@ -76,7 +75,7 @@ arrow::Status RevenueByDay::process(const int64_t& batchSize,const std::vector<s
     revenueDStats.numBatch = batchSize;
 
     spdlog::info("MB/s: {}", revenueDStats.megabytesPerSecond());
-    spdlog::info("Revenue/s: {}", revenueDStats.revenuePerSecond());
+    spdlog::info("Rows/s: {}", revenueDStats.rowsPerSecond());
 
     return arrow::Status::OK();
 }

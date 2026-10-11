@@ -5,19 +5,18 @@
 
 struct TripsHourStats{
     int64_t files = 0;
+    int64_t numRows = 0;
     int64_t batchCounter = 0;
     int64_t bytesProcessed = 0;
     int64_t numBatch = 0;
 
     double elapsedSeconds = 0.0;
-    int64_t trips = 0.0;
-
-    double tripsPerSecond() const{
-        return trips / elapsedSeconds;
-    }
-
     double megabytesPerSecond() const{
         return bytesProcessed / 1024.0 / 1024.0 / elapsedSeconds;
+    }
+
+    double rowsPerSecond() const{
+        return numRows / elapsedSeconds;
     }
 };
 
