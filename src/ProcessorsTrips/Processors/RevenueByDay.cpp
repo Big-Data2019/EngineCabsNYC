@@ -80,7 +80,3 @@ arrow::Status RevenueByDay::process(const int64_t& batchSize,const std::vector<s
 
     return arrow::Status::OK();
 }
-
-void RevenueByDay::finish(const std::string& output){
-    
-}
