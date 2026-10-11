@@ -31,13 +31,13 @@ void RunCommand::registerCommand(CLI::App& app){
         "--files",
         data.filesToProcess,
         "Files that will be processed"
-    );
+    )->delimiter(',');
 
     cmd->add_option(
         "--processors",
         data.processors,
         "Processors that will run the files"
-    );
+    )->delimiter(',');
 
     cmd->add_option(
         "--batch",
