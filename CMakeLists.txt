@@ -159,6 +159,18 @@ PUBLIC
     Arrow::arrow_shared
 )
 
+# Utils library
+add_library(Utils
+    src/Utils/ExpanderFiles.cpp
+)
+
+target_include_directories(Utils PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
+
+target_link_libraries(Utils
+PRIVATE
+    spdlog::spdlog
+)
+
 # Main executable
 add_executable(EngineCabsNYC src/main.cpp)
 
