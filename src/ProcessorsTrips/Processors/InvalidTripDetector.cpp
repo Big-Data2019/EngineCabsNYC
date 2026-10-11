@@ -102,7 +102,3 @@ arrow::Status InvalidTripDetector::process(const int64_t& batchSize,
 
     return arrow::Status::OK();
 }
-
-void InvalidTripDetector::finish(const std::string& output){
-
-}

@@ -70,6 +70,7 @@ PUBLIC
 add_library(Manifest
     src/Manifest/Json/ParquetDownload.cpp
     src/Manifest/Json/RowCounterManifest.cpp
+    src/Manifest/Json/InvalidTripManifest.cpp
 )
 
 target_include_directories(Manifest PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
