@@ -2,6 +2,7 @@
 #include "Manifest/JsonGenerator.hpp"
 #include "ProcessorsTrips/Processors/RowCounter.hpp"
 #include <string>
+#include <filesystem>
 
 void RowCounter::finish(const std::string& output){
     JsonBuilder data;
@@ -16,7 +17,7 @@ void RowCounter::finish(const std::string& output){
     data.newData("Troughput", rowStats.megabytesPerSecond());
 
     std::filesystem::create_directories(output);
-    const std::filesystem::path fileName = std::filesystem::path(output) / "manifest.json";
+    const std::filesystem::path fileName = std::filesystem::path(output) / "RowCounterManifest.json";
 
     JsonGenerator generator;
     generator.generateManifest(fileName.string(), data);
