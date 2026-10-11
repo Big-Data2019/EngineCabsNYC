@@ -15,8 +15,9 @@ void RowCounter::finish(const std::string& output){
     data.newData("Rows/sec", rowStats.rowsPerSecond());
     data.newData("Troughput", rowStats.megabytesPerSecond());
 
-    const std::string fileName = "manifest.json";
+    std::filesystem::create_directories(output);
+    const std::filesystem::path fileName = std::filesystem::path(output) / "manifest.json";
 
     JsonGenerator generator;
-    generator.generateManifest(fileName, data);
+    generator.generateManifest(fileName.string(), data);
 }
