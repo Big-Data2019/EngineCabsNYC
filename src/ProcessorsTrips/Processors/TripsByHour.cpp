@@ -48,6 +48,7 @@ arrow::Status TripsByHour::process(const int64_t& batchSize, const std::vector<s
                 // Break the while loop when there are no more batches left
                 if(!batch) break;
                 tripsHStats.batchCounter++;
+                tripsHStats.numRows += batch->num_rows();
 
                 auto dateArray = std::static_pointer_cast<arrow::TimestampArray>(batch->column(0));
                 for(int64_t i = 0; i < batch->num_rows(); i++){
