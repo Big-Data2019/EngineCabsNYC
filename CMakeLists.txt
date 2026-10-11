@@ -51,12 +51,25 @@ PUBLIC
     yaml-cpp::yaml-cpp
 )
 
+# ManifestCore library
+add_library(ManifestCore
+    src/Manifest/JsonBuilder.cpp
+    src/Manifest/JsonGenerator.cpp
+)
+
+target_include_directories(ManifestCore PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
+
+target_link_libraries(ManifestCore
+PRIVATE
+    spdlog::spdlog
+PUBLIC
+    nlohmann_json::nlohmann_json
+)
+
 # Manifest library
 add_library(Manifest
     src/Manifest/Json/ParquetDownload.cpp
-    src/Manifest/Json/RawCounterManifest.cpp
-    src/Manifest/JsonBuilder.cpp
-    src/Manifest/JsonGenerator.cpp
+    src/Manifest/Json/RowCounterManifest.cpp
 )
 
 target_include_directories(Manifest PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
@@ -66,9 +79,9 @@ PRIVATE
     spdlog::spdlog
     Download
     Processors
+    ManifestCore
 PUBLIC
     Config
-    nlohmann_json::nlohmann_json
 )
 
 # Download library
@@ -156,6 +169,7 @@ PRIVATE
     Parquet::parquet_shared
     spdlog::spdlog
     Utils
+    ManifestCore
 PUBLIC
     Arrow::arrow_shared
 )
