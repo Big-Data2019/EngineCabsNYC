@@ -155,6 +155,7 @@ target_link_libraries(Processors
 PRIVATE
     Parquet::parquet_shared
     spdlog::spdlog
+    Utils
 PUBLIC
     Arrow::arrow_shared
 )

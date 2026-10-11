@@ -1,4 +1,5 @@
 #include "ProcessorsTrips/ProcessorRegister.hpp"
+#include "Utils/ExpanderFiles.hpp"
 #include <spdlog/spdlog.h>
 
 void ProcessorRegister::registerProcessors(RowStats& rowStats,
@@ -17,11 +18,13 @@ void ProcessorRegister::registerProcessors(RowStats& rowStats,
 }
 
 void ProcessorRegister::searchProcessor(const ProcessorData& data){
+    auto files = expandFiles(data.filesToProcess);
+
     for(const auto& processor : data.processors){
         auto it = processors.find(processor);
 
         if(it != processors.end()){
-            auto status = it->second->process(data.batchSize, data.filesToProcess);
+            auto status = it->second->process(data.batchSize, files);
             if(!status.ok()){
                 spdlog::error("Processor: {}, failed: {}", processor, status.ToString());
             }
