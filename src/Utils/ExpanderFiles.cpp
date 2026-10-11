@@ -23,7 +23,7 @@ std::vector<std::string> expandFiles(const std::vector<std::string>& files){
                 }
             }
         } else{
-            if(!std::filesystem::exists(path)){
+            if(std::filesystem::exists(path)){
                 extractedFiles.push_back(path.string());
             } else{
                 spdlog::warn("File does not exists: {}", path.string());
