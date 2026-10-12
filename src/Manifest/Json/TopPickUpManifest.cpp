@@ -1,0 +1,42 @@
+#include "ProcessorsTrips/Processors/TopPickupZones.hpp"
+#include "Manifest/JsonBuilder.hpp"
+#include "Manifest/JsonGenerator.hpp"
+#include <algorithm>
+#include <filesystem>
+
+void TopPickupZones::finish(const std::string& output){
+    JsonBuilder data;
+
+    std::vector<std::pair<int32_t, int64_t>> zones(pickUpZone.begin(), pickUpZone.end());
+    std::sort(zones.begin(), zones.end(), [](const auto& a, const auto& b){
+        return a.second > b.second;
+    });
+
+    std::vector<nlohmann::ordered_json> topZones;
+    const std::size_t amount = std::min<std::size_t>(10, zones.size());
+
+    for(std::size_t i = 0; i < amount; i++){
+        nlohmann::ordered_json zone;
+
+        zone["rank"] = i + 1;
+        zone["zoneId"] = zones[i].first;
+        zone["trips"] = zones[i].second;
+
+        topZones.push_back(zone);
+    }
+
+    data.newData("Files", pickupZStats.files);
+    data.newData("Batches", pickupZStats.batchCounter);
+    data.newData("Input size", pickupZStats.bytesProcessed);
+    data.newData("Elapsed", pickupZStats.elapsedSeconds);
+    data.newData("Batch size", pickupZStats.numBatch);
+    data.newData("Rows/sec", pickupZStats.rowsPerSecond());
+    data.newData("Troughput", pickupZStats.megabytesPerSecond());
+    data.manyNewData("Pickup zones", topZones);
+
+    std::filesystem::create_directories(output);
+    const std::filesystem::path fileName = std::filesystem::path(output) / "TopPickUpManifest.json";
+
+    JsonGenerator generator;
+    generator.generateManifest(fileName.string(), data);
+}

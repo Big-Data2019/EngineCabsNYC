@@ -72,6 +72,3 @@ arrow::Status TopPickupZones::process(const int64_t& batchSize,
 
 	return arrow::Status::OK();
 }
-
-void TopPickupZones::finish(const std::string& output){
-}

@@ -73,6 +73,7 @@ add_library(Manifest
     src/Manifest/Json/InvalidTripManifest.cpp
     src/Manifest/Json/RevenueDayManifest.cpp
     src/Manifest/Json/TripsByHourManifest.cpp
+    src/Manifest/Json/TopPickUpManifest.cpp
 )
 
 target_include_directories(Manifest PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
