@@ -106,6 +106,3 @@ const std::vector<std::string>& files)
 
     return arrow::Status::OK();
 }
-
-void FareDistribution::finish(const std::string& output){
-}
