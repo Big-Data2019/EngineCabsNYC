@@ -4,7 +4,7 @@
 #include <map>
 
 struct TripsHourStats{
-    int64_t files = 0;
+    int8_t files = 0;
     int64_t numRows = 0;
     int64_t batchCounter = 0;
     int64_t bytesProcessed = 0;
