@@ -1,8 +1,6 @@
 #include "ProcessorsTrips/Processors/RevenueByDay.hpp"
 #include "Parquet/IdxColumnSchema.hpp"
-#include <arrow/io/api.h>
-#include <arrow/api.h>
-#include <parquet/arrow/reader.h>
+#include "Parquet/ParquetReader.hpp"
 #include <chrono>
 #include <filesystem>
 #include <spdlog/spdlog.h>
@@ -14,31 +12,21 @@ RevenueByDay::RevenueByDay(RevenueDayStats& stats_)
 arrow::Status RevenueByDay::process(const int64_t& batchSize,const std::vector<std::string>& files)
 {
     for(const auto& file : files){
-        std::shared_ptr<arrow::io::ReadableFile> input;
-        ARROW_ASSIGN_OR_RAISE(input, arrow::io::ReadableFile::Open(file));
-
-        parquet::ArrowReaderProperties readerProperties;
-        readerProperties.set_batch_size(batchSize);
-
-        // Builder to create the properties
-        parquet::arrow::FileReaderBuilder readerBuilder;
-        readerBuilder.properties(readerProperties);
-
-        ARROW_RETURN_NOT_OK(readerBuilder.Open(input));
-
-        std::unique_ptr<parquet::arrow::FileReader> arrowReader;
-        ARROW_ASSIGN_OR_RAISE(arrowReader, readerBuilder.Build());
-
-        ARROW_ASSIGN_OR_RAISE(const int dateColumn, getIdxColumn(file, "tpep_pickup_datetime"));
-        ARROW_ASSIGN_OR_RAISE(const int totalAmountColumn, getIdxColumn(file, "total_amount"));
+        ARROW_ASSIGN_OR_RAISE(auto parquetContext, openParquetReader(file, batchSize));
+        ARROW_ASSIGN_OR_RAISE(const int dateColumn, getIdxColumn(
+            parquetContext.schema, "tpep_pickup_datetime"));
+        ARROW_ASSIGN_OR_RAISE(const int totalAmountColumn, getIdxColumn(
+            parquetContext.schema, "total_amount"));
 
         std::shared_ptr<arrow::RecordBatch> batch;
         std::shared_ptr<arrow::RecordBatchReader> batchReader;
 
         auto start = std::chrono::high_resolution_clock::now();
-        for(int idxRowGroup = 0; idxRowGroup < arrowReader->num_row_groups(); idxRowGroup++){
+        for(int idxRowGroup = 0; idxRowGroup < parquetContext.reader->num_row_groups();
+        idxRowGroup++){
             ARROW_ASSIGN_OR_RAISE(batchReader,
-                arrowReader->GetRecordBatchReader({idxRowGroup}, {dateColumn, totalAmountColumn}));
+                parquetContext.reader->GetRecordBatchReader(
+                    {idxRowGroup}, {dateColumn, totalAmountColumn}));
 
             while(true){
                 ARROW_RETURN_NOT_OK(batchReader->ReadNext(&batch));
