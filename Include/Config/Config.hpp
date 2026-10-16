@@ -2,7 +2,7 @@
 
 #include <vector>
 #include <string_view>
-#include <yaml-cpp/yaml.h>
+#include <yaml-cpp/node/node.h>
 
 class Config final{
 private:
