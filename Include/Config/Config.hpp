@@ -1,6 +1,5 @@
 #pragma once
 
-#include <string>
 #include <vector>
 #include <string_view>
 #include <yaml-cpp/yaml.h>
@@ -10,8 +9,8 @@ private:
     explicit Config(const YAML::Node& node);
     static constexpr std::string_view baseUrl = "https://d37ci6vzurychx.cloudfront.net/trip-data";
 
-    std::string datasetName_;
-    std::string outputDir_;
+    const std::string datasetName_;
+    const std::string outputDir_;
     std::vector<int> years_;
     std::vector<int> months_;
 
