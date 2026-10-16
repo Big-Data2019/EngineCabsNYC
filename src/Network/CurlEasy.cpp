@@ -6,7 +6,7 @@ CurlEasy::CurlEasy() :
     curl(curl_easy_init())
 {
     if(!curl){
-        throw std::runtime_error("Failed to global initialize libcurl handler");
+        throw std::runtime_error("Failed to initialize libcurl easy handle");
     }
 }
 
