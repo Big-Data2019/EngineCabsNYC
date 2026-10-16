@@ -18,7 +18,6 @@ find_package(fmt CONFIG REQUIRED)
 find_package(CLI11 CONFIG REQUIRED)
 find_package(Arrow CONFIG REQUIRED)
 find_package(Parquet CONFIG REQUIRED)
-find_package(re2 CONFIG REQUIRED)
 find_package(nlohmann_json CONFIG REQUIRED)
 find_package(CURL CONFIG REQUIRED)
 
@@ -45,7 +44,6 @@ target_include_directories(Config PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
 
 target_link_libraries(Config
 PRIVATE
-    re2::re2
     fmt::fmt
 PUBLIC
     yaml-cpp::yaml-cpp
