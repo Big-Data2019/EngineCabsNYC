@@ -1,7 +1,7 @@
-#include "Network/CurlGlobal.hpp"
-#include "Config/Config.hpp"
 #include "ProcessorsTrips/ProcessorData.hpp"
 #include "Cli/CommandRegister.hpp"
+#include "Network/CurlGlobal.hpp"
+#include "Config/Config.hpp"
 #include <spdlog/spdlog.h>
 #include <CLI/CLI.hpp>
 #include <locale>
@@ -23,10 +23,6 @@ int main(int argc, char **argv){
         return app.exit(e);
     }
 
-    if(argc == 1){
-        spdlog::info(app.help());
-        return 0;
-    }
-
+    if(argc == 1) spdlog::info(app.help());
     return 0;
 }
