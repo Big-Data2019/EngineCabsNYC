@@ -25,8 +25,8 @@ bool verifyDownload(const Config& config){
 
     for(auto& year : config.years()){
         for(auto& month : config.months()){
-            std::string outputPath = config.outputPath(year, month);
-            std::string url = config.downloadUrl(year, month);
+            std::string outputPath = config.getOutputPath(year, month);
+            std::string url = config.getDownloadUrl(year, month);
             bool exists = existsFile(outputPath);
 
             spdlog::info("Link: {}", url);

@@ -16,8 +16,8 @@ private:
 
 public:
     explicit Config(const std::string& yamlFile);
-    std::string downloadUrl(int year, int month) const;
-    std::string outputPath(int year, int month) const;
+    std::string getDownloadUrl(int year, int month) const;
+    std::string getOutputPath(int year, int month) const;
 
     const std::vector<int>& years() const noexcept;
     const std::vector<int>& months() const noexcept;

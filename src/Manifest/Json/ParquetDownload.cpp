@@ -30,7 +30,7 @@ void generateDownloadManifest(const Config& config){
             nlohmann::ordered_json fileList;
             fileList["year"] = year;
             fileList["month"] = month;
-            fileList["path"] = config.outputPath(year, month);
+            fileList["path"] = config.getOutputPath(year, month);
             fileList["source"] = "nyc_tlc";
             fileList["status"] = download ? "Downloaded" : "Failed";
 

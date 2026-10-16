@@ -13,13 +13,13 @@ Config::Config(const YAML::Node& node) :
     outputDir_(node["output_dir"].as<std::string>())
 {}
 
-std::string Config::downloadUrl(int year, int month) const{
+std::string Config::getDownloadUrl(int year, int month) const{
     return fmt::format("{}/{}_tripdata_{}-{:02}.parquet",
         baseUrl, getTypeDataset(datasetName_), year, month
     );
 }
 
-std::string Config::outputPath(int year, int month) const{
+std::string Config::getOutputPath(int year, int month) const{
     return fmt::format("{}/dataset_{}-{:02}.parquet",
         outputDir_, year, month
     );
