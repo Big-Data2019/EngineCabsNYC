@@ -123,6 +123,7 @@ PRIVATE
 add_library(Parquet
     src/Parquet/Inspect.cpp
     src/Parquet/IdxColumnSchema.cpp
+    src/Parquet/ParquetReader.cpp
 )
 
 target_include_directories(Parquet PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
@@ -175,6 +176,7 @@ PRIVATE
     Parquet::parquet_shared
     spdlog::spdlog
     Utils
+    Parquet
     ManifestCore
 PUBLIC
     Arrow::arrow_shared
