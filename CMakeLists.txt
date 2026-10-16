@@ -209,7 +209,6 @@ add_executable(EngineCabsNYCTests Tests/TestMain.cpp)
 
 target_link_libraries(EngineCabsNYCTests
 PRIVATE
-    GTest::gtest
     GTest::gtest_main
 )
 
@@ -218,7 +217,7 @@ add_executable(EngineCabsNYCBench Benchmarks/BenchMain.cpp)
 
 target_link_libraries(EngineCabsNYCBench
 PRIVATE
-    benchmark::benchmark
+    benchmark::benchmark_main
 )
 
 # Copy the dataset configuration file to the build directory
