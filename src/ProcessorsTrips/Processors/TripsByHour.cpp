@@ -1,4 +1,5 @@
 #include "ProcessorsTrips/Processors/TripsByHour.hpp"
+#include "Parquet/IdxColumnSchema.hpp"
 #include <arrow/io/api.h>
 #include <arrow/api.h>
 #include <parquet/arrow/reader.h>
@@ -27,13 +28,7 @@ arrow::Status TripsByHour::process(const int64_t& batchSize, const std::vector<s
         std::unique_ptr<parquet::arrow::FileReader> arrowReader;
         ARROW_ASSIGN_OR_RAISE(arrowReader, readerBuilder.Build());
 
-        std::shared_ptr<arrow::Schema> schema;
-        ARROW_RETURN_NOT_OK(arrowReader->GetSchema(&schema));
-
-        const int dateColumn = schema->GetFieldIndex("tpep_pickup_datetime");
-        if(dateColumn == -1){
-            return arrow::Status::Invalid("The required column was not found");
-        }
+        ARROW_ASSIGN_OR_RAISE(const int dateColumn, getIdxColumn(file, "tpep_pickup_datetime"));
 
         std::shared_ptr<arrow::RecordBatch> batch;
         std::shared_ptr<arrow::RecordBatchReader> batchReader;
