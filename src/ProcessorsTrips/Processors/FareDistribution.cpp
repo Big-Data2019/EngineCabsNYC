@@ -1,4 +1,5 @@
 #include "ProcessorsTrips/Processors/FareDistribution.hpp"
+#include "Parquet/IdxColumnSchema.hpp"
 #include <arrow/io/api.h>
 #include <arrow/api.h>
 #include <parquet/arrow/reader.h>
@@ -28,13 +29,7 @@ const std::vector<std::string>& files)
         std::unique_ptr<parquet::arrow::FileReader> arrowReader;
         ARROW_ASSIGN_OR_RAISE(arrowReader, readerBuilder.Build());
 
-        std::shared_ptr<arrow::Schema> schema;
-        ARROW_RETURN_NOT_OK(arrowReader->GetSchema(&schema));
-
-        const int fareAmountColumn = schema->GetFieldIndex("fare_amount");
-        if(fareAmountColumn == -1){
-            return arrow::Status::Invalid("The required column was not found");
-        }
+        ARROW_ASSIGN_OR_RAISE(const int fareAmountColumn, getIdxColumn(file, "fare_amount"));
 
         std::shared_ptr<arrow::RecordBatch> batch;
         std::shared_ptr<arrow::RecordBatchReader> batchReader;

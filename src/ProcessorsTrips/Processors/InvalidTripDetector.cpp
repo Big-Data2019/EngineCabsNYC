@@ -1,4 +1,5 @@
 #include "ProcessorsTrips/Processors/InvalidTripDetector.hpp"
+#include "Parquet/IdxColumnSchema.hpp"
 #include <arrow/io/api.h>
 #include <arrow/api.h>
 #include <parquet/arrow/reader.h>
@@ -28,20 +29,10 @@ arrow::Status InvalidTripDetector::process(const int64_t& batchSize,
         std::unique_ptr<parquet::arrow::FileReader> arrowReader;
         ARROW_ASSIGN_OR_RAISE(arrowReader, readerBuilder.Build());
 
-        std::shared_ptr<arrow::Schema> schema;
-        ARROW_RETURN_NOT_OK(arrowReader->GetSchema(&schema));
-
-        const int pickupTimeColumn = schema->GetFieldIndex("tpep_pickup_datetime");
-        const int dropoffTimeColumn = schema->GetFieldIndex("tpep_dropoff_datetime");
-        if(pickupTimeColumn == -1 || dropoffTimeColumn == -1){
-            return arrow::Status::Invalid("The required column was not found");
-        }
-
-        const int tripDistanceColumn = schema->GetFieldIndex("trip_distance");
-        const int totalAmountColumn = schema->GetFieldIndex("total_amount");
-        if(tripDistanceColumn == -1 || totalAmountColumn == -1){
-            return arrow::Status::Invalid("The required column was not found");
-        }
+        ARROW_ASSIGN_OR_RAISE(const int pickupTimeColumn, getIdxColumn(file, "tpep_pickup_datetime"));
+        ARROW_ASSIGN_OR_RAISE(const int dropoffTimeColumn, getIdxColumn(file, "tpep_dropoff_datetime"));
+        ARROW_ASSIGN_OR_RAISE(const int tripDistanceColumn, getIdxColumn(file, "trip_distance"));
+        ARROW_ASSIGN_OR_RAISE(const int totalAmountColumn, getIdxColumn(file, "total_amount"));
 
         std::shared_ptr<arrow::RecordBatch> batch;
         std::shared_ptr<arrow::RecordBatchReader> batchReader;
