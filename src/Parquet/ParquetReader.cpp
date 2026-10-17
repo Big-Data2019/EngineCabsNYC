@@ -14,14 +14,14 @@ arrow::Result<ParquetReaderContext> openParquetReader(const std::string& file, c
 
     ARROW_RETURN_NOT_OK(readerBuilder.Open(input));
 
-    std::unique_ptr<parquet::arrow::FileReader> arrowReader;
-    ARROW_ASSIGN_OR_RAISE(arrowReader, readerBuilder.Build()); // Construct the reader
+    std::unique_ptr<parquet::arrow::FileReader> reader;
+    ARROW_ASSIGN_OR_RAISE(reader, readerBuilder.Build()); // Construct the reader
 
     std::shared_ptr<arrow::Schema> schema; // Get the schema with the reader
-    ARROW_RETURN_NOT_OK(arrowReader->GetSchema(&schema));
+    ARROW_RETURN_NOT_OK(reader->GetSchema(&schema));
 
     return ParquetReaderContext{
-        std::move(arrowReader),
+        std::move(reader),
         std::move(schema)
     };
 }
