@@ -119,9 +119,10 @@ PRIVATE
 
 # Parquet library
 add_library(Parquet
-    src/Parquet/Inspect.cpp
+    src/Parquet/InspectSchema.cpp
     src/Parquet/IdxColumnSchema.cpp
     src/Parquet/ParquetReader.cpp
+    src/Parquet/PrintSchemaInfo.cpp
 )
 
 target_include_directories(Parquet PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
