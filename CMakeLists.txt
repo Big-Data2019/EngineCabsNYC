@@ -21,6 +21,8 @@ find_package(Parquet CONFIG REQUIRED)
 find_package(nlohmann_json CONFIG REQUIRED)
 find_package(CURL CONFIG REQUIRED)
 
+add_subdirectory(src)
+
 # Network library
 add_library(Network
     src/Network/CurlGlobal.cpp
@@ -102,19 +104,6 @@ PRIVATE
     spdlog::spdlog
 PUBLIC
     Config
-)
-
-# Filesystem library
-add_library(Filesystem
-    src/Filesystem/CreateOutputDir.cpp
-    src/Filesystem/File.cpp
-)
-
-target_include_directories(Filesystem PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
-
-target_link_libraries(Filesystem
-PRIVATE
-    spdlog::spdlog
 )
 
 # Parquet library
