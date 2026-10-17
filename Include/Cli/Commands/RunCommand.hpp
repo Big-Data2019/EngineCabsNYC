@@ -9,6 +9,6 @@ private:
     void execute() override;
 
 public:
-    void registerCommand(CLI::App& app) override;
     RunCommand(ProcessorData& data_);
+    void registerCommand(CLI::App& app) override;
 };
