@@ -23,19 +23,6 @@ find_package(CURL CONFIG REQUIRED)
 
 add_subdirectory(src)
 
-# Network library
-add_library(Network
-    src/Network/CurlGlobal.cpp
-    src/Network/CurlEasy.cpp
-)
-
-target_include_directories(Network PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
-
-target_link_libraries(Network
-PUBLIC
-    CURL::libcurl
-)
-
 # Config library
 add_library(Config
     src/Config/Config.cpp
