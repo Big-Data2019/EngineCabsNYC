@@ -41,13 +41,11 @@ if(BUILD_TESTING)
     add_subdirectory(Tests)
 endif()
 
-# Benchmark executable
-add_executable(EngineCabsNYCBench Benchmarks/BenchMain.cpp)
-
-target_link_libraries(EngineCabsNYCBench
-PRIVATE
-    benchmark::benchmark_main
-)
+# Benchmarks configuration and enablement
+option(BUILD_BENCHMARKS "Build benchmarks" OFF)
+if(BUILD_BENCHMARKS)
+    add_subdirectory(Benchmarks)
+endif()
 
 # Copy the dataset configuration file to the build directory
 configure_file(
