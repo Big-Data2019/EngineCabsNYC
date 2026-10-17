@@ -23,21 +23,6 @@ find_package(CURL CONFIG REQUIRED)
 
 add_subdirectory(src)
 
-# Config library
-add_library(Config
-    src/Config/Config.cpp
-    src/Config/DatasetType.cpp
-)
-
-target_include_directories(Config PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
-
-target_link_libraries(Config
-PRIVATE
-    fmt::fmt
-PUBLIC
-    yaml-cpp::yaml-cpp
-)
-
 # ManifestCore library
 add_library(ManifestCore
     src/Manifest/JsonBuilder.cpp
