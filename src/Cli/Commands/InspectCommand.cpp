@@ -1,13 +1,16 @@
 #include "Cli/Commands/InspectCommand.hpp"
-#include "Parquet/Inspect.hpp"
+#include "Parquet/PrintSchemaInfo.hpp"
+#include "Parquet/InspectSchema.hpp"
 #include <spdlog/spdlog.h>
 
 void InspectCommand::execute(){
-    auto status = inspectSchema(file);
-    if(!status.ok()){
-        spdlog::error("Error of the status: {}", status.ToString());
-        return;
+    auto result = inspectParquetSchema(file);
+    if(!result.ok()){
+        spdlog::error("Error of the status: {}", result.status().ToString());
+        return; 
     }
+
+    printSchemaInfo(*result);
 }
 
 void InspectCommand::registerCommand(CLI::App& app){
