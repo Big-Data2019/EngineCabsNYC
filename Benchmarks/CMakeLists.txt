@@ -1,3 +1,5 @@
+find_package(benchmark CONFIG REQUIRED)
+
 # Benchmark executable
 add_executable(EngineCabsNYCBench BenchMain.cpp)
 

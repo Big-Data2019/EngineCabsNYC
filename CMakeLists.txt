@@ -10,16 +10,10 @@ if(WIN32)
 endif()
 
 # Add source files
-find_package(GTest CONFIG REQUIRED)
-find_package(benchmark CONFIG REQUIRED)
-find_package(yaml-cpp CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
-find_package(fmt CONFIG REQUIRED)
 find_package(CLI11 CONFIG REQUIRED)
 find_package(Arrow CONFIG REQUIRED)
 find_package(Parquet CONFIG REQUIRED)
-find_package(nlohmann_json CONFIG REQUIRED)
-find_package(CURL CONFIG REQUIRED)
 
 add_subdirectory(src)
 

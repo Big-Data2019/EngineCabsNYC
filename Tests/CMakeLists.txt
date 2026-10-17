@@ -1,3 +1,5 @@
+find_package(GTest CONFIG REQUIRED)
+
 # Test executable
 add_executable(EngineCabsNYCTests TestMain.cpp)
 

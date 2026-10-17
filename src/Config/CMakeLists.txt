@@ -1,3 +1,6 @@
+find_package(yaml-cpp CONFIG REQUIRED)
+find_package(fmt CONFIG REQUIRED)
+
 # Config library
 add_library(Config
     Config.cpp

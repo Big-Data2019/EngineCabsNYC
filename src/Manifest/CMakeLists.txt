@@ -1,3 +1,4 @@
+find_package(nlohmann_json CONFIG REQUIRED)
 
 # ManifestCore library
 add_library(ManifestCore

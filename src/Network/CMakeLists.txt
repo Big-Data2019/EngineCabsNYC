@@ -1,3 +1,5 @@
+find_package(CURL CONFIG REQUIRED)
+
 # Network library
 add_library(Network
     CurlGlobal.cpp
