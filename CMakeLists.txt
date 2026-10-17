@@ -61,30 +61,6 @@ PUBLIC
     Config
 )
 
-# Processors library
-add_library(Processors
-    src/ProcessorsTrips/Processors/RevenueByDay.cpp
-    src/ProcessorsTrips/Processors/RowCounter.cpp
-    src/ProcessorsTrips/Processors/TripsByHour.cpp
-    src/ProcessorsTrips/Processors/InvalidTripDetector.cpp
-    src/ProcessorsTrips/Processors/TopPickupZones.cpp
-    src/ProcessorsTrips/Processors/FareDistribution.cpp
-    src/ProcessorsTrips/ProcessorRegister.cpp
-)
-
-target_include_directories(Processors PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
-
-target_link_libraries(Processors
-PRIVATE
-    Parquet::parquet_shared
-    spdlog::spdlog
-    Utils
-    Parquet
-    ManifestCore
-PUBLIC
-    Arrow::arrow_shared
-)
-
 # Main executable
 add_executable(EngineCabsNYC src/main.cpp)
 
