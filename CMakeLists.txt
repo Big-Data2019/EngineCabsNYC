@@ -35,13 +35,11 @@ PRIVATE
     CLI11::CLI11
 )
 
-# Test executable
-add_executable(EngineCabsNYCTests Tests/TestMain.cpp)
-
-target_link_libraries(EngineCabsNYCTests
-PRIVATE
-    GTest::gtest_main
-)
+# Tests configuration and enablement
+include(CTest)
+if(BUILD_TESTING)
+    add_subdirectory(Tests)
+endif()
 
 # Benchmark executable
 add_executable(EngineCabsNYCBench Benchmarks/BenchMain.cpp)
