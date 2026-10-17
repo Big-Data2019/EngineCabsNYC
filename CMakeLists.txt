@@ -61,63 +61,6 @@ PUBLIC
     Config
 )
 
-# Download library
-add_library(Download
-    src/Download/parquetFiles.cpp
-    src/Download/CheckDownload.cpp
-)
-
-target_include_directories(Download PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
-
-target_link_libraries(Download
-PRIVATE
-    Network
-    Filesystem
-    spdlog::spdlog
-PUBLIC
-    Config
-)
-
-# Parquet library
-add_library(Parquet
-    src/Parquet/InspectSchema.cpp
-    src/Parquet/IdxColumnSchema.cpp
-    src/Parquet/ParquetReader.cpp
-    src/Parquet/PrintSchemaInfo.cpp
-)
-
-target_include_directories(Parquet PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
-
-target_link_libraries(Parquet
-PRIVATE
-    spdlog::spdlog
-    Parquet::parquet_shared
-PUBLIC
-    Arrow::arrow_shared
-)
-
-# Cli library
-add_library(Cli
-    src/Cli/Commands/DownloadCommand.cpp
-    src/Cli/Commands/InspectCommand.cpp
-    src/Cli/Commands/RunCommand.cpp
-    src/Cli/CommandRegister.cpp
-)
-
-target_include_directories(Cli PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
-
-target_link_libraries(Cli
-PRIVATE
-    Manifest
-    Filesystem
-    Parquet
-    spdlog::spdlog
-PUBLIC
-    Config
-    Processors
-    CLI11::CLI11
-)
-
 # Processors library
 add_library(Processors
     src/ProcessorsTrips/Processors/RevenueByDay.cpp
@@ -140,18 +83,6 @@ PRIVATE
     ManifestCore
 PUBLIC
     Arrow::arrow_shared
-)
-
-# Utils library
-add_library(Utils
-    src/Utils/ExpanderFiles.cpp
-)
-
-target_include_directories(Utils PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
-
-target_link_libraries(Utils
-PRIVATE
-    spdlog::spdlog
 )
 
 # Main executable

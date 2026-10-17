@@ -1,3 +1,7 @@
 add_subdirectory(Filesystem)
 add_subdirectory(Network)
 add_subdirectory(Config)
+add_subdirectory(Download)
+add_subdirectory(Parquet)
+add_subdirectory(Cli)
+add_subdirectory(Utils)
