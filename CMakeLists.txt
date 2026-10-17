@@ -23,44 +23,6 @@ find_package(CURL CONFIG REQUIRED)
 
 add_subdirectory(src)
 
-# ManifestCore library
-add_library(ManifestCore
-    src/Manifest/JsonBuilder.cpp
-    src/Manifest/JsonGenerator.cpp
-)
-
-target_include_directories(ManifestCore PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
-
-target_link_libraries(ManifestCore
-PRIVATE
-    spdlog::spdlog
-PUBLIC
-    nlohmann_json::nlohmann_json
-)
-
-# Manifest library
-add_library(Manifest
-    src/Manifest/Json/ParquetDownload.cpp
-    src/Manifest/Json/RowCounterManifest.cpp
-    src/Manifest/Json/InvalidTripManifest.cpp
-    src/Manifest/Json/RevenueDayManifest.cpp
-    src/Manifest/Json/TripsByHourManifest.cpp
-    src/Manifest/Json/TopPickUpManifest.cpp
-    src/Manifest/Json/FareDisManifest.cpp
-)
-
-target_include_directories(Manifest PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
-
-target_link_libraries(Manifest
-PRIVATE
-    spdlog::spdlog
-    Download
-    Processors
-    ManifestCore
-PUBLIC
-    Config
-)
-
 # Main executable
 add_executable(EngineCabsNYC src/main.cpp)
 
