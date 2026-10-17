@@ -1,8 +1,8 @@
 #include "Download/parquetFiles.hpp"
 #include "Network/CurlEasy.hpp"
-#include <fstream>
 #include <spdlog/spdlog.h>
 #include <filesystem>
+#include <fstream>
 
 namespace{
 // Function to receive the network data and insert in the outputFile

@@ -2,8 +2,8 @@
 #include "Parquet/IdxColumnSchema.hpp"
 #include "Parquet/ParquetReader.hpp"
 #include <spdlog/spdlog.h>
-#include <chrono>
 #include <filesystem>
+#include <chrono>
 
 TripsByHour::TripsByHour(TripsHourStats& stats_)
     : tripsHStats(stats_)

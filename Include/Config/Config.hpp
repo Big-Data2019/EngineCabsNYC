@@ -1,8 +1,8 @@
 #pragma once
 
-#include <vector>
-#include <string_view>
 #include <yaml-cpp/yaml.h>
+#include <string_view>
+#include <vector>
 
 class Config final{
 private:

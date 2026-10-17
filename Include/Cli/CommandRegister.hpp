@@ -1,11 +1,11 @@
 #pragma once
 
-#include "Cli/ICommand.hpp"
-#include "Config/Config.hpp"
 #include "ProcessorsTrips/ProcessorData.hpp"
+#include "Config/Config.hpp"
+#include "Cli/ICommand.hpp"
+#include <utility>
 #include <vector>
 #include <memory>
-#include <utility>
 
 class CommandRegister final{
 private:

@@ -1,8 +1,8 @@
 #include "ProcessorsTrips/Processors/TopPickupZones.hpp"
-#include "Manifest/JsonBuilder.hpp"
 #include "Manifest/JsonGenerator.hpp"
-#include <algorithm>
+#include "Manifest/JsonBuilder.hpp"
 #include <filesystem>
+#include <algorithm>
 
 void TopPickupZones::finish(const std::string& output){
     JsonBuilder data;

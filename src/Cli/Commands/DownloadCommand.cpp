@@ -1,7 +1,7 @@
+#include "Manifest/Json/ParquetDownload.hpp"
 #include "Cli/Commands/DownloadCommand.hpp"
 #include "Filesystem/CreateOutputDir.hpp"
 #include "Config/DatasetType.hpp"
-#include "Manifest/Json/ParquetDownload.hpp"
 #include <spdlog/spdlog.h>
 
 DownloadCommand::DownloadCommand(const Config& config_)

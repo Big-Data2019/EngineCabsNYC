@@ -1,6 +1,6 @@
 #include "ProcessorsTrips/Processors/InvalidTripDetector.hpp"
-#include "Manifest/JsonBuilder.hpp"
 #include "Manifest/JsonGenerator.hpp"
+#include "Manifest/JsonBuilder.hpp"
 #include <string>
 
 void InvalidTripDetector::finish(const std::string& output){

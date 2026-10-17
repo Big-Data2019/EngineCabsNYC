@@ -1,8 +1,8 @@
 #include "Manifest/Json/ParquetDownload.hpp"
-#include "Manifest/JsonBuilder.hpp"
 #include "Manifest/JsonGenerator.hpp"
-#include "Utils/MeasureTime.hpp"
 #include "Download/CheckDownload.hpp"
+#include "Manifest/JsonBuilder.hpp"
+#include "Utils/MeasureTime.hpp"
 
 namespace{
 std::string generateTimestamp(const std::string& name){

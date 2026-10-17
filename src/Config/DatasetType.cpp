@@ -1,8 +1,8 @@
 #include "Config/DatasetType.hpp"
 #include <string_view>
 #include <algorithm>
-#include <array>
 #include <cctype>
+#include <array>
 
 std::string getTypeDataset(const std::string& datasetName){
     std::string lowerCaseName = datasetName;

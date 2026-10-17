@@ -1,8 +1,8 @@
 #include "ProcessorsTrips/Processors/RowCounter.hpp"
 #include "Parquet/ParquetReader.hpp"
 #include <spdlog/spdlog.h>
-#include <chrono>
 #include <filesystem>
+#include <chrono>
 
 RowCounter::RowCounter(RowStats& stats_)
     : rowStats(stats_)

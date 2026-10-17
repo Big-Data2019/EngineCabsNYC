@@ -1,7 +1,7 @@
 #pragma once
 
-#include <chrono>
 #include <utility>
+#include <chrono>
 
 template <typename Func, typename... Args>
 // Measures the duration from the start to an end time

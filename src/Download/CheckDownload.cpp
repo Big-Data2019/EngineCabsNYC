@@ -1,8 +1,8 @@
 #include "Download/CheckDownload.hpp"
-#include "Filesystem/File.hpp"
 #include "Download/parquetFiles.hpp"
-#include <filesystem>
+#include "Filesystem/File.hpp"
 #include <spdlog/spdlog.h>
+#include <filesystem>
 
 namespace{
 bool readyToProcess(const std::string& outputPath, const std::string& url, bool exists){

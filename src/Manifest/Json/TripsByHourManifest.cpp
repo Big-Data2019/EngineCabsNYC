@@ -1,6 +1,6 @@
 #include "ProcessorsTrips/Processors/TripsByHour.hpp"
-#include "Manifest/JsonBuilder.hpp"
 #include "Manifest/JsonGenerator.hpp"
+#include "Manifest/JsonBuilder.hpp"
 #include <filesystem>
 
 void TripsByHour::finish(const std::string& output){

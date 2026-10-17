@@ -1,5 +1,5 @@
-#include "Config/Config.hpp"
 #include "Config/DatasetType.hpp"
+#include "Config/Config.hpp"
 #include <fmt/format.h>
 
 Config::Config(const std::string& yamlFile) :

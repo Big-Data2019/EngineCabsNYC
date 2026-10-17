@@ -1,6 +1,6 @@
 #include "Filesystem/CreateOutputDir.hpp"
-#include <filesystem>
 #include <spdlog/spdlog.h>
+#include <filesystem>
 
 bool createOutputDir(const std::string& outputDir){
     std::filesystem::path pathToDownload(outputDir);

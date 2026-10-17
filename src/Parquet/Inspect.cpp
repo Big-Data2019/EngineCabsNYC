@@ -1,8 +1,8 @@
 #include "Parquet/Inspect.hpp"
-#include <arrow/api.h>
-#include <arrow/io/file.h>
 #include <parquet/arrow/reader.h>
+#include <arrow/io/file.h>
 #include <spdlog/spdlog.h>
+#include <arrow/api.h>
 
 arrow::Status inspectSchema(const std::string& file){
     arrow::MemoryPool* pool = arrow::default_memory_pool();

@@ -1,6 +1,6 @@
 #include "ProcessorsTrips/Processors/RevenueByDay.hpp"
-#include "Manifest/JsonBuilder.hpp"
 #include "Manifest/JsonGenerator.hpp"
+#include "Manifest/JsonBuilder.hpp"
 
 void RevenueByDay::finish(const std::string& output){
     JsonBuilder data;

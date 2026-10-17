@@ -1,6 +1,6 @@
 #include "Utils/ExpanderFiles.hpp"
-#include <filesystem>
 #include <spdlog/spdlog.h>
+#include <filesystem>
 #include <algorithm>
 
 std::vector<std::string> expandFiles(const std::vector<std::string>& files){

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Cli/ICommand.hpp"
 #include "Config/Config.hpp"
+#include "Cli/ICommand.hpp"
 
 class DownloadCommand final : public ICommand{
 private:

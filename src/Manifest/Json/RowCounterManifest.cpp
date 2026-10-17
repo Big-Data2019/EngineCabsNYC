@@ -1,8 +1,8 @@
-#include "Manifest/JsonBuilder.hpp"
-#include "Manifest/JsonGenerator.hpp"
 #include "ProcessorsTrips/Processors/RowCounter.hpp"
-#include <string>
+#include "Manifest/JsonGenerator.hpp"
+#include "Manifest/JsonBuilder.hpp"
 #include <filesystem>
+#include <string>
 
 void RowCounter::finish(const std::string& output){
     JsonBuilder data;
