@@ -1,6 +1,6 @@
 #include "Manifest/Json/ParquetDownload.hpp"
-#include "Cli/Commands/DownloadCommand.hpp"
 #include "Filesystem/CreateOutputDir.hpp"
+#include "Cli/Commands/Download.hpp"
 #include "Config/DatasetType.hpp"
 #include <spdlog/spdlog.h>
 

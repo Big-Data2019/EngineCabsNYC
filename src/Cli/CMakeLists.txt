@@ -1,8 +1,8 @@
 # Cli library
 add_library(Cli
-    Commands/DownloadCommand.cpp
-    Commands/InspectCommand.cpp
-    Commands/RunCommand.cpp
+    Commands/Download.cpp
+    Commands/Inspect.cpp
+    Commands/Run.cpp
     CommandRegister.cpp
 )
 

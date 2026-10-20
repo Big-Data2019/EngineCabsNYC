@@ -1,6 +1,6 @@
-#include "Cli/Commands/InspectCommand.hpp"
 #include "Parquet/PrintSchemaInfo.hpp"
 #include "Parquet/InspectSchema.hpp"
+#include "Cli/Commands/Inspect.hpp"
 #include <spdlog/spdlog.h>
 
 void InspectCommand::execute(){
