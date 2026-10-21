@@ -1,4 +1,4 @@
-#include "Parquet/ParquetSchemaInfo.hpp"
+#include "Parquet/SchemaInfo.hpp"
 #include "Parquet/InspectSchema.hpp"
 #include <parquet/arrow/reader.h>
 #include <parquet/arrow/schema.h>

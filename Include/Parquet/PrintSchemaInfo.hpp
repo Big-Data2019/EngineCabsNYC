@@ -1,5 +1,5 @@
 #pragma once
 
-#include "Parquet/ParquetSchemaInfo.hpp"
+#include "Parquet/SchemaInfo.hpp"
 
 void printSchemaInfo(const SchemaInfo& info);

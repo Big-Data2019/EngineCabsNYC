@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Parquet/ParquetSchemaInfo.hpp"
+#include "Parquet/SchemaInfo.hpp"
 #include <arrow/result.h>
 #include <string>
 
