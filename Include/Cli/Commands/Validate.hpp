@@ -7,6 +7,7 @@
 class ValidateCommand final : public ICommand{
 private:
     std::vector<std::string> paths;
+    std::string output;
     void execute() override;
 
 public:
