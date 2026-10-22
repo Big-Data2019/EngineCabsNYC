@@ -2,7 +2,23 @@
 #include <arrow/io/api.h>
 #include <utility>
 
-arrow::Result<ParquetReaderContext> openParquetReader(const std::string& file, const int64_t& batchSize){
+arrow::Result<ParquetReaderContext> openParquetReader(const std::string& file){
+    std::shared_ptr<arrow::io::ReadableFile> input;
+    ARROW_ASSIGN_OR_RAISE(input, arrow::io::ReadableFile::Open(file)); // Open the file
+
+    std::unique_ptr<parquet::arrow::FileReader> reader;
+    ARROW_ASSIGN_OR_RAISE(reader, parquet::arrow::OpenFile(input, arrow::default_memory_pool()));
+
+    std::shared_ptr<arrow::Schema> schema; // Get the schema with the reader
+    ARROW_RETURN_NOT_OK(reader->GetSchema(&schema));
+
+    return ParquetReaderContext{
+        std::move(reader),
+        std::move(schema)
+    };
+}
+
+arrow::Result<ParquetReaderContext> openParquetReader(const std::string& file, int64_t batchSize){
     std::shared_ptr<arrow::io::ReadableFile> input;
     ARROW_ASSIGN_OR_RAISE(input, arrow::io::ReadableFile::Open(file)); // Open the file
 

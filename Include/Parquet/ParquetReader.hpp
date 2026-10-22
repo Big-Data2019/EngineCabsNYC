@@ -10,7 +10,6 @@ struct ParquetReaderContext{
     std::shared_ptr<arrow::Schema> schema;
 };
 
-arrow::Result<ParquetReaderContext> openParquetReader(
-    const std::string& file,
-    const int64_t& batchSize
-);
+arrow::Result<ParquetReaderContext> openParquetReader(const std::string& file);
+
+arrow::Result<ParquetReaderContext> openParquetReader(const std::string& file, int64_t batchSize);
