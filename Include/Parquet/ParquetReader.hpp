@@ -1,7 +1,8 @@
 #pragma once
 
 #include <parquet/arrow/reader.h>
-#include <arrow/api.h>
+#include <parquet/arrow/schema.h>
+#include <arrow/result.h>
 #include <memory>
 #include <string>
 
