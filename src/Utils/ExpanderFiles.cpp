@@ -12,6 +12,7 @@ std::vector<std::string> expandFiles(const std::vector<std::string>& files){
         if(path.filename() == "*.parquet"){
             auto dir = path.parent_path();
             if(dir.empty()) dir = ".";
+
             if(!std::filesystem::exists(dir)){
                 spdlog::warn("Directory does not exists: {}", dir.string());
                 continue;
