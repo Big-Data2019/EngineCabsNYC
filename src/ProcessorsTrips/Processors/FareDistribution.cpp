@@ -9,9 +9,7 @@ FareDistribution::FareDistribution(FareDistributionStats& stats_)
 	: fareDisStats(stats_)
 {}
 
-arrow::Status FareDistribution::process(int64_t batchSize,
-    const std::vector<std::string>& files)
-{
+arrow::Status FareDistribution::process(int64_t batchSize, const std::vector<std::string>& files){
     for(const auto& file : files){
         ARROW_ASSIGN_OR_RAISE(auto parquetContext, openParquetReader(file, batchSize));
         ARROW_ASSIGN_OR_RAISE(const int fareAmountColumn, getIdxColumn(
