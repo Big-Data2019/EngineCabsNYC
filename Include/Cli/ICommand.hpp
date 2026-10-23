@@ -5,7 +5,7 @@
 class ICommand{
 public:
     virtual ~ICommand() = default;
-    
+
     virtual void registerCommand(CLI::App& app) = 0;
     virtual void execute() = 0;
 };
