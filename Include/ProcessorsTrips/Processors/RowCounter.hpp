@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ProcessorsTrips/BatchProcessor.hpp"
+#include "ProcessorsTrips/TripBatchProcessor.hpp"
 
 struct RowStats{
     int8_t files = 0;

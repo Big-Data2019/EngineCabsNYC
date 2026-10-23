@@ -6,7 +6,7 @@
 #include "ProcessorsTrips/Processors/RevenueByDay.hpp"
 #include "ProcessorsTrips/Processors/TripsByHour.hpp"
 #include "ProcessorsTrips/Processors/RowCounter.hpp"
-#include "ProcessorsTrips/BatchProcessor.hpp"
+#include "ProcessorsTrips/TripBatchProcessor.hpp"
 #include "ProcessorsTrips/ProcessorData.hpp"
 #include <unordered_map>
 #include <string>
