@@ -3,6 +3,7 @@
 #include "Filesystem/ExistsFile.hpp"
 #include <spdlog/spdlog.h>
 #include <filesystem>
+#include <string>
 
 bool verifyDownload(const Config& config){
     bool ready = true;
