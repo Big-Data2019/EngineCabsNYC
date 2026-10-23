@@ -9,7 +9,7 @@ InvalidTripDetector::InvalidTripDetector(InvalidTripStats& stats_)
     : invalidTStats(stats_)
 {}
 
-arrow::Status InvalidTripDetector::process(const int64_t& batchSize,
+arrow::Status InvalidTripDetector::process(int64_t batchSize,
     const std::vector<std::string>& files)
 {
     for(const auto& file : files){

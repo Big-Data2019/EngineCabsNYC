@@ -9,7 +9,7 @@ FareDistribution::FareDistribution(FareDistributionStats& stats_)
 	: fareDisStats(stats_)
 {}
 
-arrow::Status FareDistribution::process(const int64_t& batchSize,
+arrow::Status FareDistribution::process(int64_t batchSize,
     const std::vector<std::string>& files)
 {
     for(const auto& file : files){

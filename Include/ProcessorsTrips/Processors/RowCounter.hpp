@@ -27,7 +27,7 @@ public:
     RowCounter(RowStats& rowStats);
 
     arrow::Status process(
-        const int64_t& batchSize,
+        int64_t batchSize,
         const std::vector<std::string>& files
     ) override;
 

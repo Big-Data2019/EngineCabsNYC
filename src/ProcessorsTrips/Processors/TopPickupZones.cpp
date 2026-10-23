@@ -9,7 +9,7 @@ TopPickupZones::TopPickupZones(PickupZoneStats& stats_)
 	: pickupZStats(stats_)	
 {}
 
-arrow::Status TopPickupZones::process(const int64_t& batchSize,
+arrow::Status TopPickupZones::process(int64_t batchSize,
 	const std::vector<std::string>& files)
 {
 	for(const auto& file : files){

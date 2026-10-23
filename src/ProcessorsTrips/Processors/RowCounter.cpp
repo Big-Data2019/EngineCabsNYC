@@ -8,7 +8,7 @@ RowCounter::RowCounter(RowStats& stats_)
     : rowStats(stats_)
 {}
 
-arrow::Status RowCounter::process(const int64_t& batchSize, const std::vector<std::string>& files){
+arrow::Status RowCounter::process(int64_t batchSize, const std::vector<std::string>& files){
     for(const auto& file : files){
         ARROW_ASSIGN_OR_RAISE(auto parquetContext, openParquetReader(file, batchSize));
 

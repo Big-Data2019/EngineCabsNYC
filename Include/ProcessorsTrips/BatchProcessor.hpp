@@ -9,7 +9,7 @@ public:
     virtual ~TripBatchProcessor() = default;
 
     virtual arrow::Status process(
-        const int64_t& batchSize, 
+        int64_t batchSize, 
         const std::vector<std::string>& files
     ) = 0;
 

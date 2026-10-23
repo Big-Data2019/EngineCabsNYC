@@ -9,7 +9,7 @@ RevenueByDay::RevenueByDay(RevenueDayStats& stats_)
     : revenueDStats(stats_)
 {}
 
-arrow::Status RevenueByDay::process(const int64_t& batchSize,const std::vector<std::string>& files)
+arrow::Status RevenueByDay::process(int64_t batchSize,const std::vector<std::string>& files)
 {
     for(const auto& file : files){
         ARROW_ASSIGN_OR_RAISE(auto parquetContext, openParquetReader(file, batchSize));
