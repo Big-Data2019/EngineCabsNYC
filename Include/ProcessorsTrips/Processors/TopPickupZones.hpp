@@ -28,10 +28,7 @@ private:
 public:
 	TopPickupZones(PickupZoneStats& pickupZStats);
 
-	arrow::Status process(
-		int64_t batchSize,
-		const std::vector<std::string>& files
-	) override;
+	arrow::Status process(int64_t batchSize, const std::string& file) override;
 
 	void finish(const std::string& output) override;		
 };

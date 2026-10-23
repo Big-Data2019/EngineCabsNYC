@@ -10,7 +10,7 @@ public:
 
     virtual arrow::Status process(
         int64_t batchSize, 
-        const std::vector<std::string>& files
+        const std::string& files
     ) = 0;
 
     virtual void finish(const std::string& output) = 0;

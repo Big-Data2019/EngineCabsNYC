@@ -22,14 +22,16 @@ void ProcessorRegister::searchProcessor(const ProcessorData& data){
 
     for(const auto& processor : data.processors){
         auto it = processors.find(processor);
+        if(it == processors.end()) continue;
 
-        if(it != processors.end()){
-            auto status = it->second->process(data.batchSize, files);
+        for(const auto& file : files){
+            auto status = it->second->process(data.batchSize, file);
+
             if(!status.ok()){
                 spdlog::error("Processor: {}, failed: {}", processor, status.ToString());
             }
-
-            it->second->finish(data.output);
         }
+
+        it->second->finish(data.output);
     }
 }
