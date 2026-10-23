@@ -1,7 +1,7 @@
 # Filesystem library
 add_library(Filesystem
     CreateOutputDir.cpp
-    File.cpp
+    ExistsFile.cpp
 )
 
 target_include_directories(Filesystem PUBLIC ${PROJECT_SOURCE_DIR}/Include)
