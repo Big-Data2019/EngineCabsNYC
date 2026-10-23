@@ -1,6 +1,7 @@
 # Utils library
 add_library(Utils
     ExpanderFiles.cpp
+    GenerateTimestamp.cpp
 )
 
 target_include_directories(Utils PUBLIC ${PROJECT_SOURCE_DIR}/Include)

@@ -1,23 +1,9 @@
 #include "Manifest/Json/ParquetDownload.hpp"
 #include "Manifest/JsonGenerator.hpp"
-#include "Download/CheckDownload.hpp"
+#include "Download/VerifyDownload.hpp"
 #include "Manifest/JsonBuilder.hpp"
 #include "Utils/MeasureTime.hpp"
-
-namespace{
-std::string generateTimestamp(const std::string& name){
-    auto now = std::chrono::system_clock::now();
-    time_t timeActual = std::chrono::system_clock::to_time_t(now);
-    // Divide it into a format of year, month, day, etc
-    tm* timePart = localtime(&timeActual);
-
-    std::stringstream ss;
-    ss<<std::put_time(timePart, "%Y%m%d%H%M%S");
-
-    std::string timestamp = ss.str() + name;
-    return timestamp;
-}
-}
+#include "Utils/GenerateTimestamp.hpp"
 
 namespace Manifest{
 void generateDownloadManifest(const Config& config){
