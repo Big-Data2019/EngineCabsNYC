@@ -7,7 +7,7 @@
 std::string generateTimestamp(const std::string& name){
     const auto now = std::chrono::system_clock::now();
     const time_t actualTime = std::chrono::system_clock::to_time_t(now);
-    // Divide it into a format of year, month, day, etc
+    // Divide it into a format of year, month, day
     const tm* timePart = std::localtime(&actualTime);
 
     std::stringstream ss;
