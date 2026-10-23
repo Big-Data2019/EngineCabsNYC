@@ -1,5 +1,6 @@
 #include "ProcessorsTrips/Processors/RowCounter.hpp"
 #include "Parquet/ParquetReader.hpp"
+#include <arrow/record_batch.h>
 #include <spdlog/spdlog.h>
 #include <filesystem>
 #include <chrono>
