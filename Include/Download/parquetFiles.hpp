@@ -2,4 +2,4 @@
 
 #include <string>
 
-bool downloadFiles(const std::string& url, const std::string& outputPath);
+bool downloadParquetFiles(const std::string& url, const std::string& output);

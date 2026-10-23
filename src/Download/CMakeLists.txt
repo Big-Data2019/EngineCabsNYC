@@ -1,6 +1,6 @@
 # Download library
 add_library(Download
-    parquetFiles.cpp
+    ParquetFiles.cpp
     CheckDownload.cpp
 )
 

@@ -1,16 +1,16 @@
-#include "Download/parquetFiles.hpp"
+#include "Download/ParquetFiles.hpp"
 #include "Network/CurlEasy.hpp"
 #include <spdlog/spdlog.h>
 #include <filesystem>
 #include <fstream>
 
 namespace{
-// Function to receive the network data and insert in the outputFile
+// Function to receive the network data and insert in the output file
 size_t writeDataCallback(void* ptr, size_t size, size_t numberMember, void* stream){
     size_t totalBytes = size * numberMember;
     std::ofstream* outputFile = static_cast<std::ofstream*>(stream);
 
-    // Insert the binary data from the .parquet file into the outputFile
+    // Insert the binary data from the .parquet file into the output file
     outputFile->write(static_cast<const char*>(ptr), totalBytes);
 
     /*
@@ -21,14 +21,13 @@ size_t writeDataCallback(void* ptr, size_t size, size_t numberMember, void* stre
 }
 }
 
-bool downloadFiles(const std::string& url, const std::string& outputPath){
-    netEasy::CurlEasy curll;
-    CURL* curl = curll.get();
+bool downloadParquetFiles(const std::string& url, const std::string& output){
+    netEasy::CurlEasy easyCurl;
+    CURL* curl = easyCurl.get();
 
-    // Open the outputFile in binary form
-    std::ofstream outputFile(outputPath, std::ios::binary);
+    std::ofstream outputFile(output, std::ios::binary); // Open the output file in binary form
     if(!outputFile.is_open()){
-        "Failed to create or open local outputfile";
+        spdlog::error("Failed to create or open local output file");
         return false;
     }
 
@@ -38,14 +37,13 @@ bool downloadFiles(const std::string& url, const std::string& outputPath){
     curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
     curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 1L);
 
-    // Starts the file transfer
-    CURLcode resCode = curl_easy_perform(curl);
+    CURLcode resCode = curl_easy_perform(curl); // Starts the file transfer
     outputFile.close();
 
     if(resCode != CURLE_OK){
         // If the download failed halfway through, delete the incomplete file to prevent corruption
-        if(std::filesystem::exists(outputPath)){
-            std::filesystem::remove(outputPath);
+        if(std::filesystem::exists(output)){
+            std::filesystem::remove(output);
         }
 
         spdlog::error("Libcurl transfer failed: {}", curl_easy_strerror(resCode));
