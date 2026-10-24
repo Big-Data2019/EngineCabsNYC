@@ -1,7 +1,10 @@
 #include "Manifest/Json/ParquetDownload.hpp"
 #include "Filesystem/CreateOutputDir.hpp"
+#include "Download/VerifyDownload.hpp"
+#include "Filesystem/ExistsFile.hpp"
 #include "Cli/Commands/Download.hpp"
 #include "Config/DatasetType.hpp"
+#include "Utils/MeasureTime.hpp"
 #include <spdlog/spdlog.h>
 
 DownloadCommand::DownloadCommand(const Config& config_)
@@ -16,7 +19,10 @@ void DownloadCommand::execute(){
         return;
     }
 
-    Manifest::generateDownloadManifest(config);
+    // Assign the time and the bool download successfully
+    auto[time, successfulDownload] = timeLapse(verifyDownload, config);
+
+    generateDownloadManifest(config, successfulDownload, time);
 }
 
 void DownloadCommand::registerCommand(CLI::App& app){

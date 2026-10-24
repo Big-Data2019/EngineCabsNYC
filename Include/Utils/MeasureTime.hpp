@@ -4,17 +4,15 @@
 #include <chrono>
 
 template <typename Func, typename... Args>
-// Measures the duration from the start to an end time
+[[nodiscard]]
 auto timeLapse(Func&& function, Args&&... args){
-    auto start = std::chrono::high_resolution_clock::now();
-    /*
-    Call the function, Forward the arguments exactly as they arrived
-    And it stores the result of the function in the variable "result"
-    */
+    auto start = std::chrono::steady_clock::now();
+
+    // Call the function, forward the arguments exactly as they arrived
     auto result = std::forward<Func>(function)(std::forward<Args>(args)...);
-    auto end = std::chrono::high_resolution_clock::now();
 
-    long long seconds = std::chrono::duration_cast<std::chrono::seconds>(end - start).count();
+    auto end = std::chrono::steady_clock::now();
+    long long elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
 
-    return std::make_pair(seconds, result);
+    return std::make_pair(elapsed, result);
 }
