@@ -10,7 +10,7 @@ RowCounter::RowCounter(RowStats& stats_)
 {}
 
 arrow::Status RowCounter::process(int64_t batchSize, const std::string& file){
-    ARROW_ASSIGN_OR_RAISE(auto parquetContext, openParquetReader(file, batchSize));
+    ARROW_ASSIGN_OR_RAISE(const auto parquetContext, openParquetReader(file, batchSize));
 
     int idxColumn = 0;
     std::shared_ptr<arrow::RecordBatch> batch;

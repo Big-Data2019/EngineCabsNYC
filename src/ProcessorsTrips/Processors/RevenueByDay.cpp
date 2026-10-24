@@ -10,7 +10,7 @@ RevenueByDay::RevenueByDay(RevenueDayStats& stats_)
 {}
 
 arrow::Status RevenueByDay::process(int64_t batchSize, const std::string& file){
-    ARROW_ASSIGN_OR_RAISE(auto parquetContext, openParquetReader(file, batchSize));
+    ARROW_ASSIGN_OR_RAISE(const auto parquetContext, openParquetReader(file, batchSize));
     ARROW_ASSIGN_OR_RAISE(const int dateColumn, getIdxColumn(
         parquetContext.schema, "tpep_pickup_datetime"));
     ARROW_ASSIGN_OR_RAISE(const int totalAmountColumn, getIdxColumn(
