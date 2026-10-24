@@ -24,8 +24,7 @@ arrow::Status InvalidTripDetector::process(int64_t batchSize, const std::string&
     std::shared_ptr<arrow::RecordBatchReader> batchReader;
 
     auto start = std::chrono::high_resolution_clock::now();
-    for(int idxRowGroup = 0; idxRowGroup < parquetContext.reader->num_row_groups();
-    idxRowGroup++){
+    for(int idxRowGroup = 0; idxRowGroup < parquetContext.reader->num_row_groups(); idxRowGroup++){
         ARROW_ASSIGN_OR_RAISE(batchReader,
             parquetContext.reader->GetRecordBatchReader({idxRowGroup}, {
                 pickupTimeColumn, dropoffTimeColumn,
@@ -39,14 +38,10 @@ arrow::Status InvalidTripDetector::process(int64_t batchSize, const std::string&
 
             invalidTStats.batchCounter++;
             invalidTStats.numRows += batch->num_rows();
-            auto pickUpArray =
-                std::static_pointer_cast<arrow::TimestampArray>(batch->column(0));
-            auto dropOffArray =
-                std::static_pointer_cast<arrow::TimestampArray>(batch->column(1));
-            auto tripDistance =
-                std::static_pointer_cast<arrow::DoubleArray>(batch->column(2));
-            auto totalAmount =
-                std::static_pointer_cast<arrow::DoubleArray>(batch->column(3));
+            auto pickUpArray = std::static_pointer_cast<arrow::TimestampArray>(batch->column(0));
+            auto dropOffArray = std::static_pointer_cast<arrow::TimestampArray>(batch->column(1));
+            auto tripDistance = std::static_pointer_cast<arrow::DoubleArray>(batch->column(2));
+            auto totalAmount = std::static_pointer_cast<arrow::DoubleArray>(batch->column(3));
 
             for(int64_t i = 0; i < batch->num_rows(); i++){
                 if(pickUpArray->IsNull(i) || dropOffArray->IsNull(i) ||

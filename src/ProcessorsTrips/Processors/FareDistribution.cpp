@@ -18,8 +18,7 @@ arrow::Status FareDistribution::process(int64_t batchSize, const std::string& fi
     std::shared_ptr<arrow::RecordBatchReader> batchReader;
 
     auto start = std::chrono::high_resolution_clock::now();
-    for(int idxRowGroup = 0; idxRowGroup < parquetContext.reader->num_row_groups();
-    idxRowGroup++){
+    for(int idxRowGroup = 0; idxRowGroup < parquetContext.reader->num_row_groups(); idxRowGroup++){
         ARROW_ASSIGN_OR_RAISE(batchReader,
             parquetContext.reader->GetRecordBatchReader({idxRowGroup}, {fareAmountColumn}));
 
