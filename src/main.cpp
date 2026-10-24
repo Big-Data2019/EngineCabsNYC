@@ -4,11 +4,9 @@
 #include "Config/Config.hpp"
 #include <spdlog/spdlog.h>
 #include <CLI/CLI.hpp>
-#include <locale>
 
 int main(int argc, char **argv){
     CLI::App app{"EngineCabsNYC: Analysis engine for intelligent decision based on hard data"};
-    std::locale::global(std::locale("en_US.UTF-8"));
     netGlobal::CurlGlobal curlGlobal;
 
     try{
