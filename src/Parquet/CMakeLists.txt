@@ -1,9 +1,7 @@
 # Parquet library
 add_library(Parquet
-    InspectSchema.cpp
     IdxColumnSchema.cpp
     ParquetReader.cpp
-    PrintSchemaInfo.cpp
 )
 
 target_include_directories(Parquet PUBLIC ${PROJECT_SOURCE_DIR}/Include)
