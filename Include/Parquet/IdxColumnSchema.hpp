@@ -5,7 +5,5 @@
 #include <memory>
 #include <string>
 
-arrow::Result<int> getIdxColumn(
-    const std::shared_ptr<arrow::Schema>& schema,
-    const std::string& nameColumn
-);
+arrow::Result<int>
+getIdxColumn(const std::shared_ptr<arrow::Schema>& schema, const std::string& nameColumn);
