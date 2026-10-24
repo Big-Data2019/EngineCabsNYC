@@ -2,6 +2,4 @@
 
 #include "Config/Config.hpp"
 
-namespace Manifest{
-    void generateDownloadManifest(const Config& config);
-}
+void generateDownloadManifest(const Config& config, bool successfulDownload, long long elapsedMs);
