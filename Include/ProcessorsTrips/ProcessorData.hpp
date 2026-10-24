@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <string>
+#include <cstdint>
 
 struct ProcessorData{
     int64_t batchSize;

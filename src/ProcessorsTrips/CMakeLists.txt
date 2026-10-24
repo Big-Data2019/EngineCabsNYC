@@ -17,7 +17,7 @@ PRIVATE
     spdlog::spdlog
     Utils
     Parquet
-    ManifestCore
+    Manifest
 PUBLIC
     Arrow::arrow_shared
 )
