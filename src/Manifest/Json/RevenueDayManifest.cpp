@@ -14,13 +14,13 @@ void RevenueByDay::finish(const std::string& output){
         days.push_back(day);
     }
 
-    data.newData("Files", revenueDStats.files);
-    data.newData("Batches", revenueDStats.batchCounter);
-    data.newData("Input size", revenueDStats.bytesProcessed);
-    data.newData("Elapsed", revenueDStats.elapsedSeconds);
-    data.newData("Batch size", revenueDStats.numBatch);
-    data.newData("Rows/sec", revenueDStats.rowsPerSecond());
-    data.newData("Troughput", revenueDStats.megabytesPerSecond());
+    data.newData("Files", revenueDayStats.files);
+    data.newData("Batches", revenueDayStats.batchCounter);
+    data.newData("Input size", revenueDayStats.bytesProcessed);
+    data.newData("Elapsed", revenueDayStats.elapsedSeconds);
+    data.newData("Batch size", revenueDayStats.numBatch);
+    data.newData("Rows/sec", revenueDayStats.rowsPerSecond());
+    data.newData("Troughput", revenueDayStats.megabytesPerSecond());
     data.manyNewData("Revenue by day", days);
 
     std::filesystem::create_directories(output);

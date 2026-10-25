@@ -15,13 +15,13 @@ void TripsByHour::finish(const std::string& output){
         tripsHours.push_back(tripHour);
     }
 
-    data.newData("Files", tripsHStats.files);
-    data.newData("Batches", tripsHStats.batchCounter);
-    data.newData("Input size", tripsHStats.bytesProcessed);
-    data.newData("Elapsed", tripsHStats.elapsedSeconds);
-    data.newData("Batch size", tripsHStats.numBatch);
-    data.newData("Rows/sec", tripsHStats.rowsPerSecond());
-    data.newData("Troughput", tripsHStats.megabytesPerSecond());
+    data.newData("Files", tripsHourStats.files);
+    data.newData("Batches", tripsHourStats.batchCounter);
+    data.newData("Input size", tripsHourStats.bytesProcessed);
+    data.newData("Elapsed", tripsHourStats.elapsedSeconds);
+    data.newData("Batch size", tripsHourStats.numBatch);
+    data.newData("Rows/sec", tripsHourStats.rowsPerSecond());
+    data.newData("Troughput", tripsHourStats.megabytesPerSecond());
     data.manyNewData("Trips by hour", tripsHours);
 
     std::filesystem::create_directories(output);

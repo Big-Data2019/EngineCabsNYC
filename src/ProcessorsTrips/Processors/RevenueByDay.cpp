@@ -5,8 +5,8 @@
 #include <filesystem>
 #include <chrono>
 
-RevenueByDay::RevenueByDay(RevenueDayStats& stats_)
-    : revenueDStats(stats_)
+RevenueByDay::RevenueByDay(RunStats& stats_)
+    : revenueDayStats(stats_)
 {}
 
 arrow::Status RevenueByDay::process(int64_t batchSize, const std::string& file){
@@ -29,8 +29,8 @@ arrow::Status RevenueByDay::process(int64_t batchSize, const std::string& file){
             ARROW_RETURN_NOT_OK(batchReader->ReadNext(&batch));
             // Break the while loop when there are no more batches left
             if(!batch) break;
-            revenueDStats.batchCounter++;
-            revenueDStats.numRows += batch->num_rows();
+            revenueDayStats.batchCounter++;
+            revenueDayStats.numRows += batch->num_rows();
 
             auto dateArray = std::static_pointer_cast<arrow::TimestampArray>(batch->column(0));
             auto amountArray = std::static_pointer_cast<arrow::DoubleArray>(batch->column(1));
@@ -47,14 +47,14 @@ arrow::Status RevenueByDay::process(int64_t batchSize, const std::string& file){
     }
     auto end = std::chrono::high_resolution_clock::now();
 
-    revenueDStats.elapsedSeconds += std::chrono::duration<double>(end - start).count();
-    revenueDStats.files++;
+    revenueDayStats.elapsedSeconds += std::chrono::duration<double>(end - start).count();
+    revenueDayStats.files++;
     auto size = std::filesystem::file_size(file);
-    revenueDStats.bytesProcessed += size;
-    revenueDStats.numBatch = batchSize;
+    revenueDayStats.bytesProcessed += size;
+    revenueDayStats.numBatch = batchSize;
 
-    spdlog::info("MB/s: {}", revenueDStats.megabytesPerSecond());
-    spdlog::info("Rows/s: {}", revenueDStats.rowsPerSecond());
+    spdlog::info("MB/s: {}", revenueDayStats.megabytesPerSecond());
+    spdlog::info("Rows/s: {}", revenueDayStats.rowsPerSecond());
 
     return arrow::Status::OK();
 }

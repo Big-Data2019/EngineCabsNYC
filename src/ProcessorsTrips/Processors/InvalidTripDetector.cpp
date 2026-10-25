@@ -5,8 +5,8 @@
 #include <filesystem>
 #include <chrono>
 
-InvalidTripDetector::InvalidTripDetector(InvalidTripStats& stats_)
-    : invalidTStats(stats_)
+InvalidTripDetector::InvalidTripDetector(RunStats& stats_)
+    : invalidTripStats(stats_)
 {}
 
 arrow::Status InvalidTripDetector::process(int64_t batchSize, const std::string& file){
@@ -36,8 +36,8 @@ arrow::Status InvalidTripDetector::process(int64_t batchSize, const std::string&
             // Break the while loop when there are no more batches left
             if(!batch) break;
 
-            invalidTStats.batchCounter++;
-            invalidTStats.numRows += batch->num_rows();
+            invalidTripStats.batchCounter++;
+            invalidTripStats.numRows += batch->num_rows();
             auto pickUpArray = std::static_pointer_cast<arrow::TimestampArray>(batch->column(0));
             auto dropOffArray = std::static_pointer_cast<arrow::TimestampArray>(batch->column(1));
             auto tripDistance = std::static_pointer_cast<arrow::DoubleArray>(batch->column(2));
@@ -46,7 +46,7 @@ arrow::Status InvalidTripDetector::process(int64_t batchSize, const std::string&
             for(int64_t i = 0; i < batch->num_rows(); i++){
                 if(pickUpArray->IsNull(i) || dropOffArray->IsNull(i) ||
                     tripDistance->IsNull(i) || totalAmount->IsNull(i)){
-                    invalidTStats.invalidTrips++;
+                    invalidTrips++;
                     continue;
                 }
 
@@ -55,22 +55,22 @@ arrow::Status InvalidTripDetector::process(int64_t batchSize, const std::string&
                 const double distance = tripDistance->Value(i);
                 const double amount = totalAmount->Value(i);
 
-                if(dropOff <= pickUp) invalidTStats.invalidTrips++;
-                else if(distance < 0 || amount < 0) invalidTStats.invalidTrips++;
-                else invalidTStats.validTrips++;
+                if(dropOff <= pickUp) invalidTrips++;
+                else if(distance < 0 || amount < 0) invalidTrips++;
+                else validTrips++;
             }
         }
     }
     auto end = std::chrono::high_resolution_clock::now();
 
-    invalidTStats.elapsedSeconds += std::chrono::duration<double>(end-start).count();
-    invalidTStats.files++;
+    invalidTripStats.elapsedSeconds += std::chrono::duration<double>(end-start).count();
+    invalidTripStats.files++;
     auto size = std::filesystem::file_size(file);
-    invalidTStats.bytesProcessed += size;
-    invalidTStats.numBatch = batchSize;
+    invalidTripStats.bytesProcessed += size;
+    invalidTripStats.numBatch = batchSize;
 
-    spdlog::info("MB/s: {}", invalidTStats.megabytesPerSecond());
-    spdlog::info("Rows/s: {}", invalidTStats.rowsPerSecond());
+    spdlog::info("MB/s: {}", invalidTripStats.megabytesPerSecond());
+    spdlog::info("Rows/s: {}", invalidTripStats.rowsPerSecond());
 
     return arrow::Status::OK();
 }

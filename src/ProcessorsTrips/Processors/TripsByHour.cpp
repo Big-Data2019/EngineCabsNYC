@@ -5,8 +5,8 @@
 #include <filesystem>
 #include <chrono>
 
-TripsByHour::TripsByHour(TripsHourStats& stats_)
-    : tripsHStats(stats_)
+TripsByHour::TripsByHour(RunStats& stats_)
+    : tripsHourStats(stats_)
 {}
 
 arrow::Status TripsByHour::process(int64_t batchSize, const std::string& file){
@@ -26,8 +26,8 @@ arrow::Status TripsByHour::process(int64_t batchSize, const std::string& file){
             ARROW_RETURN_NOT_OK(batchReader->ReadNext(&batch));
             // Break the while loop when there are no more batches left
             if(!batch) break;
-            tripsHStats.batchCounter++;
-            tripsHStats.numRows += batch->num_rows();
+            tripsHourStats.batchCounter++;
+            tripsHourStats.numRows += batch->num_rows();
 
             auto dateArray = std::static_pointer_cast<arrow::TimestampArray>(batch->column(0));
             for(int64_t i = 0; i < batch->num_rows(); i++){
@@ -42,14 +42,14 @@ arrow::Status TripsByHour::process(int64_t batchSize, const std::string& file){
     }
     auto end = std::chrono::high_resolution_clock::now();
 
-    tripsHStats.elapsedSeconds += std::chrono::duration<double>(end - start).count();
-    tripsHStats.files++;
+    tripsHourStats.elapsedSeconds += std::chrono::duration<double>(end - start).count();
+    tripsHourStats.files++;
     auto size = std::filesystem::file_size(file);
-    tripsHStats.bytesProcessed += size;
-    tripsHStats.numBatch = batchSize;
+    tripsHourStats.bytesProcessed += size;
+    tripsHourStats.numBatch = batchSize;
 
-    spdlog::info("MB/s: {}", tripsHStats.megabytesPerSecond());
-    spdlog::info("Rows/s: {}", tripsHStats.rowsPerSecond());
+    spdlog::info("MB/s: {}", tripsHourStats.megabytesPerSecond());
+    spdlog::info("Rows/s: {}", tripsHourStats.rowsPerSecond());
 
     return arrow::Status::OK();
 }

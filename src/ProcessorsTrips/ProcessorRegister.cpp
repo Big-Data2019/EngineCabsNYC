@@ -2,19 +2,21 @@
 #include "Utils/ExpanderFiles.hpp"
 #include <spdlog/spdlog.h>
 
-void ProcessorRegister::registerProcessors(RowStats& rowStats,
-    RevenueDayStats& revenueDStats,
-    TripsHourStats& tripsHStats,
-    InvalidTripStats& invalidTStats,
-    PickupZoneStats& pickupZStats,
-    FareDistributionStats& fareDisStats
+void ProcessorRegister::registerProcessors(
+    RunStats& rowCounterStats,
+    RunStats& revenueDayStats,
+    RunStats& tripsHourStats,
+    RunStats& invalidTripStats,
+    RunStats& pickupZoneStats,
+    RunStats& fareDisStats,
+    FareDistributionResult& fareDisResult
 ){
-    processors["row"] = std::make_unique<RowCounter>(rowStats);
-    processors["revenueD"] = std::make_unique<RevenueByDay>(revenueDStats);
-    processors["tripsH"] = std::make_unique<TripsByHour>(tripsHStats);
-    processors["invalid"] = std::make_unique<InvalidTripDetector>(invalidTStats);
-    processors["pickupZ"] = std::make_unique<TopPickupZones>(pickupZStats);
-    processors["fareDis"] = std::make_unique<FareDistribution>(fareDisStats);
+    processors["row"] = std::make_unique<RowCounter>(rowCounterStats);
+    processors["revenueD"] = std::make_unique<RevenueByDay>(revenueDayStats);
+    processors["tripsH"] = std::make_unique<TripsByHour>(tripsHourStats);
+    processors["invalid"] = std::make_unique<InvalidTripDetector>(invalidTripStats);
+    processors["pickupZ"] = std::make_unique<TopPickupZones>(pickupZoneStats);
+    processors["fareDis"] = std::make_unique<FareDistribution>(fareDisResult, fareDisStats);
 }
 
 void ProcessorRegister::searchProcessor(const ProcessorData& data){

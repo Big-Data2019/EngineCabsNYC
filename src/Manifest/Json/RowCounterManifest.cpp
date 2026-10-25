@@ -7,14 +7,14 @@
 void RowCounter::finish(const std::string& output){
     JsonBuilder data;
 
-    data.newData("Files", rowStats.files);
-    data.newData("Batches", rowStats.batchCounter);
-    data.newData("Rows", rowStats.numRows);
-    data.newData("Input size", rowStats.bytesProcessed);
-    data.newData("Elapsed", rowStats.elapsedSeconds);
-    data.newData("Batch size", rowStats.numBatch);
-    data.newData("Rows/sec", rowStats.rowsPerSecond());
-    data.newData("Troughput", rowStats.megabytesPerSecond());
+    data.newData("Files", rowCounterStats.files);
+    data.newData("Batches", rowCounterStats.batchCounter);
+    data.newData("Rows", rowCounterStats.numRows);
+    data.newData("Input size", rowCounterStats.bytesProcessed);
+    data.newData("Elapsed", rowCounterStats.elapsedSeconds);
+    data.newData("Batch size", rowCounterStats.numBatch);
+    data.newData("Rows/sec", rowCounterStats.rowsPerSecond());
+    data.newData("Troughput", rowCounterStats.megabytesPerSecond());
 
     std::filesystem::create_directories(output);
     const std::filesystem::path fileName = std::filesystem::path(output) / "RowCounterManifest.json";

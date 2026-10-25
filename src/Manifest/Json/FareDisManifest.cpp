@@ -13,14 +13,14 @@ void FareDistribution::finish(const std::string& output){
     data.newData("Rows/sec", fareDisStats.rowsPerSecond());
     data.newData("Troughput", fareDisStats.megabytesPerSecond());
 
-    data.newData("Minimun", fareDisStats.minFare);
-    data.newData("Average fare", fareDisStats.averageFare);
-    data.newData("Max fare", fareDisStats.maxFare);
+    data.newData("Minimun", fareDisResult.minFare);
+    data.newData("Average fare", fareDisResult.averageFare);
+    data.newData("Max fare", fareDisResult.maxFare);
 
-    data.newData("P25", fareDisStats.percentile25);
-    data.newData("P50", fareDisStats.percentile50);
-    data.newData("P75", fareDisStats.percentile75);
-    data.newData("P99", fareDisStats.percentile99);
+    data.newData("P25", fareDisResult.percentile25);
+    data.newData("P50", fareDisResult.percentile50);
+    data.newData("P75", fareDisResult.percentile75);
+    data.newData("P99", fareDisResult.percentile99);
 
     std::vector<nlohmann::ordered_json> distribution;
 

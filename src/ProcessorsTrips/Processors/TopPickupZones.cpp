@@ -5,8 +5,8 @@
 #include <filesystem>
 #include <chrono>
 
-TopPickupZones::TopPickupZones(PickupZoneStats& stats_)
-	: pickupZStats(stats_)	
+TopPickupZones::TopPickupZones(RunStats& stats_)
+	: pickupZoneStats(stats_)	
 {}
 
 arrow::Status TopPickupZones::process(int64_t batchSize, const std::string& file){
@@ -26,8 +26,8 @@ arrow::Status TopPickupZones::process(int64_t batchSize, const std::string& file
 			ARROW_RETURN_NOT_OK(batchReader->ReadNext(&batch));
 			// Break the while loop when there are no more batches left
 			if(!batch) break;
-			pickupZStats.batchCounter++;
-			pickupZStats.numRows += batch->num_rows();
+			pickupZoneStats.batchCounter++;
+			pickupZoneStats.numRows += batch->num_rows();
 
 			auto zoneArray = std::static_pointer_cast<arrow::Int32Array>(batch->column(0));
 			for(int64_t i = 0; i < batch->num_rows(); i++){
@@ -40,14 +40,14 @@ arrow::Status TopPickupZones::process(int64_t batchSize, const std::string& file
 	}
 	auto end = std::chrono::high_resolution_clock::now();
 
-	pickupZStats.elapsedSeconds += std::chrono::duration<double>(end - start).count();
-	pickupZStats.files++;
+	pickupZoneStats.elapsedSeconds += std::chrono::duration<double>(end - start).count();
+	pickupZoneStats.files++;
 	auto size = std::filesystem::file_size(file);
-	pickupZStats.bytesProcessed += size;
-	pickupZStats.numBatch = batchSize;
+	pickupZoneStats.bytesProcessed += size;
+	pickupZoneStats.numBatch = batchSize;
 
-    spdlog::info("MB/s: {}", pickupZStats.megabytesPerSecond());
-	spdlog::info("Rows/s: {}", pickupZStats.rowsPerSecond());
+    spdlog::info("MB/s: {}", pickupZoneStats.megabytesPerSecond());
+	spdlog::info("Rows/s: {}", pickupZoneStats.rowsPerSecond());
 
 	return arrow::Status::OK();
 }

@@ -1,34 +1,19 @@
 #pragma once
 
 #include "ProcessorsTrips/TripBatchProcessor.hpp"
+#include "ProcessorsTrips/RunStats.hpp"
 #include <unordered_map>
-
-struct PickupZoneStats{
-	int8_t files = 0;
-	int64_t numRows = 0;
-	int64_t batchCounter = 0;
-	int64_t bytesProcessed = 0;
-	int64_t numBatch = 0;
-
-	double elapsedSeconds = 0.0;
-	double rowsPerSecond() const{
-		return numRows / elapsedSeconds;
-	}
-
-	double megabytesPerSecond() const{
-		return bytesProcessed / 1024.0 / 1024.0 / elapsedSeconds;
-	}
-};
+#include <cstdint>
 
 class TopPickupZones final : public TripBatchProcessor{
 private:
 	std::unordered_map<int32_t, int64_t> pickUpZone;
-	PickupZoneStats& pickupZStats;
+	RunStats& pickupZoneStats;
 
 public:
-	TopPickupZones(PickupZoneStats& pickupZStats);
+	explicit TopPickupZones(RunStats& pickupZoneStats);
 
-	arrow::Status process(int64_t batchSize, const std::string& file) override;
+	arrow::Status process(std::int64_t batchSize, const std::string& file) override;
 
 	void finish(const std::string& output) override;		
 };

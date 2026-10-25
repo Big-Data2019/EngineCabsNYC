@@ -6,20 +6,23 @@ RunCommand::RunCommand(ProcessorData& data_)
 {}
 
 void RunCommand::execute(){
-    RowStats rowStats;
-    RevenueDayStats RevenueDStats;
-    TripsHourStats tripsHStats;
-    InvalidTripStats invalidTStats;
-    PickupZoneStats pickupZStats;
-    FareDistributionStats fareDisStats; 
+    RunStats rowCounterStats;
+    RunStats RevenueDayStats;
+    RunStats tripsHourStats;
+    RunStats invalidTripStats;
+    RunStats pickupZoneStats;
+    RunStats fareDisStats;
+    FareDistributionResult fareDisResult; 
     ProcessorRegister processR;
 
-    processR.registerProcessors(rowStats,
-        RevenueDStats,
-        tripsHStats,
-        invalidTStats,
-        pickupZStats,
-        fareDisStats
+    processR.registerProcessors(
+        rowCounterStats,
+        RevenueDayStats,
+        tripsHourStats,
+        invalidTripStats,
+        pickupZoneStats,
+        fareDisStats,
+        fareDisResult
     );
     processR.searchProcessor(data);
 }

@@ -17,12 +17,14 @@ private:
     std::unordered_map<std::string, std::unique_ptr<TripBatchProcessor>> processors;
 
 public:
-    void registerProcessors(RowStats& rowStats,
-        RevenueDayStats& revenueDStats,
-        TripsHourStats& tripsHStats,
-        InvalidTripStats& invalidTStats,
-        PickupZoneStats& pickupZStats,
-        FareDistributionStats& fareDisStats
+    void registerProcessors(
+        RunStats& rowCounterStats,
+        RunStats& revenueDayStats,
+        RunStats& tripsHourStats,
+        RunStats& invalidTripStats,
+        RunStats& pickupZoneStats,
+        RunStats& FareDisStats,
+        FareDistributionResult& fareDisResult
     );
 
     void searchProcessor(const ProcessorData& data);

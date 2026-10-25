@@ -25,13 +25,13 @@ void TopPickupZones::finish(const std::string& output){
         topZones.push_back(zone);
     }
 
-    data.newData("Files", pickupZStats.files);
-    data.newData("Batches", pickupZStats.batchCounter);
-    data.newData("Input size", pickupZStats.bytesProcessed);
-    data.newData("Elapsed", pickupZStats.elapsedSeconds);
-    data.newData("Batch size", pickupZStats.numBatch);
-    data.newData("Rows/sec", pickupZStats.rowsPerSecond());
-    data.newData("Troughput", pickupZStats.megabytesPerSecond());
+    data.newData("Files", pickupZoneStats.files);
+    data.newData("Batches", pickupZoneStats.batchCounter);
+    data.newData("Input size", pickupZoneStats.bytesProcessed);
+    data.newData("Elapsed", pickupZoneStats.elapsedSeconds);
+    data.newData("Batch size", pickupZoneStats.numBatch);
+    data.newData("Rows/sec", pickupZoneStats.rowsPerSecond());
+    data.newData("Troughput", pickupZoneStats.megabytesPerSecond());
     data.manyNewData("Pickup zones", topZones);
 
     std::filesystem::create_directories(output);

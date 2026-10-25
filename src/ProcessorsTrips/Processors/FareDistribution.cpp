@@ -5,8 +5,8 @@
 #include <filesystem>
 #include <chrono>
 
-FareDistribution::FareDistribution(FareDistributionStats& stats_)
-	: fareDisStats(stats_)
+FareDistribution::FareDistribution(FareDistributionResult& statsResult_, RunStats& stats_)
+	: fareDisResult(statsResult_), fareDisStats(stats_) 
 {}
 
 arrow::Status FareDistribution::process(int64_t batchSize, const std::string& file){
@@ -35,19 +35,19 @@ arrow::Status FareDistribution::process(int64_t batchSize, const std::string& fi
 
                 const double fare = fareArray->Value(i);
                 if(fare < 0.0) continue;
-                if(fareDisStats.validFares == 0){
-                    fareDisStats.minFare = fare;
-                    fareDisStats.maxFare = fare;
+                if(fareDisResult.validFares == 0){
+                    fareDisResult.minFare = fare;
+                    fareDisResult.maxFare = fare;
                 } else{
-                    if(fare < fareDisStats.minFare){
-                        fareDisStats.minFare = fare;
-                    } else if(fare > fareDisStats.maxFare){
-                        fareDisStats.maxFare = fare;
+                    if(fare < fareDisResult.minFare){
+                        fareDisResult.minFare = fare;
+                    } else if(fare > fareDisResult.maxFare){
+                        fareDisResult.maxFare = fare;
                     }
                 }
 
-                fareDisStats.fareSum += fare;
-                fareDisStats.validFares++;
+                fareDisResult.fareSum += fare;
+                fareDisResult.validFares++;
 
                 std::size_t bucketIndex = static_cast<std::size_t>(fare / bucketWidth);
                 if(bucketIndex >= regularBucket) bucketIndex = regularBucket;
@@ -65,17 +65,17 @@ arrow::Status FareDistribution::process(int64_t batchSize, const std::string& fi
     fareDisStats.bytesProcessed += size;
     fareDisStats.numBatch = batchSize;
 
-    if(fareDisStats.validFares > 0){
-        fareDisStats.averageFare =
-            fareDisStats.fareSum / static_cast<double>(fareDisStats.validFares);
+    if(fareDisResult.validFares > 0){
+        fareDisResult.averageFare =
+            fareDisResult.fareSum / static_cast<double>(fareDisResult.validFares);
     }
 
     if(!fares.empty()){
         std::sort(fares.begin(), fares.end());
-        fareDisStats.percentile25 = fares[fares.size() * 25 / 100];
-        fareDisStats.percentile50 = fares[fares.size() * 50 / 100];
-        fareDisStats.percentile75 = fares[fares.size() * 75 / 100];
-        fareDisStats.percentile99 = fares[fares.size() * 99 / 100];
+        fareDisResult.percentile25 = fares[fares.size() * 25 / 100];
+        fareDisResult.percentile50 = fares[fares.size() * 50 / 100];
+        fareDisResult.percentile75 = fares[fares.size() * 75 / 100];
+        fareDisResult.percentile99 = fares[fares.size() * 99 / 100];
     }
 
     spdlog::info("MB/s: {}", fareDisStats.megabytesPerSecond());
