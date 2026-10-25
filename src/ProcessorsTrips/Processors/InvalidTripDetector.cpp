@@ -9,7 +9,7 @@ InvalidTripDetector::InvalidTripDetector(RunStats& stats_)
     : invalidTripStats(stats_)
 {}
 
-arrow::Status InvalidTripDetector::process(int64_t batchSize, const std::string& file){
+arrow::Status InvalidTripDetector::process(std::int64_t batchSize, const std::string& file){
     ARROW_ASSIGN_OR_RAISE(const auto parquetContext, openParquetReader(file, batchSize));
     ARROW_ASSIGN_OR_RAISE(const int pickupTimeColumn, getIdxColumn(
         parquetContext.schema, "tpep_pickup_datetime"));
@@ -43,15 +43,15 @@ arrow::Status InvalidTripDetector::process(int64_t batchSize, const std::string&
             auto tripDistance = std::static_pointer_cast<arrow::DoubleArray>(batch->column(2));
             auto totalAmount = std::static_pointer_cast<arrow::DoubleArray>(batch->column(3));
 
-            for(int64_t i = 0; i < batch->num_rows(); i++){
+            for(std::int64_t i = 0; i < batch->num_rows(); i++){
                 if(pickUpArray->IsNull(i) || dropOffArray->IsNull(i) ||
                     tripDistance->IsNull(i) || totalAmount->IsNull(i)){
                     invalidTrips++;
                     continue;
                 }
 
-                const int64_t pickUp = pickUpArray->Value(i);
-                const int64_t dropOff = dropOffArray->Value(i);
+                const std::int64_t pickUp = pickUpArray->Value(i);
+                const std::int64_t dropOff = dropOffArray->Value(i);
                 const double distance = tripDistance->Value(i);
                 const double amount = totalAmount->Value(i);
 

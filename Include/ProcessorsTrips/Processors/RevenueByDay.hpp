@@ -7,7 +7,7 @@
 
 class RevenueByDay final : public TripBatchProcessor{
 private: 
-    std::map<int64_t, double> Accumulator;
+    std::map<std::int64_t, double> Accumulator;
     RunStats& revenueDayStats;
 
 public:

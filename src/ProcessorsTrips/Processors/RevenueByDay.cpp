@@ -9,7 +9,7 @@ RevenueByDay::RevenueByDay(RunStats& stats_)
     : revenueDayStats(stats_)
 {}
 
-arrow::Status RevenueByDay::process(int64_t batchSize, const std::string& file){
+arrow::Status RevenueByDay::process(std::int64_t batchSize, const std::string& file){
     ARROW_ASSIGN_OR_RAISE(const auto parquetContext, openParquetReader(file, batchSize));
     ARROW_ASSIGN_OR_RAISE(const int dateColumn, getIdxColumn(
         parquetContext.schema, "tpep_pickup_datetime"));
@@ -34,11 +34,11 @@ arrow::Status RevenueByDay::process(int64_t batchSize, const std::string& file){
 
             auto dateArray = std::static_pointer_cast<arrow::TimestampArray>(batch->column(0));
             auto amountArray = std::static_pointer_cast<arrow::DoubleArray>(batch->column(1));
-            for(int64_t i = 0; i < batch->num_rows(); i++){
+            for(std::int64_t i = 0; i < batch->num_rows(); i++){
                 if(dateArray->IsNull(i) || amountArray->IsNull(i)) continue;
 
-                int64_t timestamp = dateArray->Value(i); // Get the value in format Timestamp
-                int64_t dayId = timestamp / 86400000000; // The value is in UNIX Epoch
+                std::int64_t timestamp = dateArray->Value(i); // Get the value in format Timestamp
+                std::int64_t dayId = timestamp / 86400000000; // The value is in UNIX Epoch
                 double amount = amountArray->Value(i);
 
                 Accumulator[dayId] += amount; // Add up the corresponding values each day

@@ -7,7 +7,7 @@
 
 class TopPickupZones final : public TripBatchProcessor{
 private:
-	std::unordered_map<int32_t, int64_t> pickUpZone;
+	std::unordered_map<std::int32_t, std::int64_t> pickUpZone;
 	RunStats& pickupZoneStats;
 
 public:

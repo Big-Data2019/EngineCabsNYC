@@ -7,7 +7,7 @@
 void TopPickupZones::finish(const std::string& output){
     JsonBuilder data;
 
-    std::vector<std::pair<int32_t, int64_t>> zones(pickUpZone.begin(), pickUpZone.end());
+    std::vector<std::pair<std::int32_t, std::int64_t>> zones(pickUpZone.begin(), pickUpZone.end());
     std::sort(zones.begin(), zones.end(), [](const auto& a, const auto& b){
         return a.second > b.second;
     });

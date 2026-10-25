@@ -9,7 +9,7 @@ TripsByHour::TripsByHour(RunStats& stats_)
     : tripsHourStats(stats_)
 {}
 
-arrow::Status TripsByHour::process(int64_t batchSize, const std::string& file){
+arrow::Status TripsByHour::process(std::int64_t batchSize, const std::string& file){
     ARROW_ASSIGN_OR_RAISE(const auto parquetContext, openParquetReader(file, batchSize));
     ARROW_ASSIGN_OR_RAISE(const int dateColumn, getIdxColumn(
         parquetContext.schema, "tpep_pickup_datetime"));
@@ -30,11 +30,11 @@ arrow::Status TripsByHour::process(int64_t batchSize, const std::string& file){
             tripsHourStats.numRows += batch->num_rows();
 
             auto dateArray = std::static_pointer_cast<arrow::TimestampArray>(batch->column(0));
-            for(int64_t i = 0; i < batch->num_rows(); i++){
+            for(std::int64_t i = 0; i < batch->num_rows(); i++){
                 if(dateArray->IsNull(i)) continue;
 
-                int64_t timestamp = dateArray->Value(i); // Get the value in format Timestamp
-                int64_t hourId = timestamp / 3600000000; // The value is in UNIX Epoch                  
+                std::int64_t timestamp = dateArray->Value(i); // Get the value in format Timestamp
+                std::int64_t hourId = timestamp / 3600000000; // The value is in UNIX Epoch                  
 
                 tripsByHour[hourId]++;
             }

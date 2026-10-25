@@ -9,7 +9,7 @@ FareDistribution::FareDistribution(FareDistributionResult& statsResult_, RunStat
 	: fareDisResult(statsResult_), fareDisStats(stats_) 
 {}
 
-arrow::Status FareDistribution::process(int64_t batchSize, const std::string& file){
+arrow::Status FareDistribution::process(std::int64_t batchSize, const std::string& file){
     ARROW_ASSIGN_OR_RAISE(const auto parquetContext, openParquetReader(file, batchSize));
     ARROW_ASSIGN_OR_RAISE(const int fareAmountColumn, getIdxColumn(
         parquetContext.schema, "fare_amount"));
@@ -30,7 +30,7 @@ arrow::Status FareDistribution::process(int64_t batchSize, const std::string& fi
             fareDisStats.numRows += batch->num_rows();
 
             auto fareArray = std::static_pointer_cast<arrow::DoubleArray>(batch->column(0));
-            for(int64_t i = 0; i < batch->num_rows(); i++){
+            for(std::int64_t i = 0; i < batch->num_rows(); i++){
                 if(fareArray->IsNull(i)) continue;
 
                 const double fare = fareArray->Value(i);

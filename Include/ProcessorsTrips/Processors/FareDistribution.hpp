@@ -22,7 +22,7 @@ class FareDistribution final : public TripBatchProcessor{
 private:
 	static constexpr double bucketWidth = 5.0;
 	static constexpr std::size_t regularBucket = 10;
-	std::array<int64_t, 11> buckets{};
+	std::array<std::int64_t, 11> buckets{};
 	std::vector<double> fares;
 
 	FareDistributionResult& fareDisResult;

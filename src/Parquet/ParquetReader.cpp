@@ -20,7 +20,8 @@ arrow::Result<ParquetReaderContext> openParquetReader(const std::string& file){
 }
 
 // Function two to retrieve the schema and the reader with a established batch size
-arrow::Result<ParquetReaderContext> openParquetReader(const std::string& file, int64_t batchSize){
+arrow::Result<ParquetReaderContext>
+openParquetReader(const std::string& file, std::int64_t batchSize){
     std::shared_ptr<arrow::io::ReadableFile> input;
     ARROW_ASSIGN_OR_RAISE(input, arrow::io::ReadableFile::Open(file)); // Open the file
 

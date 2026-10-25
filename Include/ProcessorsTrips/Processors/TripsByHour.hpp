@@ -7,7 +7,7 @@
 
 class TripsByHour final : public TripBatchProcessor{
 private:
-    std::map<int64_t, int64_t> tripsByHour;
+    std::map<std::int64_t, std::int64_t> tripsByHour;
     RunStats tripsHourStats;
 
 public:

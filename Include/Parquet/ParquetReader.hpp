@@ -13,4 +13,5 @@ struct ParquetReaderContext{
 
 arrow::Result<ParquetReaderContext> openParquetReader(const std::string& file);
 
-arrow::Result<ParquetReaderContext> openParquetReader(const std::string& file, int64_t batchSize);
+arrow::Result<ParquetReaderContext>
+openParquetReader(const std::string& file, std::int64_t batchSize);

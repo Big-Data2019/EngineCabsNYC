@@ -9,7 +9,7 @@ TopPickupZones::TopPickupZones(RunStats& stats_)
 	: pickupZoneStats(stats_)	
 {}
 
-arrow::Status TopPickupZones::process(int64_t batchSize, const std::string& file){
+arrow::Status TopPickupZones::process(std::int64_t batchSize, const std::string& file){
     ARROW_ASSIGN_OR_RAISE(const auto parquetContext, openParquetReader(file, batchSize));
     ARROW_ASSIGN_OR_RAISE(int puLocationId, getIdxColumn(
 		parquetContext.schema, "PULocationID"));
@@ -30,10 +30,10 @@ arrow::Status TopPickupZones::process(int64_t batchSize, const std::string& file
 			pickupZoneStats.numRows += batch->num_rows();
 
 			auto zoneArray = std::static_pointer_cast<arrow::Int32Array>(batch->column(0));
-			for(int64_t i = 0; i < batch->num_rows(); i++){
+			for(std::int64_t i = 0; i < batch->num_rows(); i++){
 				if(zoneArray->IsNull(i)) continue;
 
-				int32_t zoneId = zoneArray->Value(i);
+				std::int32_t zoneId = zoneArray->Value(i);
 				pickUpZone[zoneId]++;
 			}
 		}
