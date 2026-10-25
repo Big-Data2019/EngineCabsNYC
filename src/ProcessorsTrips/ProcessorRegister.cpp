@@ -11,12 +11,12 @@ void ProcessorRegister::registerProcessors(
     RunStats& fareDisStats,
     FareDistributionResult& fareDisResult
 ){
-    processors["row"] = std::make_unique<RowCounter>(rowCounterStats);
-    processors["revenueD"] = std::make_unique<RevenueByDay>(revenueDayStats);
-    processors["tripsH"] = std::make_unique<TripsByHour>(tripsHourStats);
-    processors["invalid"] = std::make_unique<InvalidTripDetector>(invalidTripStats);
-    processors["pickupZ"] = std::make_unique<TopPickupZones>(pickupZoneStats);
-    processors["fareDis"] = std::make_unique<FareDistribution>(fareDisResult, fareDisStats);
+    processors["row-counter"] = std::make_unique<RowCounter>(rowCounterStats);
+    processors["revenue-by-day"] = std::make_unique<RevenueByDay>(revenueDayStats);
+    processors["trips-by-hour"] = std::make_unique<TripsByHour>(tripsHourStats);
+    processors["invalid-trip-detector"] = std::make_unique<InvalidTripDetector>(invalidTripStats);
+    processors["top-pickup-zones"] = std::make_unique<TopPickupZones>(pickupZoneStats);
+    processors["fare-dis"] = std::make_unique<FareDistribution>(fareDisResult, fareDisStats);
 }
 
 void ProcessorRegister::searchProcessor(const ProcessorData& data){
