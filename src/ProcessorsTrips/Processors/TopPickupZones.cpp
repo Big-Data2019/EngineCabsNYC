@@ -42,8 +42,7 @@ arrow::Status TopPickupZones::process(int64_t batchSize, const std::string& file
 
 	pickupZoneStats.elapsedSeconds += std::chrono::duration<double>(end - start).count();
 	pickupZoneStats.files++;
-	auto size = std::filesystem::file_size(file);
-	pickupZoneStats.bytesProcessed += size;
+	pickupZoneStats.bytesProcessed += std::filesystem::file_size(file);
 	pickupZoneStats.numBatch = batchSize;
 
     spdlog::info("MB/s: {}", pickupZoneStats.megabytesPerSecond());

@@ -65,8 +65,7 @@ arrow::Status InvalidTripDetector::process(int64_t batchSize, const std::string&
 
     invalidTripStats.elapsedSeconds += std::chrono::duration<double>(end-start).count();
     invalidTripStats.files++;
-    auto size = std::filesystem::file_size(file);
-    invalidTripStats.bytesProcessed += size;
+    invalidTripStats.bytesProcessed += std::filesystem::file_size(file);
     invalidTripStats.numBatch = batchSize;
 
     spdlog::info("MB/s: {}", invalidTripStats.megabytesPerSecond());

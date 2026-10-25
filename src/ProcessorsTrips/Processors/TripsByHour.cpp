@@ -44,8 +44,7 @@ arrow::Status TripsByHour::process(int64_t batchSize, const std::string& file){
 
     tripsHourStats.elapsedSeconds += std::chrono::duration<double>(end - start).count();
     tripsHourStats.files++;
-    auto size = std::filesystem::file_size(file);
-    tripsHourStats.bytesProcessed += size;
+    tripsHourStats.bytesProcessed += std::filesystem::file_size(file);
     tripsHourStats.numBatch = batchSize;
 
     spdlog::info("MB/s: {}", tripsHourStats.megabytesPerSecond());

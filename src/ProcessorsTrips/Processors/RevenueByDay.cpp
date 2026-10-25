@@ -49,8 +49,7 @@ arrow::Status RevenueByDay::process(int64_t batchSize, const std::string& file){
 
     revenueDayStats.elapsedSeconds += std::chrono::duration<double>(end - start).count();
     revenueDayStats.files++;
-    auto size = std::filesystem::file_size(file);
-    revenueDayStats.bytesProcessed += size;
+    revenueDayStats.bytesProcessed += std::filesystem::file_size(file);
     revenueDayStats.numBatch = batchSize;
 
     spdlog::info("MB/s: {}", revenueDayStats.megabytesPerSecond());

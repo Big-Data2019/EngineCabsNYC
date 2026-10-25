@@ -17,7 +17,6 @@ arrow::Status RowCounter::process(int64_t batchSize, const std::string& file){
     std::shared_ptr<arrow::RecordBatchReader> batchReader;
 
     auto start = std::chrono::high_resolution_clock::now();
-
     for(int idxRowGroup = 0; idxRowGroup < parquetContext.reader->num_row_groups(); idxRowGroup++){
         ARROW_ASSIGN_OR_RAISE(batchReader,
             parquetContext.reader->GetRecordBatchReader({idxRowGroup}, {idxColumn}));
@@ -35,8 +34,7 @@ arrow::Status RowCounter::process(int64_t batchSize, const std::string& file){
 
     rowCounterStats.elapsedSeconds += std::chrono::duration<double>(end - start).count();
     rowCounterStats.files++;
-    auto size = std::filesystem::file_size(file);
-    rowCounterStats.bytesProcessed += size;
+    rowCounterStats.bytesProcessed += std::filesystem::file_size(file);
     rowCounterStats.numBatch = batchSize;
 
     spdlog::info("MB/s: {}", rowCounterStats.megabytesPerSecond());

@@ -61,8 +61,7 @@ arrow::Status FareDistribution::process(int64_t batchSize, const std::string& fi
 
     fareDisStats.elapsedSeconds += std::chrono::duration<double>(end - start).count();
     fareDisStats.files++;
-    auto size = std::filesystem::file_size(file);
-    fareDisStats.bytesProcessed += size;
+    fareDisStats.bytesProcessed += std::filesystem::file_size(file);
     fareDisStats.numBatch = batchSize;
 
     if(fareDisResult.validFares > 0){
