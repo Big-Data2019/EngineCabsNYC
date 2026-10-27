@@ -1,8 +1,7 @@
 #pragma once
 
-#include "Parquet/ValidateInfo.hpp"
 #include "arrow/result.h"
-#include <vector>
+#include "Parquet/InvalidInfo.hpp"
 #include <string>
 
-arrow::Result<ValidateInfo> validateParquetSchema(const std::vector<std::string>& file);
+arrow::Result<InvalidInfo> validateParquetData(const std::string& file);

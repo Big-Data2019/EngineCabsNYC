@@ -2,6 +2,7 @@
 add_library(Parquet
     IdxColumnSchema.cpp
     ParquetReader.cpp
+    ValidateParquet.cpp
 )
 
 target_include_directories(Parquet PUBLIC ${PROJECT_SOURCE_DIR}/Include)
