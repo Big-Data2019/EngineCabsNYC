@@ -142,7 +142,7 @@ arrow::Result<InvalidInfo> validateParquetData(const std::string& file){
                 }
 
                 if(!nullPassengerCount){
-                    if(passengerCount->Value(i) < 1 || passengerCount->Value(i) > 8){
+                    if(passengerCount->Value(i) <= 0 || passengerCount->Value(i) >= 5){
                         info.passengerCountInvalids++;
                         invalidRow = true;
                     }
@@ -167,7 +167,9 @@ arrow::Result<InvalidInfo> validateParquetData(const std::string& file){
     spdlog::info("Rows processed: {}", info.totalRows);
     spdlog::info("Valid Rows: {}", info.validRows);
     spdlog::info("Invalid Rows: {}", info.invalidRows);
+    spdlog::info("Null Values: {}", info.nullValues);
 
+    spdlog::info("--Top Errors--");
     printTopErrors(info);
 
     return info;
