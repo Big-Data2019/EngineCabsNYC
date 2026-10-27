@@ -19,6 +19,7 @@ PUBLIC
 # Manifest library
 add_library(Manifest
     Json/ParquetDownload.cpp
+    Json/ValidateParquetManifest.cpp
     Json/RowCounterManifest.cpp
     Json/InvalidTripManifest.cpp
     Json/RevenueDayManifest.cpp
